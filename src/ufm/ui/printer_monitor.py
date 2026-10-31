@@ -244,15 +244,17 @@ class PrinterMonitorTask(QThread):
                     raise PrinterEventBufferOverflow("printer.event_buffer_overflow")
                 next_event = asyncio.create_task(_next_event(event_stream))
         finally:
-            if next_event is not None and not next_event.done():
-                next_event.cancel()
-                await asyncio.gather(next_event, return_exceptions=True)
-            if stream is not None:
-                close_stream = getattr(stream, "aclose", None)
-                if callable(close_stream):
-                    await close_stream()
-            # Always release the socket before waiting out a reconnect delay.
-            await provider.disconnect()
+            try:
+                if next_event is not None and not next_event.done():
+                    next_event.cancel()
+                    await asyncio.gather(next_event, return_exceptions=True)
+                if stream is not None:
+                    close_stream = getattr(stream, "aclose", None)
+                    if callable(close_stream):
+                        await close_stream()
+            finally:
+                # A stream cleanup error must never skip releasing the provider.
+                await provider.disconnect()
 
     @staticmethod
     def _retry_delay(retry_number: int) -> float:
