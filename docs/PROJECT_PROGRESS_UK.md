@@ -2316,3 +2316,9 @@ GitHub staging audit: removed a generated linked-stack test transcript from the 
 ### Додатковий вихідний файл після повної звірки робочого дерева
 
 Після під’єднання локальної теки знайдено один раніше неіндексований, але актуальний HaspelSync тест `linked-stack/haspelsync/test/ams.env.test.js`. Він містить тільки узагальнені AMS fixtures без серійних номерів чи LAN-коду; включено окремим комітом, щоб репозиторій не пропускав наявне джерело/перевірку. Решта локальних відмінностей — це збережені нерозкриті деталі середовища в документації; вони залишаються незакоміченими в робочій теці.
+
+## 2026-10-31 — GitHub Actions type-check failure diagnosis
+
+GitHub Actions failed on all three pushes at the same `Type check` step; Ruff and dependency installation passed, while pytest/build/wheel steps were skipped. The logs show unresolved `PySide6.QtCore/QtGui/QtPrintSupport/QtSvg/QtWidgets` imports and cascading `Any` subclass/type errors. Root cause: `.github/workflows/ci.yml` installed `.[dev]`, but did not install the declared `desktop` extra (`PySide6-Essentials`). Updated install target to `.[dev,desktop]`.
+
+Local verification with `.venv312`: Ruff passed; MyPy passed (139 files); full pytest passed (683 tests + 491 subtests in 87.93s). This verifies the source with PySide6 present, not the remote multi-OS/3.12–3.14 matrix. Next: push the workflow correction and confirm GitHub Actions finishes successfully on the new commit; if a platform-specific PySide wheel fails to install, adjust the matrix based on its log. No runtime printer, database, or production data was touched.

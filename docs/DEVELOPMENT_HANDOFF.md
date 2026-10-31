@@ -3473,3 +3473,10 @@ The user-provided screenshot shows the Devices page of a test build. It visibly 
 A current Computer Use capture of the isolated Candidate instead showed the Filament page with an empty “Consume manually” modal. It was left untouched: no text was entered and neither OK nor Cancel was clicked; no accounting operation was submitted. The network wizard was not opened, so visual review of the new button’s label, layout, and availability on the actual PC remains open. Tests and the packaged build do not replace this visual acceptance. E06.02 remains Partial; this stage does not confirm a live printer connection, authenticated state/AMS, or debit.
 
 Resume only from a safe window with no pending manual operation: open the enrollment wizard and visually inspect the Studio autofill dialog. Do not perform a network call or save a LAN code during that visual inspection. After this checkpoint, refresh Graphify traceability/project/enriched maps and verify source hashes and endpoints. No production database or accounting state was touched.
+
+
+## 2026-10-31 — GitHub Actions mypy dependency correction
+
+All three initial push-triggered CI runs failed at MyPy after Ruff succeeded; tests and wheel build were skipped. Representative logs show only missing `PySide6.Qt*` implementations, which cause cascading Any subclass/type errors. `.github/workflows/ci.yml` installed only the `dev` extra despite desktop UI modules being included in the mypy target. Corrected CI installation to `.[dev,desktop]` so PySide6-Essentials is present on the cross-platform matrix.
+
+Local Python 3.12 verification: Ruff clean, MyPy clean across 139 files, pytest 683 passed + 491 subtests (87.93s). Remote CI for Linux/macOS/Windows and Python 3.12–3.14 is still pending. After push, inspect each matrix result; if Qt wheel installation fails on a platform/version, adjust only from the observed logs.
