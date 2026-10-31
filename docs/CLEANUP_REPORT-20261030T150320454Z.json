@@ -1,0 +1,36 @@
+{
+  "TimestampUtc": "2026-10-30T15:03:20.4499805Z",
+  "Applied": false,
+  "Project": "D:\\Bot\\Universal_Filament_Manager",
+  "Entries": [
+    {
+      "Path": "D:\\Bot\\Universal_Filament_Manager\\.pytest_cache",
+      "Files": 5,
+      "Bytes": 80681,
+      "Removed": false
+    },
+    {
+      "Path": "D:\\Bot\\Universal_Filament_Manager\\.mypy_cache",
+      "Files": 3,
+      "Bytes": 25321701,
+      "Removed": false
+    },
+    {
+      "Path": "D:\\Bot\\Universal_Filament_Manager\\.ruff_cache",
+      "Files": 10,
+      "Bytes": 29846,
+      "Removed": false
+    }
+  ],
+  "Preserved": [
+    "backups",
+    ".runtime",
+    ".tools",
+    ".venv",
+    ".venv312",
+    "linked-stack",
+    "graphify-out",
+    "dist",
+    "personal data"
+  ]
+}

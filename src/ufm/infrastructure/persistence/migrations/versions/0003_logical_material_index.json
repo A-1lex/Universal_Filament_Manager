@@ -1,0 +1,3 @@
+[
+  "ALTER TABLE print_job_material ADD COLUMN logical_material_index INTEGER CONSTRAINT ck_print_job_material_logical_material_range CHECK (logical_material_index IS NULL OR (typeof(logical_material_index) = 'integer' AND logical_material_index BETWEEN 0 AND 255))"
+]

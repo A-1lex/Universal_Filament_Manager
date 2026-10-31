@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "locale": "uk-UA",
+  "log_level": "INFO",
+  "sqlite_busy_timeout_ms": 5000
+}

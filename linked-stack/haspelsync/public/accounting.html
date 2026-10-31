@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="accounting.tabTitle">Облік · HaspelSync</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="accounting.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script>
+        try { if (localStorage.getItem("dark-mode") === "true") document.documentElement.classList.add("dark-mode"); } catch {}
+    </script>
+    <script src="i18n.js"></script>
+    <script src="i18n/all.js"></script>
+</head>
+<body class="hide-footer accounting-page">
+    <div id="menubar"><div id="menu-root"></div></div>
+    <main class="acc-page">
+        <header class="acc-header">
+            <div><p class="acc-kicker" data-i18n="accounting.kicker"></p><h1 data-i18n="accounting.title"></h1><p class="acc-intro" data-i18n="accounting.intro"></p></div>
+            <label class="acc-language"><span data-i18n="accounting.language"></span><select id="acc-language" aria-label="Language"></select></label>
+        </header>
+        <div id="acc-message" class="acc-message" role="status" aria-live="polite" hidden></div>
+        <section class="acc-toolbar" data-i18n-aria-label="accounting.filters">
+            <label><span data-i18n="accounting.printer"></span><select id="acc-printer"></select></label>
+            <label><span data-i18n="accounting.from"></span><input id="acc-from" type="date"></label>
+            <label><span data-i18n="accounting.until"></span><input id="acc-until" type="date"></label>
+            <button id="acc-refresh" class="acc-button secondary" type="button" data-i18n="accounting.refresh"></button>
+        </section>
+        <section class="acc-metrics">
+            <article><span data-i18n="accounting.prints"></span><strong id="acc-print-count">0</strong><small data-i18n="accounting.period"></small></article>
+            <article><span data-i18n="accounting.filament"></span><strong id="acc-grams">0</strong><small data-i18n="accounting.bookedOnly"></small></article>
+            <article><span data-i18n="accounting.cost"></span><strong id="acc-cost">—</strong><small data-i18n="accounting.filamentOnly"></small></article>
+            <article id="acc-review-card"><span data-i18n="accounting.review"></span><strong id="acc-review">0</strong><small data-i18n="accounting.reviewHint"></small></article>
+        </section>
+        <div class="acc-tabs" role="tablist" data-i18n-aria-label="accounting.nav">
+            <button role="tab" aria-selected="true" aria-controls="acc-history" id="tab-history" data-panel="acc-history" data-i18n="accounting.history"></button>
+            <button role="tab" aria-selected="false" aria-controls="acc-spools" id="tab-spools" data-panel="acc-spools" data-i18n="accounting.spools"></button>
+            <button role="tab" aria-selected="false" aria-controls="acc-reports" id="tab-reports" data-panel="acc-reports" data-i18n="accounting.reports"></button>
+        </div>
+        <section id="acc-history" role="tabpanel" aria-labelledby="tab-history" class="acc-panel">
+            <div class="acc-section-head"><div><h2 data-i18n="accounting.historyTitle"></h2><p data-i18n="accounting.historyHint"></p></div><label class="acc-toggle"><input id="acc-only-review" type="checkbox"><span data-i18n="accounting.onlyReview"></span></label></div>
+            <div class="acc-table-wrap"><table><thead><tr><th data-i18n="accounting.date"></th><th data-i18n="accounting.job"></th><th data-i18n="accounting.spool"></th><th data-i18n="accounting.mass"></th><th data-i18n="accounting.cost"></th><th data-i18n="accounting.status"></th></tr></thead><tbody id="acc-history-body"></tbody></table></div>
+            <div id="acc-empty" class="acc-empty" hidden><span aria-hidden="true">▤</span><h3 data-i18n="accounting.emptyTitle"></h3><p data-i18n="accounting.emptyHint"></p></div>
+            <p class="acc-footnote" data-i18n="accounting.historyLimit"></p>
+        </section>
+        <section id="acc-spools" role="tabpanel" aria-labelledby="tab-spools" class="acc-panel" hidden>
+            <div class="acc-section-head"><div><h2 data-i18n="accounting.spoolsTitle"></h2><p data-i18n="accounting.spoolsHint"></p></div></div>
+            <label class="acc-spool-picker"><span data-i18n="accounting.spool"></span><select id="acc-spool"></select></label>
+            <p id="acc-spool-detail" class="acc-spool-detail"></p>
+            <div class="acc-form-grid">
+                <form id="acc-weigh-form" class="acc-form">
+                    <div class="acc-form-heading"><span class="acc-step">01</span><div><h3 data-i18n="accounting.weighTitle"></h3><p data-i18n="accounting.weighHint"></p></div></div>
+                    <label><span data-i18n="accounting.gross"></span><input id="acc-gross" inputmode="decimal" autocomplete="off" placeholder="0,000" required></label>
+                    <label><span data-i18n="accounting.tare"></span><input id="acc-tare" inputmode="decimal" autocomplete="off" placeholder="0,000" required></label>
+                    <div class="acc-preview"><span data-i18n="accounting.net"></span><strong id="acc-net">—</strong></div>
+                    <p class="acc-form-note" data-i18n="accounting.weighNote"></p>
+                    <button class="acc-button" type="submit" data-i18n="accounting.applyWeight"></button>
+                </form>
+                <form id="acc-cost-form" class="acc-form">
+                    <div class="acc-form-heading"><span class="acc-step">02</span><div><h3 data-i18n="accounting.priceTitle"></h3><p data-i18n="accounting.priceHint"></p></div></div>
+                    <div class="acc-input-pair"><label><span data-i18n="accounting.purchasePrice"></span><input id="acc-price" inputmode="decimal" autocomplete="off" placeholder="0,00" required></label><label><span data-i18n="accounting.currency"></span><select id="acc-currency"><option>UAH</option><option>EUR</option><option>USD</option><option>PLN</option></select></label></div>
+                    <label><span data-i18n="accounting.basis"></span><input id="acc-basis" inputmode="decimal" autocomplete="off" placeholder="1000" required></label>
+                    <p class="acc-form-note" data-i18n="accounting.priceNote"></p>
+                    <button class="acc-button" type="submit" data-i18n="accounting.savePrice"></button>
+                </form>
+            </div>
+            <div class="acc-section-head"><div><h3 data-i18n="accounting.weighingsTitle"></h3></div></div>
+            <div class="acc-table-wrap"><table><thead><tr><th data-i18n="accounting.date"></th><th data-i18n="accounting.spool"></th><th data-i18n="accounting.net"></th><th data-i18n="accounting.status"></th></tr></thead><tbody id="acc-weighings-body"></tbody></table></div>
+        </section>
+        <section id="acc-reports" role="tabpanel" aria-labelledby="tab-reports" class="acc-panel" hidden>
+            <div class="acc-section-head"><div><h2 data-i18n="accounting.reportTitle"></h2><p data-i18n="accounting.reportHint"></p></div><button id="acc-export" class="acc-button" type="button" data-i18n="accounting.export" disabled></button></div>
+            <div id="acc-report-totals" class="acc-report-totals"></div>
+            <p id="acc-unknown-cost" class="acc-form-note"></p>
+            <div class="acc-explanation"><h3 data-i18n="accounting.methodTitle"></h3><p data-i18n="accounting.method"></p></div>
+        </section>
+    </main>
+    <dialog id="acc-review-dialog" class="acc-dialog" aria-labelledby="acc-review-title">
+        <form id="acc-review-form" class="acc-form">
+            <h2 id="acc-review-title" data-i18n="accounting.reviewTitle"></h2>
+            <p class="acc-form-note" data-i18n="accounting.reviewInstructions"></p>
+            <p id="acc-review-balance" class="acc-preview"></p>
+            <label><span data-i18n="accounting.reviewDecision"></span><select id="acc-review-resolution" required><option value="" data-i18n="accounting.chooseDecision"></option><option value="applied" data-i18n="accounting.applied"></option><option value="not_applied" data-i18n="accounting.notApplied"></option></select></label>
+            <label><span data-i18n="accounting.reviewReason"></span><textarea id="acc-review-note" maxlength="500" rows="3" required></textarea></label>
+            <div class="acc-dialog-actions"><button id="acc-review-cancel" class="acc-button secondary" type="button" data-i18n="accounting.cancel"></button><button class="acc-button" type="submit" data-i18n="accounting.confirmReview"></button></div>
+        </form>
+    </dialog>
+    <script src="menu.js"></script>
+    <script type="module" src="accounting.js"></script>
+</body>
+</html>

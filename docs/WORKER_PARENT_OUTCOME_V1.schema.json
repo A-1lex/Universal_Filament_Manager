@@ -1,0 +1,109 @@
+{
+  "additionalProperties": false,
+  "description": "Parent-to-worker acknowledgement; must never be accepted as a fact.",
+  "properties": {
+    "v": {
+      "maximum": 1,
+      "minimum": 1,
+      "title": "V",
+      "type": "integer"
+    },
+    "request_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Request Id",
+      "type": "string"
+    },
+    "printer_id": {
+      "format": "uuid",
+      "title": "Printer Id",
+      "type": "string"
+    },
+    "source_epoch": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Source Epoch",
+      "type": "string"
+    },
+    "sequence": {
+      "maximum": 1000000000000,
+      "minimum": 0,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "kind": {
+      "const": "finalization_outcome",
+      "title": "Kind",
+      "type": "string"
+    },
+    "job_id": {
+      "format": "uuid",
+      "title": "Job Id",
+      "type": "string"
+    },
+    "receipt_id": {
+      "format": "uuid",
+      "title": "Receipt Id",
+      "type": "string"
+    },
+    "outcome": {
+      "enum": [
+        "committed",
+        "already_committed",
+        "rejected"
+      ],
+      "title": "Outcome",
+      "type": "string"
+    },
+    "finalization_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Finalization Id"
+    },
+    "reason_code": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason Code"
+    }
+  },
+  "required": [
+    "v",
+    "request_id",
+    "printer_id",
+    "source_epoch",
+    "sequence",
+    "observed_at",
+    "kind",
+    "job_id",
+    "receipt_id",
+    "outcome"
+  ],
+  "title": "FinalizationOutcome",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

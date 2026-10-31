@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "MaterialEstimate": {
+      "additionalProperties": false,
+      "properties": {
+        "logical_material": {
+          "maximum": 255,
+          "minimum": 0,
+          "title": "Logical Material",
+          "type": "integer"
+        },
+        "mass_mg": {
+          "maximum": 1000000000000,
+          "minimum": 0,
+          "title": "Mass Mg",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "logical_material",
+        "mass_mg"
+      ],
+      "title": "MaterialEstimate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "v": {
+      "maximum": 1,
+      "minimum": 1,
+      "title": "V",
+      "type": "integer"
+    },
+    "request_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Request Id",
+      "type": "string"
+    },
+    "printer_id": {
+      "format": "uuid",
+      "title": "Printer Id",
+      "type": "string"
+    },
+    "source_epoch": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Source Epoch",
+      "type": "string"
+    },
+    "sequence": {
+      "maximum": 1000000000000,
+      "minimum": 0,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "kind": {
+      "const": "calculate",
+      "title": "Kind",
+      "type": "string"
+    },
+    "occurrence_key": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Occurrence Key",
+      "type": "string"
+    },
+    "file_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "File Sha256",
+      "type": "string"
+    },
+    "evidence_id": {
+      "format": "uuid",
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "policy_version": {
+      "enum": [
+        "three-mf-full-mg-preview-v1",
+        "haspel-range-cent-preview-v1"
+      ],
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "completed_layer": {
+      "anyOf": [
+        {
+          "maximum": 1000000,
+          "minimum": -1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Completed Layer"
+    },
+    "metadata_xml": {
+      "maxLength": 524288,
+      "minLength": 1,
+      "title": "Metadata Xml",
+      "type": "string"
+    },
+    "materials": {
+      "items": {
+        "$ref": "#/$defs/MaterialEstimate"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "title": "Materials",
+      "type": "array"
+    }
+  },
+  "required": [
+    "v",
+    "request_id",
+    "printer_id",
+    "source_epoch",
+    "sequence",
+    "observed_at",
+    "kind",
+    "occurrence_key",
+    "file_sha256",
+    "evidence_id",
+    "policy_version",
+    "completed_layer",
+    "metadata_xml",
+    "materials"
+  ],
+  "title": "CalculationRequest",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

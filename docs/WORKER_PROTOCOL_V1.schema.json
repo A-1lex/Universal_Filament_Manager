@@ -1,0 +1,901 @@
+{
+  "$defs": {
+    "ErrorMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "maximum": 1,
+          "minimum": 1,
+          "title": "V",
+          "type": "integer"
+        },
+        "request_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "printer_id": {
+          "format": "uuid",
+          "title": "Printer Id",
+          "type": "string"
+        },
+        "source_epoch": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Source Epoch",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 1000000000000,
+          "minimum": 0,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "kind": {
+          "const": "error",
+          "title": "Kind",
+          "type": "string"
+        },
+        "code": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Code",
+          "type": "string"
+        },
+        "retryable": {
+          "title": "Retryable",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "v",
+        "request_id",
+        "printer_id",
+        "source_epoch",
+        "sequence",
+        "observed_at",
+        "kind",
+        "code",
+        "retryable"
+      ],
+      "title": "ErrorMessage",
+      "type": "object"
+    },
+    "EvidenceMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "maximum": 1,
+          "minimum": 1,
+          "title": "V",
+          "type": "integer"
+        },
+        "request_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "printer_id": {
+          "format": "uuid",
+          "title": "Printer Id",
+          "type": "string"
+        },
+        "source_epoch": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Source Epoch",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 1000000000000,
+          "minimum": 0,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "kind": {
+          "const": "evidence",
+          "title": "Kind",
+          "type": "string"
+        },
+        "occurrence_key": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Occurrence Key",
+          "type": "string"
+        },
+        "file_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "File Sha256",
+          "type": "string"
+        },
+        "plate": {
+          "maximum": 256,
+          "minimum": 1,
+          "title": "Plate",
+          "type": "integer"
+        },
+        "source": {
+          "enum": [
+            "three_mf",
+            "gcode",
+            "slicer",
+            "printer"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "quantity": {
+          "enum": [
+            "estimate",
+            "measurement"
+          ],
+          "title": "Quantity",
+          "type": "string"
+        },
+        "confidence_bp": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Confidence Bp",
+          "type": "integer"
+        },
+        "includes_purge": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Includes Purge"
+        },
+        "interval_start": {
+          "format": "date-time",
+          "title": "Interval Start",
+          "type": "string"
+        },
+        "interval_end": {
+          "format": "date-time",
+          "title": "Interval End",
+          "type": "string"
+        }
+      },
+      "required": [
+        "v",
+        "request_id",
+        "printer_id",
+        "source_epoch",
+        "sequence",
+        "observed_at",
+        "kind",
+        "occurrence_key",
+        "file_sha256",
+        "plate",
+        "source",
+        "quantity",
+        "confidence_bp",
+        "includes_purge",
+        "interval_start",
+        "interval_end"
+      ],
+      "title": "EvidenceMessage",
+      "type": "object"
+    },
+    "JobMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "maximum": 1,
+          "minimum": 1,
+          "title": "V",
+          "type": "integer"
+        },
+        "request_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "printer_id": {
+          "format": "uuid",
+          "title": "Printer Id",
+          "type": "string"
+        },
+        "source_epoch": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Source Epoch",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 1000000000000,
+          "minimum": 0,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "kind": {
+          "const": "job",
+          "title": "Kind",
+          "type": "string"
+        },
+        "occurrence_key": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Occurrence Key",
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "started",
+            "running",
+            "paused",
+            "completed",
+            "failed",
+            "cancelled"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "file_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "File Sha256"
+        },
+        "completed_layers": {
+          "anyOf": [
+            {
+              "maximum": 1000000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Completed Layers"
+        },
+        "current_layer": {
+          "anyOf": [
+            {
+              "maximum": 1000000000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Layer"
+        },
+        "progress_bp": {
+          "anyOf": [
+            {
+              "maximum": 10000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Progress Bp"
+        },
+        "exact_started_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exact Started At"
+        },
+        "exact_started_at_source": {
+          "anyOf": [
+            {
+              "enum": [
+                "printer_reported",
+                "provider_reported"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exact Started At Source"
+        },
+        "exact_ended_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exact Ended At"
+        },
+        "exact_ended_at_source": {
+          "anyOf": [
+            {
+              "enum": [
+                "printer_reported",
+                "provider_reported"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exact Ended At Source"
+        },
+        "material_slot_mappings": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/MaterialSlotMappingFact"
+          },
+          "maxItems": 256,
+          "title": "Material Slot Mappings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "v",
+        "request_id",
+        "printer_id",
+        "source_epoch",
+        "sequence",
+        "observed_at",
+        "kind",
+        "occurrence_key",
+        "state"
+      ],
+      "title": "JobMessage",
+      "type": "object"
+    },
+    "MaterialEstimate": {
+      "additionalProperties": false,
+      "properties": {
+        "logical_material": {
+          "maximum": 255,
+          "minimum": 0,
+          "title": "Logical Material",
+          "type": "integer"
+        },
+        "mass_mg": {
+          "maximum": 1000000000000,
+          "minimum": 0,
+          "title": "Mass Mg",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "logical_material",
+        "mass_mg"
+      ],
+      "title": "MaterialEstimate",
+      "type": "object"
+    },
+    "MaterialSlotMappingFact": {
+      "additionalProperties": false,
+      "properties": {
+        "logical_material": {
+          "maximum": 255,
+          "minimum": 0,
+          "title": "Logical Material",
+          "type": "integer"
+        },
+        "disposition": {
+          "enum": [
+            "reported_slot",
+            "unused",
+            "unsupported"
+          ],
+          "title": "Disposition",
+          "type": "string"
+        },
+        "provider_system_key": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider System Key"
+        },
+        "provider_slot_key": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Slot Key"
+        }
+      },
+      "required": [
+        "logical_material",
+        "disposition"
+      ],
+      "title": "MaterialSlotMappingFact",
+      "type": "object"
+    },
+    "ProposalMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "maximum": 1,
+          "minimum": 1,
+          "title": "V",
+          "type": "integer"
+        },
+        "request_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "printer_id": {
+          "format": "uuid",
+          "title": "Printer Id",
+          "type": "string"
+        },
+        "source_epoch": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Source Epoch",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 1000000000000,
+          "minimum": 0,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "kind": {
+          "const": "proposal",
+          "title": "Kind",
+          "type": "string"
+        },
+        "occurrence_key": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Occurrence Key",
+          "type": "string"
+        },
+        "file_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "File Sha256",
+          "type": "string"
+        },
+        "evidence_id": {
+          "format": "uuid",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "policy_version": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "quantity": {
+          "const": "estimate",
+          "title": "Quantity",
+          "type": "string"
+        },
+        "label": {
+          "const": "Розрахункова витрата",
+          "title": "Label",
+          "type": "string"
+        },
+        "confidence_bp": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Confidence Bp",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "needs_mapping"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "partial": {
+          "title": "Partial",
+          "type": "boolean"
+        },
+        "materials": {
+          "items": {
+            "$ref": "#/$defs/MaterialEstimate"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "title": "Materials",
+          "type": "array"
+        },
+        "allocations": {
+          "items": {
+            "$ref": "#/$defs/SpoolAllocation"
+          },
+          "maxItems": 1024,
+          "title": "Allocations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "v",
+        "request_id",
+        "printer_id",
+        "source_epoch",
+        "sequence",
+        "observed_at",
+        "kind",
+        "occurrence_key",
+        "file_sha256",
+        "evidence_id",
+        "policy_version",
+        "quantity",
+        "label",
+        "confidence_bp",
+        "status",
+        "partial",
+        "materials",
+        "allocations"
+      ],
+      "title": "ProposalMessage",
+      "type": "object"
+    },
+    "SlotFact": {
+      "additionalProperties": false,
+      "properties": {
+        "slot_key": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Slot Key",
+          "type": "string"
+        },
+        "logical_material": {
+          "anyOf": [
+            {
+              "maximum": 255,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Logical Material"
+        },
+        "identifier": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Identifier"
+        }
+      },
+      "required": [
+        "slot_key"
+      ],
+      "title": "SlotFact",
+      "type": "object"
+    },
+    "SlotsMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "maximum": 1,
+          "minimum": 1,
+          "title": "V",
+          "type": "integer"
+        },
+        "request_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "printer_id": {
+          "format": "uuid",
+          "title": "Printer Id",
+          "type": "string"
+        },
+        "source_epoch": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Source Epoch",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 1000000000000,
+          "minimum": 0,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "kind": {
+          "const": "slots",
+          "title": "Kind",
+          "type": "string"
+        },
+        "occurrence_key": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Occurrence Key"
+        },
+        "slots": {
+          "items": {
+            "$ref": "#/$defs/SlotFact"
+          },
+          "maxItems": 256,
+          "title": "Slots",
+          "type": "array"
+        }
+      },
+      "required": [
+        "v",
+        "request_id",
+        "printer_id",
+        "source_epoch",
+        "sequence",
+        "observed_at",
+        "kind",
+        "slots"
+      ],
+      "title": "SlotsMessage",
+      "type": "object"
+    },
+    "SpoolAllocation": {
+      "additionalProperties": false,
+      "properties": {
+        "allocation_id": {
+          "format": "uuid",
+          "title": "Allocation Id",
+          "type": "string"
+        },
+        "logical_material": {
+          "maximum": 255,
+          "minimum": 0,
+          "title": "Logical Material",
+          "type": "integer"
+        },
+        "segment_id": {
+          "format": "uuid",
+          "title": "Segment Id",
+          "type": "string"
+        },
+        "spool_id": {
+          "format": "uuid",
+          "title": "Spool Id",
+          "type": "string"
+        },
+        "mass_mg": {
+          "maximum": 1000000000000,
+          "minimum": 0,
+          "title": "Mass Mg",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "allocation_id",
+        "logical_material",
+        "segment_id",
+        "spool_id",
+        "mass_mg"
+      ],
+      "title": "SpoolAllocation",
+      "type": "object"
+    },
+    "StatusMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "maximum": 1,
+          "minimum": 1,
+          "title": "V",
+          "type": "integer"
+        },
+        "request_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "printer_id": {
+          "format": "uuid",
+          "title": "Printer Id",
+          "type": "string"
+        },
+        "source_epoch": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Source Epoch",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 1000000000000,
+          "minimum": 0,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "kind": {
+          "const": "status",
+          "title": "Kind",
+          "type": "string"
+        },
+        "connection": {
+          "enum": [
+            "connected",
+            "offline",
+            "retrying",
+            "disabled"
+          ],
+          "title": "Connection",
+          "type": "string"
+        },
+        "reason_code": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9_.:-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason Code"
+        }
+      },
+      "required": [
+        "v",
+        "request_id",
+        "printer_id",
+        "source_epoch",
+        "sequence",
+        "observed_at",
+        "kind",
+        "connection"
+      ],
+      "title": "StatusMessage",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "error": "#/$defs/ErrorMessage",
+      "evidence": "#/$defs/EvidenceMessage",
+      "job": "#/$defs/JobMessage",
+      "proposal": "#/$defs/ProposalMessage",
+      "slots": "#/$defs/SlotsMessage",
+      "status": "#/$defs/StatusMessage"
+    },
+    "propertyName": "kind"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/StatusMessage"
+    },
+    {
+      "$ref": "#/$defs/JobMessage"
+    },
+    {
+      "$ref": "#/$defs/SlotsMessage"
+    },
+    {
+      "$ref": "#/$defs/EvidenceMessage"
+    },
+    {
+      "$ref": "#/$defs/ProposalMessage"
+    },
+    {
+      "$ref": "#/$defs/ErrorMessage"
+    }
+  ]
+}

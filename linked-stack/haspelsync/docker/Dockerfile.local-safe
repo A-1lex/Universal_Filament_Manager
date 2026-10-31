@@ -1,0 +1,7 @@
+FROM filament-manager/haspelsync:1.3.4-uk
+
+# Keep the installed upstream dependencies and Ukrainian UI. Only the reviewed
+# application changes are overlaid, without touching mounted installation data.
+COPY package.json package-lock.json /app/
+COPY src/ /app/src/
+COPY public/ /app/public/

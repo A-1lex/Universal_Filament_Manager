@@ -1,0 +1,317 @@
+import { mappingsPath, serverLogFilePath } from "./config.js";
+import { readJsonFile, writeJsonFile } from "./jsonfile.js";
+import { normColor } from "./gcode.js";
+import { slotColors } from "./utils.js";
+import { trace } from "./logger.js";
+
+/**
+ * Manual AMS slot -> Spoolman spool assignments.
+ *
+ * Bambu Lab spools carry an RFID tag whose tray_uuid is stored in Spoolman as
+ * extra.tag, which links slot and spool automatically. 3rd-party spools have no
+ * chip (tray_uuid is "N/A"), so the link has to come from the user. The same
+ * mechanism also resolves the ambiguous case of two tagged spools that are
+ * identical in tray_info_idx and color.
+ *
+ * Shape:
+ *   { schemaVersion, printers: { "<printerId>": { "A1": { spoolId, fingerprint, updatedAt } } } }
+ *
+ * The fingerprint identifies the physical spool as far as the AMS can describe
+ * it. When it stops matching, a different spool was put into that slot and the
+ * assignment is dropped rather than silently booking onto the wrong spool.
+ */
+let mappings = null;
+
+/**
+ * The version of the file this module writes.
+ *
+ * 1 is the first version with a wrapper around the printers, and the first
+ * whose slot labels count a unit's slots from 1. Version 0 is the flat file
+ * every installation before it has on disk, whose keys are the same assignments
+ * under the labels `A0` to `D3`. Bump this whenever the meaning of what is
+ * stored changes and handle the old value in `migrateStored()`.
+ */
+const MAPPINGS_SCHEMA_VERSION = 1;
+
+/**
+ * Describes a slot's filament as precisely as the AMS allows for a chipless
+ * spool: the filament profile the printer reports for the slot, its material
+ * type and the normalised colour.
+ *
+ * `tray_info_idx` is what makes this sharper than material and colour alone.
+ * Where the printer reports a per-filament profile, two spools that are
+ * identical in material and colour can still differ here, so swapping one for
+ * the other invalidates the assignment instead of booking onto the wrong spool.
+ * It is added to the material rather than replacing it: a P2S reports the
+ * generic `GFL99` for every 3rd party spool, so on its own it would not even
+ * tell PLA from PETG.
+ *
+ * The colour set is added for the same reason, one level further down. A multi
+ * colour filament reports only its first colour in `tray_color`, and a gradient
+ * spool carries the plain `GFA00` profile, so swapping Arctic Whisper for Solar
+ * Breeze changed nothing in the first three parts and the assignment survived a
+ * spool it no longer described.
+ *
+ * A single colour spool produces the three part fingerprint it always did, so
+ * nothing already on disk has to be migrated for it.
+ */
+export function slotFingerprint(slot) {
+    // Through normColor like every other part, so the whole fingerprint is one
+    // case. slotColors() normalises to lower, the rest of this string is upper.
+    const colors = [...new Set(slotColors(slot).map(normColor))];
+    const suffix = colors.length > 1 ? `|${colors.sort().join("+")}` : "";
+    return `${slot?.tray_info_idx || "?"}|${slot?.tray_type || "?"}|${normColor(slot?.tray_color)}${suffix}`;
+}
+
+/**
+ * The fingerprint format written before the colour set was part of it, which is
+ * only ever different for a multi colour spool.
+ */
+function preColorSetFingerprint(slot) {
+    return `${slot?.tray_info_idx || "?"}|${slot?.tray_type || "?"}|${normColor(slot?.tray_color)}`;
+}
+
+/**
+ * The fingerprint format written before the filament profile was part of it.
+ * Existing installs have these on disk and there is no migration step, so a
+ * stored one is still compared in its own format and rewritten on the next
+ * lookup that matches.
+ */
+function legacyFingerprint(slot) {
+    return `${slot?.tray_type || "?"}|${normColor(slot?.tray_color)}`;
+}
+
+/**
+ * Whether a stored fingerprint still describes what is in the slot.
+ *
+ * @param {string|null} stored - the fingerprint saved with the assignment
+ * @param {object} slot - the AMS slot as it reads now
+ * @returns {{matches: boolean, legacy: boolean}} whether it matches, and
+ *   whether it did so only in the old two part format
+ */
+function fingerprintMatches(stored, slot) {
+    if (stored === slotFingerprint(slot)) return { matches: true, legacy: false };
+    // Two parts means it was written before the profile was included
+    if (stored.split("|").length === 2 && stored === legacyFingerprint(slot)) {
+        return { matches: true, legacy: true };
+    }
+    // Three parts on a multi colour slot means it was written before the colour
+    // set was included. The assignment still describes this spool, it just says
+    // less about it than it could, so it is kept and rewritten.
+    if (stored.split("|").length === 3 && stored === preColorSetFingerprint(slot)) {
+        return { matches: true, legacy: true };
+    }
+    return { matches: false, legacy: false };
+}
+
+/**
+ * Reads the two shapes the file can have.
+ *
+ * The first version stored the printers flat at the top level. Everything since
+ * wraps them, so the file can carry the version its slot labels were written
+ * with. A flat file is therefore version 0 rather than the current one: that is
+ * the whole signal the renumbering below has to go on, since a file holding
+ * `A1` alone says nothing about whether that is the second slot of the old
+ * labels or the first of the new ones.
+ *
+ * @param {object} parsed - the parsed file contents
+ * @returns {{printers: object, schemaVersion: number}}
+ */
+export function parseStoredFile(parsed) {
+    if (parsed && typeof parsed.printers === "object" && parsed.printers !== null && !Array.isArray(parsed.printers)) {
+        return {
+            printers: parsed.printers,
+            schemaVersion: Number.isInteger(parsed.schemaVersion) ? parsed.schemaVersion : MAPPINGS_SCHEMA_VERSION,
+        };
+    }
+
+    return { printers: parsed ?? {}, schemaVersion: 0 };
+}
+
+/**
+ * Brings a stored set of assignments up to the current schema version.
+ *
+ * Version 0 numbered a unit's slots from 0, so its keys are `A0` to `D3` where
+ * the same physical slots are now `A1` to `D4`. Every key is shifted by one, or
+ * the assignments of an existing install would sit one slot off: the spool the
+ * user assigned to the first slot would answer for the second and the last one
+ * would answer for nothing at all.
+ *
+ * Only the four slot units carry a number. `HT-A` to `HT-H` and `External` name
+ * a unit that has a single slot and are passed through, as is anything else the
+ * file happens to hold, because dropping a key nobody recognises loses an
+ * assignment over a label this version does not know yet.
+ *
+ * @param {object} printers - the stored assignments, keyed by printer id
+ * @param {number} schemaVersion - the version they were written with
+ * @returns {object} the assignments in the current shape
+ */
+export function migrateStored(printers, schemaVersion) {
+    if (schemaVersion >= MAPPINGS_SCHEMA_VERSION) return printers;
+
+    const renumber = slots => Object.fromEntries(
+        Object.entries(slots || {}).map(([amsId, entry]) => {
+            const match = /^([A-D])([0-3])$/.exec(amsId);
+            return [match ? `${match[1]}${Number(match[2]) + 1}` : amsId, entry];
+        }),
+    );
+
+    return Object.fromEntries(Object.entries(printers).map(([printerId, slots]) => [printerId, renumber(slots)]));
+}
+
+/**
+ * Loads the mapping file once and caches it for the process lifetime.
+ *
+ * A missing file is the normal first run case and yields an empty map. So does
+ * a corrupt one, because refusing to start over an unreadable convenience cache
+ * would be worse than losing the assignments in it.
+ *
+ * A file that had to be migrated is written back immediately, so that the
+ * version on disk states what its labels mean rather than being renumbered
+ * again on every start.
+ *
+ * @returns {object} the assignments of every printer, keyed by printer id
+ */
+function load() {
+    if (mappings) return mappings;
+
+    let migrated = false;
+
+    const parsed = readJsonFile(mappingsPath);
+    if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) {
+        const file = parseStoredFile(parsed);
+        migrated = file.schemaVersion < MAPPINGS_SCHEMA_VERSION;
+        mappings = migrateStored(file.printers, file.schemaVersion);
+        trace("service", "Server", serverLogFilePath, "Spool mappings loaded:", JSON.stringify(mappings));
+    } else {
+        if (parsed !== null) console.error("Server", serverLogFilePath, "mappings.json must contain an object, starting empty");
+        mappings = {};
+    }
+
+    if (migrated) {
+        console.log("Server", serverLogFilePath, `[Mapping] Slot labels renumbered to schema ${MAPPINGS_SCHEMA_VERSION}, a unit's slots now count from 1 (A0 became A1)`);
+        persist();
+    }
+
+    return mappings;
+}
+
+/** Writes the in-memory mappings back to disk atomically. */
+function persist() {
+    writeJsonFile(mappingsPath, { schemaVersion: MAPPINGS_SCHEMA_VERSION, printers: mappings });
+}
+
+/** Returns all slot assignments for a printer, or an empty object. */
+export function getMappings(printerId) {
+    return load()[printerId] || {};
+}
+
+/**
+ * Returns the assignment for a slot, or null. When a slot is given, the stored
+ * fingerprint is checked against it and a stale assignment is dropped (the
+ * spool in that slot was swapped).
+ */
+export function getMapping(printerId, amsId, slot = null) {
+    const entry = load()[printerId]?.[amsId];
+    if (!entry) return null;
+
+    if (slot && entry.fingerprint) {
+        const { matches, legacy } = fingerprintMatches(entry.fingerprint, slot);
+        if (!matches) {
+            console.log("Server", serverLogFilePath, `[Mapping] ${printerId}/${amsId}: filament changed (${entry.fingerprint} -> ${slotFingerprint(slot)}), dropping assignment to spool ${entry.spoolId}`);
+            clearMapping(printerId, amsId);
+            return null;
+        }
+
+        // Upgrade the stored format in place, so this comparison only has to
+        // fall back to the old one once per assignment
+        if (legacy) {
+            entry.fingerprint = slotFingerprint(slot);
+            persist();
+        }
+    }
+
+    return entry;
+}
+
+/**
+ * The ids of every spool assigned to a slot other than the one given, across
+ * all printers.
+ *
+ * What the automatic assignment has to leave alone: a spool that already sits
+ * in another slot by assignment is not the one in this slot, however well its
+ * colour fits.
+ *
+ * @param {string} printerId - printer serial of the slot being asked about
+ * @param {string} amsId - its slot label
+ * @returns {Set<number>}
+ */
+export function spoolIdsAssignedElsewhere(printerId, amsId) {
+    const taken = new Set();
+    for (const [printer, slots] of Object.entries(load())) {
+        for (const [slot, entry] of Object.entries(slots || {})) {
+            if (printer === printerId && slot === amsId) continue;
+            if (Number.isInteger(entry?.spoolId)) taken.add(entry.spoolId);
+        }
+    }
+    return taken;
+}
+
+/**
+ * Assigns a Spoolman spool to an AMS slot and persists it immediately.
+ *
+ * The slot is stored as a fingerprint alongside the id, so a later lookup can
+ * tell whether the same physical spool is still in place. Passing no slot
+ * stores an assignment that is never invalidated by a filament change.
+ *
+ * An assignment the service made on its own is marked as such, so the
+ * dashboard can say it was not the user's choice and the user can tell a
+ * spool they picked from one the colour match picked.
+ *
+ * @param {string} printerId - printer serial
+ * @param {string} amsId - slot label, e.g. "A1"
+ * @param {number|string} spoolId - Spoolman spool id
+ * @param {object|null} slot - the AMS slot the assignment was made from
+ * @returns {object} the stored entry
+ */
+export function setMapping(printerId, amsId, spoolId, slot = null, { automatic = false } = {}) {
+    const all = load();
+    (all[printerId] ||= {})[amsId] = {
+        spoolId: Number(spoolId),
+        fingerprint: slot ? slotFingerprint(slot) : null,
+        updatedAt: new Date().toISOString(),
+        ...(automatic ? { automatic: true } : {}),
+    };
+    persist();
+    return all[printerId][amsId];
+}
+
+/**
+ * Removes every assignment of a printer, used when the printer itself is
+ * deleted. Returns false when there was nothing to remove.
+ *
+ * @param {string} printerId - printer serial
+ * @returns {boolean} whether anything was removed
+ */
+export function clearPrinterMappings(printerId) {
+    const all = load();
+    if (!all[printerId]) return false;
+
+    delete all[printerId];
+    persist();
+    return true;
+}
+
+/**
+ * Removes a slot assignment and persists the change. Returns false when there
+ * was nothing to remove.
+ */
+export function clearMapping(printerId, amsId) {
+    const all = load();
+    if (!all[printerId]?.[amsId]) return false;
+
+    delete all[printerId][amsId];
+    if (Object.keys(all[printerId]).length === 0) delete all[printerId];
+    persist();
+    return true;
+}

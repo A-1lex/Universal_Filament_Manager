@@ -1,0 +1,778 @@
+﻿project,file,line,kind,snippet,review
+haspelsync-downloaded,api.html,51,literal-control,"<input type=""search"" id=""api-filter"" placeholder=""Path or description"" data-i18n-placeholder=""api.filterPlaceholder"" autocomplete=""off"">",needs-semantic-review
+haspelsync-downloaded,api.html,58,literal-control,"<input type=""text"" id=""api-key"" class=""set-mono"" placeholder=""ams_..."" autocomplete=""off"" spellcheck=""false"">",needs-semantic-review
+haspelsync-downloaded,api.html,61,literal-control,"<button class=""btn"" type=""button"" id=""api-expand"" data-i18n=""api.expandAll"">",needs-semantic-review
+haspelsync-downloaded,api.html,62,literal-control,"<button class=""btn"" type=""button"" id=""api-collapse"" data-i18n=""api.collapseAll"">",needs-semantic-review
+haspelsync-downloaded,api.js,43,click-binding,"document.getElementById(""api-expand"").addEventListener(""click"", () => setAllOpen(true));",needs-semantic-review
+haspelsync-downloaded,api.js,44,click-binding,"document.getElementById(""api-collapse"").addEventListener(""click"", () => setAllOpen(false));",needs-semantic-review
+haspelsync-downloaded,api.js,228,literal-control,"<button class=""btn btn-primary"" type=""submit"">",needs-semantic-review
+haspelsync-downloaded,api.js,230,literal-control,"<button class=""btn btn-primary"" type=""submit"">",needs-semantic-review
+haspelsync-downloaded,api.js,230,literal-control,"<button class=""btn api-stop"" type=""button"" hidden>",needs-semantic-review
+haspelsync-downloaded,api.js,232,literal-control,"<button class=""btn ${method === ""DELETE"" ? ""btn-danger"" : ""btn-primary""}"" type=""submit"">",needs-semantic-review
+haspelsync-downloaded,api.js,250,literal-control,"<select name=""${escapeHtml(name)}""${required}>",needs-semantic-review
+haspelsync-downloaded,api.js,257,literal-control,"<select name=""${escapeHtml(name)}""${required}>",needs-semantic-review
+haspelsync-downloaded,api.js,260,literal-control,"<input type=""text"" name=""${escapeHtml(name)}"" value=""${escapeHtml(value)}""${required} placeholder=""${escapeHtml(schema.example ?? schema.default ?? """")}"">",needs-semantic-review
+haspelsync-downloaded,api.js,444,literal-control,"<button class=""btn btn-small api-copy"" type=""button"">",needs-semantic-review
+haspelsync-downloaded,api.js,452,click-binding,"box.querySelector("".api-copy"").addEventListener(""click"", async event => {",needs-semantic-review
+haspelsync-downloaded,api.js,513,click-binding,stop.onclick = end;,needs-semantic-review
+haspelsync-downloaded,export.js,41,literal-control,"<button class=""btn"" type=""button"" id=""export-mode-cancel"">",needs-semantic-review
+haspelsync-downloaded,export.js,42,literal-control,"<button class=""btn"" type=""button"" id=""export-mode-full"">",needs-semantic-review
+haspelsync-downloaded,export.js,43,literal-control,"<button class=""btn btn-primary"" type=""button"" id=""export-mode-anon"">",needs-semantic-review
+haspelsync-downloaded,export.js,80,literal-control,"<input type=""checkbox"" value=""${option.id}""${option.checked === false ? """" : "" checked""}>",needs-semantic-review
+haspelsync-downloaded,export.js,104,click-binding,anon.onclick = null;,needs-semantic-review
+haspelsync-downloaded,export.js,105,click-binding,full.onclick = null;,needs-semantic-review
+haspelsync-downloaded,export.js,106,click-binding,cancel.onclick = null;,needs-semantic-review
+haspelsync-downloaded,export.js,111,click-binding,"anon.onclick = () => finish(""anonymized"");",needs-semantic-review
+haspelsync-downloaded,export.js,112,click-binding,"full.onclick = () => finish(""full"");",needs-semantic-review
+haspelsync-downloaded,export.js,113,click-binding,cancel.onclick = () => finish(null);,needs-semantic-review
+haspelsync-downloaded,frontend.js,121,click-binding,"document.getElementById(""spool-list"").addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-downloaded,frontend.js,237,click-binding,"document.getElementById(""notice-dialog-close"").onclick = async () => {",needs-semantic-review
+haspelsync-downloaded,frontend.js,243,click-binding,"document.getElementById(""notice-dialog-open"").onclick = async () => {",needs-semantic-review
+haspelsync-downloaded,frontend.js,523,literal-control,"<button type=""button"" class=""ams-toggle"" aria-expanded=""true"" title=""${escapeHtml(expand)}"" aria-label=""${escapeHtml(expand)}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,824,click-binding,"button.addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-downloaded,frontend.js,927,literal-control,"<button type=""button"" class=""sp-tab sp-tab-active"" data-mode=""assign"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,928,literal-control,"<button type=""button"" class=""sp-tab"" data-mode=""create"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,940,click-binding,"for (const tab of tabs) tab.addEventListener(""click"", () => selectMode(tab.dataset.mode));",needs-semantic-review
+haspelsync-downloaded,frontend.js,990,literal-control,"<input type=""radio"" name=""assign-spool"" value=""${entry.sp.id}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1017,literal-control,"<input id=""sp-search"" type=""search"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.assign.searchPlaceholder""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1087,click-binding,actionButton.onclick = () => {,needs-semantic-review
+haspelsync-downloaded,frontend.js,1222,literal-control,"<select id=""sp-filament"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1234,literal-control,"<input id=""sp-cat-vendor"" list=""sp-cat-vendors"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.create.allManufacturers""))}"" value=""${escapeHtml(vendorSpelling)}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1240,literal-control,"<input id=""sp-cat-material"" list=""sp-cat-materials"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.create.allMaterials""))}"" value=""${escapeHtml(defaults.material)}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1246,literal-control,"<input id=""sp-cat-filament"" list=""sp-cat-filaments"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.create.pickToFill""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1256,literal-control,"<input id=""sp-vendor"" list=""sp-vendors"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.create.vendorPlaceholder""))}"" value=""${escapeHtml(vendorSpelling)}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1262,literal-control,"<input id=""sp-material"" list=""sp-materials"" autocomplete=""off"" value=""${escapeHtml(defaults.material)}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1268,literal-control,"<input id=""sp-name"" placeholder=""${escapeHtml(t(""dashboard.create.namePlaceholder""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1275,literal-control,"<button type=""button"" class=""btn btn-small"" id=""sp-colour-add"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1276,literal-control,"<select id=""sp-direction"" title=""${escapeHtml(t(""dashboard.create.directionTitle""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1287,literal-control,"<input type=""number"" id=""sp-density"" step=""0.01"" min=""0.01"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1291,literal-control,"<input type=""number"" id=""sp-diameter"" step=""0.01"" min=""0.01"" value=""1.75"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1295,literal-control,"<input type=""number"" id=""sp-extruder-temp"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1299,literal-control,"<input type=""number"" id=""sp-bed-temp"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1305,literal-control,"<input type=""number"" id=""sp-weight"" min=""0"" value=""1000"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1309,literal-control,"<input type=""number"" id=""sp-spool-weight"" min=""0"" value=""250"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1316,literal-control,"<input type=""number"" id=""sp-initial-weight"" min=""0"" value=""1000"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1320,literal-control,"<input type=""number"" id=""sp-remaining-weight"" min=""0"" placeholder=""${escapeHtml(t(""dashboard.create.remainingPlaceholder""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1324,literal-control,"<input id=""sp-location"" list=""sp-locations"" autocomplete=""off"" value=""${escapeHtml(currentPrinterName ? `${currentPrinterName} - ${amsSpool.amsId}` : """")}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1329,literal-control,"<input id=""sp-comment"" placeholder=""${escapeHtml(t(""dashboard.create.optional""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1560,literal-control,"<input type=""color"" class=""sp-colour-pick"" value=""#${hex}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1561,literal-control,"<input class=""sp-colour-hex"" value=""${hex}"" maxlength=""6"" autocomplete=""off"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1562,literal-control,"<button type=""button"" class=""sp-colour-remove"" title=""${escapeHtml(t(""dashboard.create.removeColour""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1592,click-binding,"$(""sp-colours"").addEventListener(""click"", (event) => {",needs-semantic-review
+haspelsync-downloaded,frontend.js,1600,click-binding,"$(""sp-colour-add"").addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-downloaded,frontend.js,1609,click-binding,"actionButton.onclick = () => submitNewSpool(pane, actionButton, button, amsSpool, lookups, catalogueVendor);",needs-semantic-review
+haspelsync-downloaded,frontend.js,1921,literal-control,"<button type=""button"" class=""sd-edit"" data-field=""${field}"" title=""${escapeHtml(what)}"" aria-label=""${escapeHtml(what)}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1962,click-binding,close.onclick = () => dialog.close();,needs-semantic-review
+haspelsync-downloaded,frontend.js,1986,literal-control,"<button type=""button"" class=""sp-tab sp-tab-active"" data-tab=""spool"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1987,literal-control,"<button type=""button"" class=""sp-tab"" data-tab=""filament"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,1999,click-binding,"for (const other of tabs) other.addEventListener(""click"", () => selectTab(other.dataset.tab));",needs-semantic-review
+haspelsync-downloaded,frontend.js,2100,click-binding,"pane.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-downloaded,frontend.js,2160,literal-control,"<select class=""sd-input"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,2163,literal-control,"<input class=""sd-input"" type=""${spec.type}"" ${spec.type === ""number"" ? 'min=""0"" step=""1""' : 'autocomplete=""off""'} value=""${escapeHtml(spec.value(spool))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,2170,literal-control,"<button type=""button"" class=""sd-confirm"" title=""${escapeHtml(t(""dashboard.detail.save""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,2171,literal-control,"<button type=""button"" class=""sd-cancel"" title=""${escapeHtml(t(""dashboard.detail.cancel""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,2202,click-binding,"value.querySelector("".sd-confirm"").addEventListener(""click"", submit);",needs-semantic-review
+haspelsync-downloaded,frontend.js,2203,click-binding,"value.querySelector("".sd-cancel"").addEventListener(""click"", stop);",needs-semantic-review
+haspelsync-downloaded,frontend.js,2338,literal-control,"<button type=""button"" class=""spool-name-link"" data-amsid=""${escapeHtml(amsSpool.amsId)}"" title=""${escapeHtml(t(""dashboard.spool.showDetails""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,2550,literal-control,"<button type=""button"" class=""gc-card-help"" data-lookup-help=""${kind}"" title=""${escapeHtml(t(""dashboard.print.helpButton""))}"" aria-label=""${escapeHtml(t(""dashboard.print.helpButton""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,2582,click-binding,"button.onclick = () => showLookupHelpDialog(button.dataset.lookupHelp, printData.sliceFetch?.reason || null);",needs-semantic-review
+haspelsync-downloaded,frontend.js,2587,click-binding,summaryButton.onclick = () => showPrintSummaryDialog(printData.lastPrintSummary);,needs-semantic-review
+haspelsync-downloaded,frontend.js,2594,click-binding,clearButton.onclick = async () => {,needs-semantic-review
+haspelsync-downloaded,frontend.js,2676,literal-control,"<button class=""btn btn-small"" data-print-clear title=""${escapeHtml(t(""dashboard.print.clearNowTitle""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,2679,literal-control,"<button class=""btn btn-small"" data-print-clear title=""${escapeHtml(t(""dashboard.print.clearTitle""))}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,2706,literal-control,"<button class=""gc-card-link ${label.className}"" data-print-summary title=""${escapeHtml(label.title)}"">",needs-semantic-review
+haspelsync-downloaded,frontend.js,2710,literal-control,"<button class=""gc-card-link"" data-print-summary>",needs-semantic-review
+haspelsync-downloaded,frontend.js,2873,click-binding,close.onclick = () => dialog.close();,needs-semantic-review
+haspelsync-downloaded,frontend.js,2970,click-binding,"document.getElementById(""print-summary-close"").onclick = () => dialog.close();",needs-semantic-review
+haspelsync-downloaded,frontend.js,3283,click-binding,actionButton.onclick = () => {,needs-semantic-review
+haspelsync-downloaded,frontend.js,3290,click-binding,actionButton.onclick = () => {,needs-semantic-review
+haspelsync-downloaded,frontend.js,3296,click-binding,closeDialog.onclick = () => dialog.close();,needs-semantic-review
+haspelsync-downloaded,index.html,43,literal-control,"<input type=""checkbox"" id=""monitoring-toggle"">",needs-semantic-review
+haspelsync-downloaded,index.html,91,literal-control,"<dialog id=""notice-dialog"">",needs-semantic-review
+haspelsync-downloaded,index.html,95,literal-control,"<button class=""btn"" id=""notice-dialog-close"" data-i18n=""dashboard.notice.gotIt"">",needs-semantic-review
+haspelsync-downloaded,index.html,96,literal-control,"<button class=""btn btn-primary"" id=""notice-dialog-open"" data-i18n=""dashboard.notice.openSettings"">",needs-semantic-review
+haspelsync-downloaded,index.html,103,literal-control,"<dialog id=""spool-detail-dialog"">",needs-semantic-review
+haspelsync-downloaded,index.html,107,literal-control,"<button class=""btn"" id=""spool-detail-close"" data-i18n=""dashboard.dialog.close"">",needs-semantic-review
+haspelsync-downloaded,index.html,114,literal-control,"<dialog id=""print-summary-dialog"">",needs-semantic-review
+haspelsync-downloaded,index.html,118,literal-control,"<button class=""btn"" id=""print-summary-close"" data-i18n=""dashboard.dialog.close"">",needs-semantic-review
+haspelsync-downloaded,index.html,125,literal-control,"<dialog id=""lookup-help-dialog"">",needs-semantic-review
+haspelsync-downloaded,index.html,129,literal-control,"<button class=""btn"" id=""lookup-help-close"" data-i18n=""dashboard.dialog.close"">",needs-semantic-review
+haspelsync-downloaded,index.html,133,literal-control,"<dialog id=""info-dialog"">",needs-semantic-review
+haspelsync-downloaded,index.html,137,literal-control,"<button class=""btn"" id=""close-dialog"" data-i18n=""dashboard.dialog.close"">",needs-semantic-review
+haspelsync-downloaded,index.html,138,literal-control,"<button class=""btn btn-primary"" id=""action-button"">",needs-semantic-review
+haspelsync-downloaded,login.html,46,literal-control,"<button id=""dark-mode-toggle"" type=""button"" title=""Light and dark mode"" data-i18n-title=""menu.theme"" aria-label=""Toggle dark mode"" data-i18n-aria-label=""menu.themeToggle"">",needs-semantic-review
+haspelsync-downloaded,login.html,50,literal-control,"<button class=""menu-tool menu-caret"" type=""button"" id=""language-button"" aria-haspopup=""true"" aria-expanded=""false"" aria-controls=""language-panel"" title=""Language"" data-i18n-title=""login.language"" aria-label=""Language"" data-i18n-aria-label=""login.language"">",needs-semantic-review
+haspelsync-downloaded,login.html,71,literal-control,"<input type=""password"" id=""login-password"" name=""password"" autocomplete=""current-password"" autofocus>",needs-semantic-review
+haspelsync-downloaded,login.html,73,literal-control,"<button type=""submit"" id=""login-submit"" data-i18n=""login.submit"">",needs-semantic-review
+haspelsync-downloaded,login.js,34,click-binding,"button.addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-downloaded,login.js,70,click-binding,"entry.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-downloaded,login.js,82,click-binding,"button.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-downloaded,login.js,86,click-binding,"document.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-downloaded,logs.html,42,literal-control,"<button type=""button"" data-stream=""log"" aria-pressed=""true"" data-i18n=""logs.stream.log"">",needs-semantic-review
+haspelsync-downloaded,logs.html,43,literal-control,"<button type=""button"" data-stream=""mqtt"" aria-pressed=""false"" data-i18n=""logs.stream.mqtt"">",needs-semantic-review
+haspelsync-downloaded,logs.html,47,literal-control,"<button id=""download-logs"" class=""log-button"" data-i18n=""logs.download.button"">",needs-semantic-review
+haspelsync-downloaded,logs.js,67,click-binding,"button.addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-downloaded,logs.js,117,click-binding,"downloadBtn.addEventListener(""click"", async () => {",needs-semantic-review
+haspelsync-downloaded,menu.js,153,literal-control,"<button class=""menu-item menu-burger"" type=""button"" id=""menu-burger"" aria-haspopup=""true"" aria-expanded=""false"" aria-controls=""menu-pages"" ${page !== ""settings"" ? 'data-current=""true""' : """"}>",needs-semantic-review
+haspelsync-downloaded,menu.js,162,literal-control,"<button class=""menu-item menu-tab menu-caret"" type=""button"" id=""menu-logs"" aria-haspopup=""true"" aria-expanded=""false"" aria-controls=""menu-logs-panel"" ${current(""logs"")}>",needs-semantic-review
+haspelsync-downloaded,menu.js,170,literal-control,"<button id=""dark-mode-toggle"" type=""button"" title=""${t(""menu.theme"")}"" aria-label=""${t(""menu.themeToggle"")}"">",needs-semantic-review
+haspelsync-downloaded,menu.js,230,literal-control,"<button class=""menu-tool menu-caret"" type=""button"" id=""menu-tools-button"" aria-haspopup=""true"" aria-expanded=""false"" aria-controls=""menu-tools-panel"" title=""${t(""menu.menu"")}"" aria-label=""${t(""menu.menu"")}""${current}>",needs-semantic-review
+haspelsync-downloaded,menu.js,246,click-binding,"button.addEventListener(""click"", loadToolsFoot, { once: true });",needs-semantic-review
+haspelsync-downloaded,menu.js,248,click-binding,"document.getElementById(""menu-logout"").onclick = event => {",needs-semantic-review
+haspelsync-downloaded,menu.js,313,click-binding,"nav.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-downloaded,menu.js,317,click-binding,"document.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-downloaded,menu.js,351,click-binding,"control.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-downloaded,menu.js,460,click-binding,"entry.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-downloaded,menu.js,689,click-binding,"toggleButton.addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-downloaded,settings.html,56,literal-control,"<button class=""btn btn-primary"" type=""button"" id=""add-printer"" data-i18n=""settings.printers.add"">",needs-semantic-review
+haspelsync-downloaded,settings.html,94,literal-control,"<select id=""ui-language"">",needs-semantic-review
+haspelsync-downloaded,settings.html,101,literal-control,"<select id=""ui-theme"">",needs-semantic-review
+haspelsync-downloaded,settings.html,127,literal-control,"<button class=""btn"" type=""button"" id=""download-diagnostics"" data-i18n=""settings.service.diagnostics"">",needs-semantic-review
+haspelsync-downloaded,settings.html,128,literal-control,"<button class=""btn"" type=""button"" id=""reconnect-printers"" data-i18n=""settings.service.reconnect"">",needs-semantic-review
+haspelsync-downloaded,settings.html,129,literal-control,"<button class=""btn"" type=""button"" id=""toggle-monitoring"" data-i18n=""settings.service.pauseMonitoring"">",needs-semantic-review
+haspelsync-downloaded,settings.html,130,literal-control,"<button class=""btn btn-danger-solid set-action-end"" type=""button"" id=""restart-service"" data-i18n=""settings.service.restart"">",needs-semantic-review
+haspelsync-downloaded,settings.html,138,literal-control,"<button class=""btn btn-primary"" type=""submit"" id=""save-settings"" disabled data-i18n=""settings.save"">",needs-semantic-review
+haspelsync-downloaded,settings.html,139,literal-control,"<button class=""btn"" type=""button"" id=""reload-settings"" disabled data-i18n=""settings.discard"">",needs-semantic-review
+haspelsync-downloaded,settings.html,149,literal-control,"<dialog id=""printer-dialog"">",needs-semantic-review
+haspelsync-downloaded,settings.html,155,literal-control,"<button class=""btn"" id=""printer-dialog-test"" type=""button"" data-i18n=""settings.testConnection"">",needs-semantic-review
+haspelsync-downloaded,settings.html,156,literal-control,"<button class=""btn"" id=""printer-dialog-cancel"" type=""button"" data-i18n=""settings.cancel"">",needs-semantic-review
+haspelsync-downloaded,settings.html,157,literal-control,"<button class=""btn btn-primary"" id=""printer-dialog-save"" type=""button"" data-i18n=""settings.saveButton"">",needs-semantic-review
+haspelsync-downloaded,settings.html,161,literal-control,"<dialog id=""apikey-dialog"">",needs-semantic-review
+haspelsync-downloaded,settings.html,166,literal-control,"<button class=""btn"" id=""apikey-dialog-cancel"" type=""button"" data-i18n=""settings.cancel"">",needs-semantic-review
+haspelsync-downloaded,settings.html,167,literal-control,"<button class=""btn btn-primary"" id=""apikey-dialog-save"" type=""button"" data-i18n=""settings.apikeys.create"">",needs-semantic-review
+haspelsync-downloaded,settings.html,173,literal-control,"<dialog id=""logdetail-dialog"">",needs-semantic-review
+haspelsync-downloaded,settings.html,178,literal-control,"<button class=""btn"" id=""logdetail-dialog-cancel"" type=""button"" data-i18n=""settings.cancel"">",needs-semantic-review
+haspelsync-downloaded,settings.html,179,literal-control,"<button class=""btn btn-primary"" id=""logdetail-dialog-save"" type=""button"" data-i18n=""settings.saveButton"">",needs-semantic-review
+haspelsync-downloaded,settings.html,183,literal-control,"<dialog id=""confirm-dialog"">",needs-semantic-review
+haspelsync-downloaded,settings.html,187,literal-control,"<button class=""btn"" id=""confirm-dialog-cancel"" type=""button"" data-i18n=""settings.cancel"">",needs-semantic-review
+haspelsync-downloaded,settings.html,188,literal-control,"<button class=""btn btn-danger"" id=""confirm-dialog-ok"" type=""button"" data-i18n=""settings.delete"">",needs-semantic-review
+haspelsync-downloaded,settings.js,118,click-binding,"document.getElementById(""reload-settings"").addEventListener(""click"", () => loadSettings(true));",needs-semantic-review
+haspelsync-downloaded,settings.js,119,click-binding,"document.getElementById(""add-printer"").addEventListener(""click"", () => openPrinterDialog(null));",needs-semantic-review
+haspelsync-downloaded,settings.js,120,click-binding,"document.getElementById(""restart-service"").addEventListener(""click"", confirmRestart);",needs-semantic-review
+haspelsync-downloaded,settings.js,121,click-binding,"document.getElementById(""download-diagnostics"").addEventListener(""click"", downloadDiagnostics);",needs-semantic-review
+haspelsync-downloaded,settings.js,122,click-binding,"document.getElementById(""reconnect-printers"").addEventListener(""click"", reconnectPrinters);",needs-semantic-review
+haspelsync-downloaded,settings.js,123,click-binding,"document.getElementById(""toggle-monitoring"").addEventListener(""click"", toggleAllMonitoring);",needs-semantic-review
+haspelsync-downloaded,settings.js,124,click-binding,"document.getElementById(""printer-dialog-cancel"").addEventListener(""click"", () => closeDialog(""printer-dialog""));",needs-semantic-review
+haspelsync-downloaded,settings.js,125,click-binding,"document.getElementById(""apikey-dialog-cancel"").addEventListener(""click"", () => closeDialog(""apikey-dialog""));",needs-semantic-review
+haspelsync-downloaded,settings.js,126,click-binding,"document.getElementById(""logdetail-dialog-cancel"").addEventListener(""click"", () => closeDialog(""logdetail-dialog""));",needs-semantic-review
+haspelsync-downloaded,settings.js,127,click-binding,"document.getElementById(""printer-dialog-test"").addEventListener(""click"", testPrinterConnection);",needs-semantic-review
+haspelsync-downloaded,settings.js,296,click-binding,"button.addEventListener(""click"", () => openSection(section.key, { pushHash: true }));",needs-semantic-review
+haspelsync-downloaded,settings.js,394,click-binding,"action.addEventListener(""click"", confirmRestart);",needs-semantic-review
+haspelsync-downloaded,settings.js,728,click-binding,"button.addEventListener(""click"", () => resetField(button.dataset.reset));",needs-semantic-review
+haspelsync-downloaded,settings.js,732,click-binding,"button.addEventListener(""click"", () => clearPassword(button.dataset.clear));",needs-semantic-review
+haspelsync-downloaded,settings.js,735,click-binding,"document.getElementById(""test-spoolman"")?.addEventListener(""click"", testSpoolmanConnection);",needs-semantic-review
+haspelsync-downloaded,settings.js,736,click-binding,"document.getElementById(""open-logdetail"")?.addEventListener(""click"", () => openLogDetailDialog(null));",needs-semantic-review
+haspelsync-downloaded,settings.js,739,click-binding,"document.getElementById(""add-apikey"")?.addEventListener(""click"", () => openApiKeyDialog());",needs-semantic-review
+haspelsync-downloaded,settings.js,748,literal-control,"<button class=""btn btn-small"" type=""button"" id=""test-spoolman"">",needs-semantic-review
+haspelsync-downloaded,settings.js,787,literal-control,"<button class=""btn btn-small"" type=""button"" id=""open-logdetail"">",needs-semantic-review
+haspelsync-downloaded,settings.js,852,literal-control,"<input type=""checkbox"" id=""ld-inherit"" ${inherits ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-downloaded,settings.js,876,literal-control,"<input type=""checkbox"" value=""log"" checked>",needs-semantic-review
+haspelsync-downloaded,settings.js,880,literal-control,"<input type=""checkbox"" value=""trace"" checked>",needs-semantic-review
+haspelsync-downloaded,settings.js,883,literal-control,"<button class=""btn btn-small"" type=""button"" id=""ld-export-download"">",needs-semantic-review
+haspelsync-downloaded,settings.js,894,literal-control,"<input type=""range"" id=""ld-level"" class=""set-slider"" min=""0"" max=""${levelField.options.length - 1}"" step=""1"" value=""${Math.max(0, levelField.options.indexOf(level))}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,907,literal-control,"<input type=""checkbox"" value=""${escapeHtml(option)}"" ${categories.includes(option) ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-downloaded,settings.js,917,literal-control,"<input type=""checkbox"" id=""ld-trace"" ${trace ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-downloaded,settings.js,941,click-binding,exportButton.onclick = () => {,needs-semantic-review
+haspelsync-downloaded,settings.js,956,click-binding,button.onclick = () => resetField(button.dataset.reset);,needs-semantic-review
+haspelsync-downloaded,settings.js,959,click-binding,"document.getElementById(""logdetail-dialog-save"").onclick = () => saveLogDetail(printer);",needs-semantic-review
+haspelsync-downloaded,settings.js,1099,literal-control,"<button type=""button"" class=""set-reset"" data-reset=""${field.key}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1106,literal-control,"<input type=""checkbox"" id=""${id}"" ${values[field.key] ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-downloaded,settings.js,1123,literal-control,"<input type=""checkbox"" id=""${id}"" ${value ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-downloaded,settings.js,1130,literal-control,"<select id=""${id}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1132,literal-control,"<input type=""number"" id=""${id}"" value=""${escapeHtml(value)}"" ${field.min !== null ? `min=""${field.min}""` : """"} ${field.max !== null ? `max=""${field.max}""` : """"}>",needs-semantic-review
+haspelsync-downloaded,settings.js,1139,literal-control,"<input type=""password"" id=""${id}"" autocomplete=""new-password"" placeholder=""${escapeHtml(t(hasValue[field.key] ? ""settings.placeholder.unchanged"" : ""settings.placeholder.notSet""))}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1142,literal-control,"<input type=""text"" id=""${id}"" value=""${escapeHtml(value ?? """")}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1150,literal-control,"<button type=""button"" class=""set-reset"" data-reset=""${field.key}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1154,literal-control,"<button type=""button"" class=""set-reset"" data-clear=""${field.key}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1246,click-binding,"toggle.addEventListener(""click"", follow);",needs-semantic-review
+haspelsync-downloaded,settings.js,1374,literal-control,"<button class=""btn btn-small"" data-edit=""${escapeHtml(printer.id)}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1375,literal-control,"<button class=""btn btn-small"" data-logdetail=""${escapeHtml(printer.id)}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1377,literal-control,"<button class=""btn btn-small btn-danger"" data-delete=""${escapeHtml(printer.id)}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1388,click-binding,button.onclick = () => openPrinterDialog(printers.find(p => p.id === button.dataset.edit));,needs-semantic-review
+haspelsync-downloaded,settings.js,1391,click-binding,button.onclick = () => openLogDetailDialog(printers.find(p => p.id === button.dataset.logdetail));,needs-semantic-review
+haspelsync-downloaded,settings.js,1394,click-binding,button.onclick = () => confirmDeletePrinter(printers.find(p => p.id === button.dataset.delete));,needs-semantic-review
+haspelsync-downloaded,settings.js,1413,literal-control,"<input type=""text"" id=""printer-name"" value=""${escapeHtml(printer?.name ?? """")}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1418,literal-control,"<input type=""text"" id=""printer-id"" value=""${escapeHtml(printer?.id ?? """")}"" ${editing ? ""disabled"" : """"}>",needs-semantic-review
+haspelsync-downloaded,settings.js,1423,literal-control,"<input type=""text"" id=""printer-ip"" value=""${escapeHtml(printer?.ip ?? """")}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1428,literal-control,"<input type=""password"" id=""printer-code"" value="""" autocomplete=""new-password"" placeholder=""${editing ? escapeHtml(t(""settings.placeholder.unchanged"")) : """"}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1433,click-binding,"document.getElementById(""printer-dialog-save"").onclick = () => savePrinter(printer);",needs-semantic-review
+haspelsync-downloaded,settings.js,1488,click-binding,ok.onclick = null;,needs-semantic-review
+haspelsync-downloaded,settings.js,1489,click-binding,cancel.onclick = null;,needs-semantic-review
+haspelsync-downloaded,settings.js,1493,click-binding,ok.onclick = () => finish(true);,needs-semantic-review
+haspelsync-downloaded,settings.js,1494,click-binding,cancel.onclick = () => finish(false);,needs-semantic-review
+haspelsync-downloaded,settings.js,1569,literal-control,"<button class=""btn btn-small"" type=""button"" id=""add-apikey"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1605,literal-control,"<button class=""btn btn-small btn-danger"" data-revoke=""${escapeHtml(key.id)}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1616,click-binding,button.onclick = () => confirmRevokeApiKey(apiKeys.find(key => key.id === button.dataset.revoke));,needs-semantic-review
+haspelsync-downloaded,settings.js,1656,literal-control,"<input type=""text"" id=""apikey-name"" maxlength=""64"" placeholder=""Home Assistant"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1663,click-binding,save.onclick = createApiKey;,needs-semantic-review
+haspelsync-downloaded,settings.js,1707,literal-control,"<input type=""text"" id=""apikey-value"" class=""set-mono"" readonly value=""${escapeHtml(key)}"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1708,literal-control,"<button class=""btn btn-small"" type=""button"" id=""apikey-copy"">",needs-semantic-review
+haspelsync-downloaded,settings.js,1714,click-binding,save.onclick = null;,needs-semantic-review
+haspelsync-downloaded,settings.js,1721,click-binding,"document.getElementById(""apikey-copy"").onclick = async () => {",needs-semantic-review
+haspelsync-own,accounting.html,21,literal-control,"<select id=""acc-language"" aria-label=""Language"">",needs-semantic-review
+haspelsync-own,accounting.html,25,literal-control,"<select id=""acc-printer"">",needs-semantic-review
+haspelsync-own,accounting.html,26,literal-control,"<input id=""acc-from"" type=""date"">",needs-semantic-review
+haspelsync-own,accounting.html,27,literal-control,"<input id=""acc-until"" type=""date"">",needs-semantic-review
+haspelsync-own,accounting.html,28,literal-control,"<button id=""acc-refresh"" class=""acc-button secondary"" type=""button"" data-i18n=""accounting.refresh"">",needs-semantic-review
+haspelsync-own,accounting.html,37,literal-control,"<button role=""tab"" aria-selected=""true"" aria-controls=""acc-history"" id=""tab-history"" data-panel=""acc-history"" data-i18n=""accounting.history"">",needs-semantic-review
+haspelsync-own,accounting.html,38,literal-control,"<button role=""tab"" aria-selected=""false"" aria-controls=""acc-spools"" id=""tab-spools"" data-panel=""acc-spools"" data-i18n=""accounting.spools"">",needs-semantic-review
+haspelsync-own,accounting.html,39,literal-control,"<button role=""tab"" aria-selected=""false"" aria-controls=""acc-reports"" id=""tab-reports"" data-panel=""acc-reports"" data-i18n=""accounting.reports"">",needs-semantic-review
+haspelsync-own,accounting.html,42,literal-control,"<input id=""acc-only-review"" type=""checkbox"">",needs-semantic-review
+haspelsync-own,accounting.html,49,literal-control,"<select id=""acc-spool"">",needs-semantic-review
+haspelsync-own,accounting.html,54,literal-control,"<input id=""acc-gross"" inputmode=""decimal"" autocomplete=""off"" placeholder=""0,000"" required>",needs-semantic-review
+haspelsync-own,accounting.html,55,literal-control,"<input id=""acc-tare"" inputmode=""decimal"" autocomplete=""off"" placeholder=""0,000"" required>",needs-semantic-review
+haspelsync-own,accounting.html,58,literal-control,"<button class=""acc-button"" type=""submit"" data-i18n=""accounting.applyWeight"">",needs-semantic-review
+haspelsync-own,accounting.html,62,literal-control,"<input id=""acc-price"" inputmode=""decimal"" autocomplete=""off"" placeholder=""0,00"" required>",needs-semantic-review
+haspelsync-own,accounting.html,62,literal-control,"<select id=""acc-currency"">",needs-semantic-review
+haspelsync-own,accounting.html,63,literal-control,"<input id=""acc-basis"" inputmode=""decimal"" autocomplete=""off"" placeholder=""1000"" required>",needs-semantic-review
+haspelsync-own,accounting.html,65,literal-control,"<button class=""acc-button"" type=""submit"" data-i18n=""accounting.savePrice"">",needs-semantic-review
+haspelsync-own,accounting.html,72,literal-control,"<button id=""acc-export"" class=""acc-button"" type=""button"" data-i18n=""accounting.export"" disabled>",needs-semantic-review
+haspelsync-own,accounting.html,78,literal-control,"<dialog id=""acc-review-dialog"" class=""acc-dialog"" aria-labelledby=""acc-review-title"">",needs-semantic-review
+haspelsync-own,accounting.html,83,literal-control,"<select id=""acc-review-resolution"" required>",needs-semantic-review
+haspelsync-own,accounting.html,85,literal-control,"<button id=""acc-review-cancel"" class=""acc-button secondary"" type=""button"" data-i18n=""accounting.cancel"">",needs-semantic-review
+haspelsync-own,accounting.html,85,literal-control,"<button class=""acc-button"" type=""submit"" data-i18n=""accounting.confirmReview"">",needs-semantic-review
+haspelsync-own,accounting.js,63,literal-control,"<button type=""button"" class=""acc-review-button"" data-review-id=""${esc(record.id)}"" data-review-kind=""${kind}"">",needs-semantic-review
+haspelsync-own,accounting.js,229,click-binding,"document.querySelectorAll("".acc-tabs button"").forEach(button => button.addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-own,accounting.js,241,click-binding,"control(""acc-export"").addEventListener(""click"", exportReport);",needs-semantic-review
+haspelsync-own,accounting.js,243,click-binding,"control(""acc-review-cancel"").addEventListener(""click"", () => control(""acc-review-dialog"").close());",needs-semantic-review
+haspelsync-own,accounting.js,244,click-binding,"for (const id of [""acc-history-body"", ""acc-weighings-body""]) control(id).addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,accounting.js,248,click-binding,"control(""acc-refresh"").addEventListener(""click"", async () => {",needs-semantic-review
+haspelsync-own,api.html,51,literal-control,"<input type=""search"" id=""api-filter"" placeholder=""Path or description"" data-i18n-placeholder=""api.filterPlaceholder"" autocomplete=""off"">",needs-semantic-review
+haspelsync-own,api.html,58,literal-control,"<input type=""text"" id=""api-key"" class=""set-mono"" placeholder=""ams_..."" autocomplete=""off"" spellcheck=""false"">",needs-semantic-review
+haspelsync-own,api.html,61,literal-control,"<button class=""btn"" type=""button"" id=""api-expand"" data-i18n=""api.expandAll"">",needs-semantic-review
+haspelsync-own,api.html,62,literal-control,"<button class=""btn"" type=""button"" id=""api-collapse"" data-i18n=""api.collapseAll"">",needs-semantic-review
+haspelsync-own,api.js,43,click-binding,"document.getElementById(""api-expand"").addEventListener(""click"", () => setAllOpen(true));",needs-semantic-review
+haspelsync-own,api.js,44,click-binding,"document.getElementById(""api-collapse"").addEventListener(""click"", () => setAllOpen(false));",needs-semantic-review
+haspelsync-own,api.js,228,literal-control,"<button class=""btn btn-primary"" type=""submit"">",needs-semantic-review
+haspelsync-own,api.js,230,literal-control,"<button class=""btn btn-primary"" type=""submit"">",needs-semantic-review
+haspelsync-own,api.js,230,literal-control,"<button class=""btn api-stop"" type=""button"" hidden>",needs-semantic-review
+haspelsync-own,api.js,232,literal-control,"<button class=""btn ${method === ""DELETE"" ? ""btn-danger"" : ""btn-primary""}"" type=""submit"">",needs-semantic-review
+haspelsync-own,api.js,250,literal-control,"<select name=""${escapeHtml(name)}""${required}>",needs-semantic-review
+haspelsync-own,api.js,257,literal-control,"<select name=""${escapeHtml(name)}""${required}>",needs-semantic-review
+haspelsync-own,api.js,260,literal-control,"<input type=""text"" name=""${escapeHtml(name)}"" value=""${escapeHtml(value)}""${required} placeholder=""${escapeHtml(schema.example ?? schema.default ?? """")}"">",needs-semantic-review
+haspelsync-own,api.js,444,literal-control,"<button class=""btn btn-small api-copy"" type=""button"">",needs-semantic-review
+haspelsync-own,api.js,452,click-binding,"box.querySelector("".api-copy"").addEventListener(""click"", async event => {",needs-semantic-review
+haspelsync-own,api.js,513,click-binding,stop.onclick = end;,needs-semantic-review
+haspelsync-own,export.js,41,literal-control,"<button class=""btn"" type=""button"" id=""export-mode-cancel"">",needs-semantic-review
+haspelsync-own,export.js,42,literal-control,"<button class=""btn"" type=""button"" id=""export-mode-full"">",needs-semantic-review
+haspelsync-own,export.js,43,literal-control,"<button class=""btn btn-primary"" type=""button"" id=""export-mode-anon"">",needs-semantic-review
+haspelsync-own,export.js,80,literal-control,"<input type=""checkbox"" value=""${option.id}""${option.checked === false ? """" : "" checked""}>",needs-semantic-review
+haspelsync-own,export.js,104,click-binding,anon.onclick = null;,needs-semantic-review
+haspelsync-own,export.js,105,click-binding,full.onclick = null;,needs-semantic-review
+haspelsync-own,export.js,106,click-binding,cancel.onclick = null;,needs-semantic-review
+haspelsync-own,export.js,111,click-binding,"anon.onclick = () => finish(""anonymized"");",needs-semantic-review
+haspelsync-own,export.js,112,click-binding,"full.onclick = () => finish(""full"");",needs-semantic-review
+haspelsync-own,export.js,113,click-binding,cancel.onclick = () => finish(null);,needs-semantic-review
+haspelsync-own,frontend.js,121,click-binding,"document.getElementById(""spool-list"").addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,frontend.js,237,click-binding,"document.getElementById(""notice-dialog-close"").onclick = async () => {",needs-semantic-review
+haspelsync-own,frontend.js,243,click-binding,"document.getElementById(""notice-dialog-open"").onclick = async () => {",needs-semantic-review
+haspelsync-own,frontend.js,523,literal-control,"<button type=""button"" class=""ams-toggle"" aria-expanded=""true"" title=""${escapeHtml(expand)}"" aria-label=""${escapeHtml(expand)}"">",needs-semantic-review
+haspelsync-own,frontend.js,824,click-binding,"button.addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-own,frontend.js,927,literal-control,"<button type=""button"" class=""sp-tab sp-tab-active"" data-mode=""assign"">",needs-semantic-review
+haspelsync-own,frontend.js,928,literal-control,"<button type=""button"" class=""sp-tab"" data-mode=""create"">",needs-semantic-review
+haspelsync-own,frontend.js,940,click-binding,"for (const tab of tabs) tab.addEventListener(""click"", () => selectMode(tab.dataset.mode));",needs-semantic-review
+haspelsync-own,frontend.js,990,literal-control,"<input type=""radio"" name=""assign-spool"" value=""${entry.sp.id}"">",needs-semantic-review
+haspelsync-own,frontend.js,1017,literal-control,"<input id=""sp-search"" type=""search"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.assign.searchPlaceholder""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,1087,click-binding,actionButton.onclick = () => {,needs-semantic-review
+haspelsync-own,frontend.js,1222,literal-control,"<select id=""sp-filament"">",needs-semantic-review
+haspelsync-own,frontend.js,1234,literal-control,"<input id=""sp-cat-vendor"" list=""sp-cat-vendors"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.create.allManufacturers""))}"" value=""${escapeHtml(vendorSpelling)}"">",needs-semantic-review
+haspelsync-own,frontend.js,1240,literal-control,"<input id=""sp-cat-material"" list=""sp-cat-materials"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.create.allMaterials""))}"" value=""${escapeHtml(defaults.material)}"">",needs-semantic-review
+haspelsync-own,frontend.js,1246,literal-control,"<input id=""sp-cat-filament"" list=""sp-cat-filaments"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.create.pickToFill""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,1256,literal-control,"<input id=""sp-vendor"" list=""sp-vendors"" autocomplete=""off"" placeholder=""${escapeHtml(t(""dashboard.create.vendorPlaceholder""))}"" value=""${escapeHtml(vendorSpelling)}"">",needs-semantic-review
+haspelsync-own,frontend.js,1262,literal-control,"<input id=""sp-material"" list=""sp-materials"" autocomplete=""off"" value=""${escapeHtml(defaults.material)}"">",needs-semantic-review
+haspelsync-own,frontend.js,1268,literal-control,"<input id=""sp-name"" placeholder=""${escapeHtml(t(""dashboard.create.namePlaceholder""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,1275,literal-control,"<button type=""button"" class=""btn btn-small"" id=""sp-colour-add"">",needs-semantic-review
+haspelsync-own,frontend.js,1276,literal-control,"<select id=""sp-direction"" title=""${escapeHtml(t(""dashboard.create.directionTitle""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,1287,literal-control,"<input type=""number"" id=""sp-density"" step=""0.01"" min=""0.01"">",needs-semantic-review
+haspelsync-own,frontend.js,1291,literal-control,"<input type=""number"" id=""sp-diameter"" step=""0.01"" min=""0.01"" value=""1.75"">",needs-semantic-review
+haspelsync-own,frontend.js,1295,literal-control,"<input type=""number"" id=""sp-extruder-temp"">",needs-semantic-review
+haspelsync-own,frontend.js,1299,literal-control,"<input type=""number"" id=""sp-bed-temp"">",needs-semantic-review
+haspelsync-own,frontend.js,1305,literal-control,"<input type=""number"" id=""sp-weight"" min=""0"" value=""1000"">",needs-semantic-review
+haspelsync-own,frontend.js,1309,literal-control,"<input type=""number"" id=""sp-spool-weight"" min=""0"" value=""250"">",needs-semantic-review
+haspelsync-own,frontend.js,1316,literal-control,"<input type=""number"" id=""sp-initial-weight"" min=""0"" value=""1000"">",needs-semantic-review
+haspelsync-own,frontend.js,1320,literal-control,"<input type=""number"" id=""sp-remaining-weight"" min=""0"" placeholder=""${escapeHtml(t(""dashboard.create.remainingPlaceholder""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,1324,literal-control,"<input id=""sp-location"" list=""sp-locations"" autocomplete=""off"" value=""${escapeHtml(currentPrinterName ? `${currentPrinterName} - ${amsSpool.amsId}` : """")}"">",needs-semantic-review
+haspelsync-own,frontend.js,1329,literal-control,"<input id=""sp-comment"" placeholder=""${escapeHtml(t(""dashboard.create.optional""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,1560,literal-control,"<input type=""color"" class=""sp-colour-pick"" value=""#${hex}"">",needs-semantic-review
+haspelsync-own,frontend.js,1561,literal-control,"<input class=""sp-colour-hex"" value=""${hex}"" maxlength=""6"" autocomplete=""off"">",needs-semantic-review
+haspelsync-own,frontend.js,1562,literal-control,"<button type=""button"" class=""sp-colour-remove"" title=""${escapeHtml(t(""dashboard.create.removeColour""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,1592,click-binding,"$(""sp-colours"").addEventListener(""click"", (event) => {",needs-semantic-review
+haspelsync-own,frontend.js,1600,click-binding,"$(""sp-colour-add"").addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-own,frontend.js,1609,click-binding,"actionButton.onclick = () => submitNewSpool(pane, actionButton, button, amsSpool, lookups, catalogueVendor);",needs-semantic-review
+haspelsync-own,frontend.js,1921,literal-control,"<button type=""button"" class=""sd-edit"" data-field=""${field}"" title=""${escapeHtml(what)}"" aria-label=""${escapeHtml(what)}"">",needs-semantic-review
+haspelsync-own,frontend.js,1962,click-binding,close.onclick = () => dialog.close();,needs-semantic-review
+haspelsync-own,frontend.js,1986,literal-control,"<button type=""button"" class=""sp-tab sp-tab-active"" data-tab=""spool"">",needs-semantic-review
+haspelsync-own,frontend.js,1987,literal-control,"<button type=""button"" class=""sp-tab"" data-tab=""filament"">",needs-semantic-review
+haspelsync-own,frontend.js,1999,click-binding,"for (const other of tabs) other.addEventListener(""click"", () => selectTab(other.dataset.tab));",needs-semantic-review
+haspelsync-own,frontend.js,2100,click-binding,"pane.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,frontend.js,2160,literal-control,"<select class=""sd-input"">",needs-semantic-review
+haspelsync-own,frontend.js,2163,literal-control,"<input class=""sd-input"" type=""${spec.type}"" ${spec.type === ""number"" ? 'min=""0"" step=""1""' : 'autocomplete=""off""'} value=""${escapeHtml(spec.value(spool))}"">",needs-semantic-review
+haspelsync-own,frontend.js,2170,literal-control,"<button type=""button"" class=""sd-confirm"" title=""${escapeHtml(t(""dashboard.detail.save""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,2171,literal-control,"<button type=""button"" class=""sd-cancel"" title=""${escapeHtml(t(""dashboard.detail.cancel""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,2202,click-binding,"value.querySelector("".sd-confirm"").addEventListener(""click"", submit);",needs-semantic-review
+haspelsync-own,frontend.js,2203,click-binding,"value.querySelector("".sd-cancel"").addEventListener(""click"", stop);",needs-semantic-review
+haspelsync-own,frontend.js,2338,literal-control,"<button type=""button"" class=""spool-name-link"" data-amsid=""${escapeHtml(amsSpool.amsId)}"" title=""${escapeHtml(t(""dashboard.spool.showDetails""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,2550,literal-control,"<button type=""button"" class=""gc-card-help"" data-lookup-help=""${kind}"" title=""${escapeHtml(t(""dashboard.print.helpButton""))}"" aria-label=""${escapeHtml(t(""dashboard.print.helpButton""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,2582,click-binding,"button.onclick = () => showLookupHelpDialog(button.dataset.lookupHelp, printData.sliceFetch?.reason || null);",needs-semantic-review
+haspelsync-own,frontend.js,2587,click-binding,summaryButton.onclick = () => showPrintSummaryDialog(printData.lastPrintSummary);,needs-semantic-review
+haspelsync-own,frontend.js,2594,click-binding,clearButton.onclick = async () => {,needs-semantic-review
+haspelsync-own,frontend.js,2676,literal-control,"<button class=""btn btn-small"" data-print-clear title=""${escapeHtml(t(""dashboard.print.clearNowTitle""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,2679,literal-control,"<button class=""btn btn-small"" data-print-clear title=""${escapeHtml(t(""dashboard.print.clearTitle""))}"">",needs-semantic-review
+haspelsync-own,frontend.js,2706,literal-control,"<button class=""gc-card-link ${label.className}"" data-print-summary title=""${escapeHtml(label.title)}"">",needs-semantic-review
+haspelsync-own,frontend.js,2710,literal-control,"<button class=""gc-card-link"" data-print-summary>",needs-semantic-review
+haspelsync-own,frontend.js,2873,click-binding,close.onclick = () => dialog.close();,needs-semantic-review
+haspelsync-own,frontend.js,2970,click-binding,"document.getElementById(""print-summary-close"").onclick = () => dialog.close();",needs-semantic-review
+haspelsync-own,frontend.js,3283,click-binding,actionButton.onclick = () => {,needs-semantic-review
+haspelsync-own,frontend.js,3290,click-binding,actionButton.onclick = () => {,needs-semantic-review
+haspelsync-own,frontend.js,3296,click-binding,closeDialog.onclick = () => dialog.close();,needs-semantic-review
+haspelsync-own,index.html,43,literal-control,"<input type=""checkbox"" id=""monitoring-toggle"">",needs-semantic-review
+haspelsync-own,index.html,91,literal-control,"<dialog id=""notice-dialog"">",needs-semantic-review
+haspelsync-own,index.html,95,literal-control,"<button class=""btn"" id=""notice-dialog-close"" data-i18n=""dashboard.notice.gotIt"">",needs-semantic-review
+haspelsync-own,index.html,96,literal-control,"<button class=""btn btn-primary"" id=""notice-dialog-open"" data-i18n=""dashboard.notice.openSettings"">",needs-semantic-review
+haspelsync-own,index.html,103,literal-control,"<dialog id=""spool-detail-dialog"">",needs-semantic-review
+haspelsync-own,index.html,107,literal-control,"<button class=""btn"" id=""spool-detail-close"" data-i18n=""dashboard.dialog.close"">",needs-semantic-review
+haspelsync-own,index.html,114,literal-control,"<dialog id=""print-summary-dialog"">",needs-semantic-review
+haspelsync-own,index.html,118,literal-control,"<button class=""btn"" id=""print-summary-close"" data-i18n=""dashboard.dialog.close"">",needs-semantic-review
+haspelsync-own,index.html,125,literal-control,"<dialog id=""lookup-help-dialog"">",needs-semantic-review
+haspelsync-own,index.html,129,literal-control,"<button class=""btn"" id=""lookup-help-close"" data-i18n=""dashboard.dialog.close"">",needs-semantic-review
+haspelsync-own,index.html,133,literal-control,"<dialog id=""info-dialog"">",needs-semantic-review
+haspelsync-own,index.html,137,literal-control,"<button class=""btn"" id=""close-dialog"" data-i18n=""dashboard.dialog.close"">",needs-semantic-review
+haspelsync-own,index.html,138,literal-control,"<button class=""btn btn-primary"" id=""action-button"">",needs-semantic-review
+haspelsync-own,login.html,46,literal-control,"<button id=""dark-mode-toggle"" type=""button"" title=""Light and dark mode"" data-i18n-title=""menu.theme"" aria-label=""Toggle dark mode"" data-i18n-aria-label=""menu.themeToggle"">",needs-semantic-review
+haspelsync-own,login.html,50,literal-control,"<button class=""menu-tool menu-caret"" type=""button"" id=""language-button"" aria-haspopup=""true"" aria-expanded=""false"" aria-controls=""language-panel"" title=""Language"" data-i18n-title=""login.language"" aria-label=""Language"" data-i18n-aria-label=""login.language"">",needs-semantic-review
+haspelsync-own,login.html,71,literal-control,"<input type=""password"" id=""login-password"" name=""password"" autocomplete=""current-password"" autofocus>",needs-semantic-review
+haspelsync-own,login.html,73,literal-control,"<button type=""submit"" id=""login-submit"" data-i18n=""login.submit"">",needs-semantic-review
+haspelsync-own,login.js,34,click-binding,"button.addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-own,login.js,70,click-binding,"entry.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,login.js,82,click-binding,"button.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,login.js,86,click-binding,"document.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,logs.html,42,literal-control,"<button type=""button"" data-stream=""log"" aria-pressed=""true"" data-i18n=""logs.stream.log"">",needs-semantic-review
+haspelsync-own,logs.html,43,literal-control,"<button type=""button"" data-stream=""mqtt"" aria-pressed=""false"" data-i18n=""logs.stream.mqtt"">",needs-semantic-review
+haspelsync-own,logs.html,47,literal-control,"<button id=""download-logs"" class=""log-button"" data-i18n=""logs.download.button"">",needs-semantic-review
+haspelsync-own,logs.js,67,click-binding,"button.addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-own,logs.js,117,click-binding,"downloadBtn.addEventListener(""click"", async () => {",needs-semantic-review
+haspelsync-own,menu.js,154,literal-control,"<button class=""menu-item menu-burger"" type=""button"" id=""menu-burger"" aria-haspopup=""true"" aria-expanded=""false"" aria-controls=""menu-pages"" ${page !== ""settings"" ? 'data-current=""true""' : """"}>",needs-semantic-review
+haspelsync-own,menu.js,164,literal-control,"<button class=""menu-item menu-tab menu-caret"" type=""button"" id=""menu-logs"" aria-haspopup=""true"" aria-expanded=""false"" aria-controls=""menu-logs-panel"" ${current(""logs"")}>",needs-semantic-review
+haspelsync-own,menu.js,172,literal-control,"<button id=""dark-mode-toggle"" type=""button"" title=""${t(""menu.theme"")}"" aria-label=""${t(""menu.themeToggle"")}"">",needs-semantic-review
+haspelsync-own,menu.js,232,literal-control,"<button class=""menu-tool menu-caret"" type=""button"" id=""menu-tools-button"" aria-haspopup=""true"" aria-expanded=""false"" aria-controls=""menu-tools-panel"" title=""${t(""menu.menu"")}"" aria-label=""${t(""menu.menu"")}""${current}>",needs-semantic-review
+haspelsync-own,menu.js,248,click-binding,"button.addEventListener(""click"", loadToolsFoot, { once: true });",needs-semantic-review
+haspelsync-own,menu.js,250,click-binding,"document.getElementById(""menu-logout"").onclick = event => {",needs-semantic-review
+haspelsync-own,menu.js,315,click-binding,"nav.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,menu.js,319,click-binding,"document.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,menu.js,353,click-binding,"control.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,menu.js,462,click-binding,"entry.addEventListener(""click"", event => {",needs-semantic-review
+haspelsync-own,menu.js,691,click-binding,"toggleButton.addEventListener(""click"", () => {",needs-semantic-review
+haspelsync-own,settings.html,56,literal-control,"<button class=""btn btn-primary"" type=""button"" id=""add-printer"" data-i18n=""settings.printers.add"">",needs-semantic-review
+haspelsync-own,settings.html,94,literal-control,"<select id=""ui-language"">",needs-semantic-review
+haspelsync-own,settings.html,101,literal-control,"<select id=""ui-theme"">",needs-semantic-review
+haspelsync-own,settings.html,127,literal-control,"<button class=""btn"" type=""button"" id=""download-diagnostics"" data-i18n=""settings.service.diagnostics"">",needs-semantic-review
+haspelsync-own,settings.html,128,literal-control,"<button class=""btn"" type=""button"" id=""reconnect-printers"" data-i18n=""settings.service.reconnect"">",needs-semantic-review
+haspelsync-own,settings.html,129,literal-control,"<button class=""btn"" type=""button"" id=""toggle-monitoring"" data-i18n=""settings.service.pauseMonitoring"">",needs-semantic-review
+haspelsync-own,settings.html,130,literal-control,"<button class=""btn btn-danger-solid set-action-end"" type=""button"" id=""restart-service"" data-i18n=""settings.service.restart"">",needs-semantic-review
+haspelsync-own,settings.html,138,literal-control,"<button class=""btn btn-primary"" type=""submit"" id=""save-settings"" disabled data-i18n=""settings.save"">",needs-semantic-review
+haspelsync-own,settings.html,139,literal-control,"<button class=""btn"" type=""button"" id=""reload-settings"" disabled data-i18n=""settings.discard"">",needs-semantic-review
+haspelsync-own,settings.html,149,literal-control,"<dialog id=""printer-dialog"">",needs-semantic-review
+haspelsync-own,settings.html,155,literal-control,"<button class=""btn"" id=""printer-dialog-test"" type=""button"" data-i18n=""settings.testConnection"">",needs-semantic-review
+haspelsync-own,settings.html,156,literal-control,"<button class=""btn"" id=""printer-dialog-cancel"" type=""button"" data-i18n=""settings.cancel"">",needs-semantic-review
+haspelsync-own,settings.html,157,literal-control,"<button class=""btn btn-primary"" id=""printer-dialog-save"" type=""button"" data-i18n=""settings.saveButton"">",needs-semantic-review
+haspelsync-own,settings.html,161,literal-control,"<dialog id=""apikey-dialog"">",needs-semantic-review
+haspelsync-own,settings.html,166,literal-control,"<button class=""btn"" id=""apikey-dialog-cancel"" type=""button"" data-i18n=""settings.cancel"">",needs-semantic-review
+haspelsync-own,settings.html,167,literal-control,"<button class=""btn btn-primary"" id=""apikey-dialog-save"" type=""button"" data-i18n=""settings.apikeys.create"">",needs-semantic-review
+haspelsync-own,settings.html,173,literal-control,"<dialog id=""logdetail-dialog"">",needs-semantic-review
+haspelsync-own,settings.html,178,literal-control,"<button class=""btn"" id=""logdetail-dialog-cancel"" type=""button"" data-i18n=""settings.cancel"">",needs-semantic-review
+haspelsync-own,settings.html,179,literal-control,"<button class=""btn btn-primary"" id=""logdetail-dialog-save"" type=""button"" data-i18n=""settings.saveButton"">",needs-semantic-review
+haspelsync-own,settings.html,183,literal-control,"<dialog id=""confirm-dialog"">",needs-semantic-review
+haspelsync-own,settings.html,187,literal-control,"<button class=""btn"" id=""confirm-dialog-cancel"" type=""button"" data-i18n=""settings.cancel"">",needs-semantic-review
+haspelsync-own,settings.html,188,literal-control,"<button class=""btn btn-danger"" id=""confirm-dialog-ok"" type=""button"" data-i18n=""settings.delete"">",needs-semantic-review
+haspelsync-own,settings.js,118,click-binding,"document.getElementById(""reload-settings"").addEventListener(""click"", () => loadSettings(true));",needs-semantic-review
+haspelsync-own,settings.js,119,click-binding,"document.getElementById(""add-printer"").addEventListener(""click"", () => openPrinterDialog(null));",needs-semantic-review
+haspelsync-own,settings.js,120,click-binding,"document.getElementById(""restart-service"").addEventListener(""click"", confirmRestart);",needs-semantic-review
+haspelsync-own,settings.js,121,click-binding,"document.getElementById(""download-diagnostics"").addEventListener(""click"", downloadDiagnostics);",needs-semantic-review
+haspelsync-own,settings.js,122,click-binding,"document.getElementById(""reconnect-printers"").addEventListener(""click"", reconnectPrinters);",needs-semantic-review
+haspelsync-own,settings.js,123,click-binding,"document.getElementById(""toggle-monitoring"").addEventListener(""click"", toggleAllMonitoring);",needs-semantic-review
+haspelsync-own,settings.js,124,click-binding,"document.getElementById(""printer-dialog-cancel"").addEventListener(""click"", () => closeDialog(""printer-dialog""));",needs-semantic-review
+haspelsync-own,settings.js,125,click-binding,"document.getElementById(""apikey-dialog-cancel"").addEventListener(""click"", () => closeDialog(""apikey-dialog""));",needs-semantic-review
+haspelsync-own,settings.js,126,click-binding,"document.getElementById(""logdetail-dialog-cancel"").addEventListener(""click"", () => closeDialog(""logdetail-dialog""));",needs-semantic-review
+haspelsync-own,settings.js,127,click-binding,"document.getElementById(""printer-dialog-test"").addEventListener(""click"", testPrinterConnection);",needs-semantic-review
+haspelsync-own,settings.js,296,click-binding,"button.addEventListener(""click"", () => openSection(section.key, { pushHash: true }));",needs-semantic-review
+haspelsync-own,settings.js,394,click-binding,"action.addEventListener(""click"", confirmRestart);",needs-semantic-review
+haspelsync-own,settings.js,728,click-binding,"button.addEventListener(""click"", () => resetField(button.dataset.reset));",needs-semantic-review
+haspelsync-own,settings.js,732,click-binding,"button.addEventListener(""click"", () => clearPassword(button.dataset.clear));",needs-semantic-review
+haspelsync-own,settings.js,735,click-binding,"document.getElementById(""test-spoolman"")?.addEventListener(""click"", testSpoolmanConnection);",needs-semantic-review
+haspelsync-own,settings.js,736,click-binding,"document.getElementById(""open-logdetail"")?.addEventListener(""click"", () => openLogDetailDialog(null));",needs-semantic-review
+haspelsync-own,settings.js,739,click-binding,"document.getElementById(""add-apikey"")?.addEventListener(""click"", () => openApiKeyDialog());",needs-semantic-review
+haspelsync-own,settings.js,748,literal-control,"<button class=""btn btn-small"" type=""button"" id=""test-spoolman"">",needs-semantic-review
+haspelsync-own,settings.js,787,literal-control,"<button class=""btn btn-small"" type=""button"" id=""open-logdetail"">",needs-semantic-review
+haspelsync-own,settings.js,852,literal-control,"<input type=""checkbox"" id=""ld-inherit"" ${inherits ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-own,settings.js,876,literal-control,"<input type=""checkbox"" value=""log"" checked>",needs-semantic-review
+haspelsync-own,settings.js,880,literal-control,"<input type=""checkbox"" value=""trace"" checked>",needs-semantic-review
+haspelsync-own,settings.js,883,literal-control,"<button class=""btn btn-small"" type=""button"" id=""ld-export-download"">",needs-semantic-review
+haspelsync-own,settings.js,894,literal-control,"<input type=""range"" id=""ld-level"" class=""set-slider"" min=""0"" max=""${levelField.options.length - 1}"" step=""1"" value=""${Math.max(0, levelField.options.indexOf(level))}"">",needs-semantic-review
+haspelsync-own,settings.js,907,literal-control,"<input type=""checkbox"" value=""${escapeHtml(option)}"" ${categories.includes(option) ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-own,settings.js,917,literal-control,"<input type=""checkbox"" id=""ld-trace"" ${trace ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-own,settings.js,941,click-binding,exportButton.onclick = () => {,needs-semantic-review
+haspelsync-own,settings.js,956,click-binding,button.onclick = () => resetField(button.dataset.reset);,needs-semantic-review
+haspelsync-own,settings.js,959,click-binding,"document.getElementById(""logdetail-dialog-save"").onclick = () => saveLogDetail(printer);",needs-semantic-review
+haspelsync-own,settings.js,1099,literal-control,"<button type=""button"" class=""set-reset"" data-reset=""${field.key}"">",needs-semantic-review
+haspelsync-own,settings.js,1106,literal-control,"<input type=""checkbox"" id=""${id}"" ${values[field.key] ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-own,settings.js,1123,literal-control,"<input type=""checkbox"" id=""${id}"" ${value ? ""checked"" : """"}>",needs-semantic-review
+haspelsync-own,settings.js,1130,literal-control,"<select id=""${id}"">",needs-semantic-review
+haspelsync-own,settings.js,1132,literal-control,"<input type=""number"" id=""${id}"" value=""${escapeHtml(value)}"" ${field.min !== null ? `min=""${field.min}""` : """"} ${field.max !== null ? `max=""${field.max}""` : """"}>",needs-semantic-review
+haspelsync-own,settings.js,1139,literal-control,"<input type=""password"" id=""${id}"" autocomplete=""new-password"" placeholder=""${escapeHtml(t(hasValue[field.key] ? ""settings.placeholder.unchanged"" : ""settings.placeholder.notSet""))}"">",needs-semantic-review
+haspelsync-own,settings.js,1142,literal-control,"<input type=""text"" id=""${id}"" value=""${escapeHtml(value ?? """")}"">",needs-semantic-review
+haspelsync-own,settings.js,1150,literal-control,"<button type=""button"" class=""set-reset"" data-reset=""${field.key}"">",needs-semantic-review
+haspelsync-own,settings.js,1154,literal-control,"<button type=""button"" class=""set-reset"" data-clear=""${field.key}"">",needs-semantic-review
+haspelsync-own,settings.js,1246,click-binding,"toggle.addEventListener(""click"", follow);",needs-semantic-review
+haspelsync-own,settings.js,1374,literal-control,"<button class=""btn btn-small"" data-edit=""${escapeHtml(printer.id)}"">",needs-semantic-review
+haspelsync-own,settings.js,1375,literal-control,"<button class=""btn btn-small"" data-logdetail=""${escapeHtml(printer.id)}"">",needs-semantic-review
+haspelsync-own,settings.js,1377,literal-control,"<button class=""btn btn-small btn-danger"" data-delete=""${escapeHtml(printer.id)}"">",needs-semantic-review
+haspelsync-own,settings.js,1388,click-binding,button.onclick = () => openPrinterDialog(printers.find(p => p.id === button.dataset.edit));,needs-semantic-review
+haspelsync-own,settings.js,1391,click-binding,button.onclick = () => openLogDetailDialog(printers.find(p => p.id === button.dataset.logdetail));,needs-semantic-review
+haspelsync-own,settings.js,1394,click-binding,button.onclick = () => confirmDeletePrinter(printers.find(p => p.id === button.dataset.delete));,needs-semantic-review
+haspelsync-own,settings.js,1413,literal-control,"<input type=""text"" id=""printer-name"" value=""${escapeHtml(printer?.name ?? """")}"">",needs-semantic-review
+haspelsync-own,settings.js,1418,literal-control,"<input type=""text"" id=""printer-id"" value=""${escapeHtml(printer?.id ?? """")}"" ${editing ? ""disabled"" : """"}>",needs-semantic-review
+haspelsync-own,settings.js,1423,literal-control,"<input type=""text"" id=""printer-ip"" value=""${escapeHtml(printer?.ip ?? """")}"">",needs-semantic-review
+haspelsync-own,settings.js,1428,literal-control,"<input type=""password"" id=""printer-code"" value="""" autocomplete=""new-password"" placeholder=""${editing ? escapeHtml(t(""settings.placeholder.unchanged"")) : """"}"">",needs-semantic-review
+haspelsync-own,settings.js,1433,click-binding,"document.getElementById(""printer-dialog-save"").onclick = () => savePrinter(printer);",needs-semantic-review
+haspelsync-own,settings.js,1488,click-binding,ok.onclick = null;,needs-semantic-review
+haspelsync-own,settings.js,1489,click-binding,cancel.onclick = null;,needs-semantic-review
+haspelsync-own,settings.js,1493,click-binding,ok.onclick = () => finish(true);,needs-semantic-review
+haspelsync-own,settings.js,1494,click-binding,cancel.onclick = () => finish(false);,needs-semantic-review
+haspelsync-own,settings.js,1569,literal-control,"<button class=""btn btn-small"" type=""button"" id=""add-apikey"">",needs-semantic-review
+haspelsync-own,settings.js,1605,literal-control,"<button class=""btn btn-small btn-danger"" data-revoke=""${escapeHtml(key.id)}"">",needs-semantic-review
+haspelsync-own,settings.js,1616,click-binding,button.onclick = () => confirmRevokeApiKey(apiKeys.find(key => key.id === button.dataset.revoke));,needs-semantic-review
+haspelsync-own,settings.js,1656,literal-control,"<input type=""text"" id=""apikey-name"" maxlength=""64"" placeholder=""Home Assistant"">",needs-semantic-review
+haspelsync-own,settings.js,1663,click-binding,save.onclick = createApiKey;,needs-semantic-review
+haspelsync-own,settings.js,1707,literal-control,"<input type=""text"" id=""apikey-value"" class=""set-mono"" readonly value=""${escapeHtml(key)}"">",needs-semantic-review
+haspelsync-own,settings.js,1708,literal-control,"<button class=""btn btn-small"" type=""button"" id=""apikey-copy"">",needs-semantic-review
+haspelsync-own,settings.js,1714,click-binding,save.onclick = null;,needs-semantic-review
+haspelsync-own,settings.js,1721,click-binding,"document.getElementById(""apikey-copy"").onclick = async () => {",needs-semantic-review
+spoolman,App.tsx,177,literal-control,<Route element={ <SpoolmanLayout>,needs-semantic-review
+spoolman,App.tsx,184,literal-control,"<Route index element={<LoadablePage name=""home"" />",needs-semantic-review
+spoolman,App.tsx,185,literal-control,"<Route path=""/spool"">",needs-semantic-review
+spoolman,App.tsx,186,literal-control,"<Route index element={<LoadableResourcePage resource=""spools"" page=""list"" />",needs-semantic-review
+spoolman,App.tsx,187,literal-control,"<Route path=""create"" element={<LoadableResourcePage resource=""spools"" page=""create"" mode=""create"" />",needs-semantic-review
+spoolman,App.tsx,191,literal-control,"<Route path=""clone/:id"" element={<LoadableResourcePage resource=""spools"" page=""create"" mode=""clone"" />",needs-semantic-review
+spoolman,App.tsx,195,literal-control,"<Route path=""edit/:id"" element={<LoadableResourcePage resource=""spools"" page=""edit"" />",needs-semantic-review
+spoolman,App.tsx,196,literal-control,"<Route path=""show/:id"" element={<LoadableResourcePage resource=""spools"" page=""show"" />",needs-semantic-review
+spoolman,App.tsx,197,literal-control,"<Route path=""print"" element={<LoadablePage name=""printing"" />",needs-semantic-review
+spoolman,App.tsx,199,literal-control,"<Route path=""/filament"">",needs-semantic-review
+spoolman,App.tsx,200,literal-control,"<Route index element={<LoadableResourcePage resource=""filaments"" page=""list"" />",needs-semantic-review
+spoolman,App.tsx,201,literal-control,"<Route path=""create"" element={<LoadableResourcePage resource=""filaments"" page=""create"" mode=""create"" />",needs-semantic-review
+spoolman,App.tsx,205,literal-control,"<Route path=""clone/:id"" element={<LoadableResourcePage resource=""filaments"" page=""create"" mode=""clone"" />",needs-semantic-review
+spoolman,App.tsx,209,literal-control,"<Route path=""edit/:id"" element={<LoadableResourcePage resource=""filaments"" page=""edit"" />",needs-semantic-review
+spoolman,App.tsx,210,literal-control,"<Route path=""show/:id"" element={<LoadableResourcePage resource=""filaments"" page=""show"" />",needs-semantic-review
+spoolman,App.tsx,212,literal-control,"<Route path=""/vendor"">",needs-semantic-review
+spoolman,App.tsx,213,literal-control,"<Route index element={<LoadableResourcePage resource=""vendors"" page=""list"" />",needs-semantic-review
+spoolman,App.tsx,214,literal-control,"<Route path=""create"" element={<LoadableResourcePage resource=""vendors"" page=""create"" mode=""create"" />",needs-semantic-review
+spoolman,App.tsx,218,literal-control,"<Route path=""clone/:id"" element={<LoadableResourcePage resource=""vendors"" page=""create"" mode=""clone"" />",needs-semantic-review
+spoolman,App.tsx,222,literal-control,"<Route path=""edit/:id"" element={<LoadableResourcePage resource=""vendors"" page=""edit"" />",needs-semantic-review
+spoolman,App.tsx,223,literal-control,"<Route path=""show/:id"" element={<LoadableResourcePage resource=""vendors"" page=""show"" />",needs-semantic-review
+spoolman,App.tsx,225,literal-control,"<Route path=""/settings/*"" element={<LoadablePage name=""settings"" />",needs-semantic-review
+spoolman,App.tsx,226,literal-control,"<Route path=""/help"" element={<LoadablePage name=""help"" />",needs-semantic-review
+spoolman,App.tsx,227,literal-control,"<Route path=""/locations"" element={<LoadablePage name=""locations"" />",needs-semantic-review
+spoolman,App.tsx,228,literal-control,"<Route path=""*"" element={<ErrorComponent />",needs-semantic-review
+spoolman,components/column.tsx,35,literal-control,"<Input placeholder=""Search..."" value={selectedKeys[0] as string} onChange={(e) =>",needs-semantic-review
+spoolman,components/column.tsx,43,literal-control,"<Button type=""link"" size=""small"" disabled={!hasValue} onClick={() =>",needs-semantic-review
+spoolman,components/column.tsx,54,literal-control,"<Button type=""primary"" size=""small"" onClick={() =>",needs-semantic-review
+spoolman,components/column.tsx,90,literal-control,"<InputNumber placeholder=""Min..."" value={minVal} precision={precision ?? 0} onChange={(value) =>",needs-semantic-review
+spoolman,components/column.tsx,96,literal-control,"<InputNumber placeholder=""Max..."" value={maxVal} precision={precision ?? 0} onChange={(value) =>",needs-semantic-review
+spoolman,components/column.tsx,104,literal-control,"<Button type=""link"" size=""small"" disabled={!hasValue} onClick={() =>",needs-semantic-review
+spoolman,components/column.tsx,115,literal-control,"<Button type=""primary"" size=""small"" onClick={() =>",needs-semantic-review
+spoolman,components/column.tsx,145,literal-control,"<DatePicker showTime={{ use12Hours: false }} format=""YYYY-MM-DD HH:mm:ss"" placeholder=""From..."" value={fromVal} onChange={(date) =>",needs-semantic-review
+spoolman,components/column.tsx,152,literal-control,"<DatePicker showTime={{ use12Hours: false }} format=""YYYY-MM-DD HH:mm:ss"" placeholder=""To..."" value={toVal} onChange={(date) =>",needs-semantic-review
+spoolman,components/column.tsx,161,literal-control,"<Button type=""link"" size=""small"" disabled={!hasValue} onClick={() =>",needs-semantic-review
+spoolman,components/column.tsx,172,literal-control,"<Button type=""primary"" size=""small"" onClick={() =>",needs-semantic-review
+spoolman,components/column.tsx,439,literal-control,"<Button icon={action.icon} title={action.name} size=""small"" />",needs-semantic-review
+spoolman,components/column.tsx,444,literal-control,"<Button key={action.name} icon={action.icon} title={action.name} size=""small"" onClick={() =>",needs-semantic-review
+spoolman,components/dateTimePicker.tsx,16,literal-control,<DatePicker showTime={{ use12Hours: false }} format={dateTimeFormat} value={props.value ? dayjs(props.value) : undefined} onChange={(value) =>,needs-semantic-review
+spoolman,components/extraFields.tsx,111,literal-control,<InputNumber addonAfter={field.unit} precision={0} />,needs-semantic-review
+spoolman,components/extraFields.tsx,116,literal-control,<InputNumber addonAfter={field.unit} precision={3} />,needs-semantic-review
+spoolman,components/extraFields.tsx,125,literal-control,<Input />,needs-semantic-review
+spoolman,components/extraFields.tsx,132,literal-control,<Checkbox />,needs-semantic-review
+spoolman,components/extraFields.tsx,139,literal-control,"<Select mode={field.multi_choice ? ""multiple"" : undefined} options={field.choices?.map((choice) =>",needs-semantic-review
+spoolman,components/extraFields.tsx,156,literal-control,"<Form.Item label={field.name} name={[""extra"", field.key]} rules={rules} {...formItemProps}>",needs-semantic-review
+spoolman,components/filamentImportModal.tsx,35,literal-control,"<Modal title={t(""filament.form.import_external"")} open={props.isOpen} onOk={() =>",needs-semantic-review
+spoolman,components/filamentImportModal.tsx,62,literal-control,"<Form.Item name=""filament"" rules={[{ required: true }]}>",needs-semantic-review
+spoolman,components/filamentImportModal.tsx,63,literal-control,"<Select options={filamentOptions} showSearch filterOption={(input, option) =>",needs-semantic-review
+spoolman,components/header/index.tsx,58,literal-control,"<Button type=""text"">",needs-semantic-review
+spoolman,components/inputNumberRange.tsx,32,literal-control,<InputNumber value={min} precision={props.precision ?? 0} addonAfter={props.unit} style={{ maxWidth: 110 }} onChange={(value) =>,needs-semantic-review
+spoolman,components/inputNumberRange.tsx,44,literal-control,<InputNumber value={max} precision={props.precision ?? 0} addonAfter={props.unit} style={{ maxWidth: 110 }} onChange={(value) =>,needs-semantic-review
+spoolman,components/layout.tsx,33,literal-control,<Button icon={<SponsorHeart />,needs-semantic-review
+spoolman,components/multiColorPicker.tsx,71,literal-control,<Button icon={<PlusOutlined />,needs-semantic-review
+spoolman,components/notificationProvider.tsx,30,literal-control,<Button style={{ flexShrink: 0 }} onClick={cancelMutation} disabled={undoableTimeout === 0} icon={<UndoOutlined />,needs-semantic-review
+spoolman,components/qrCodeScanner.tsx,36,literal-control,<Modal open={visible} destroyOnHidden onCancel={() =>,needs-semantic-review
+spoolman,pages/filaments/create.tsx,107,literal-control,"<Create title={props.mode === ""create"" ? t(""filament.titles.create"") : t(""filament.titles.clone"")} isLoading={formLoading} headerButtons={() =>",needs-semantic-review
+spoolman,pages/filaments/create.tsx,112,literal-control,"<Button type=""primary"" onClick={() =>",needs-semantic-review
+spoolman,pages/filaments/create.tsx,119,literal-control,"<Button type=""primary"" onClick={() =>",needs-semantic-review
+spoolman,pages/filaments/create.tsx,122,literal-control,"<Button type=""primary"" onClick={() =>",needs-semantic-review
+spoolman,pages/filaments/create.tsx,137,literal-control,"<Form.Item label={t(""filament.fields.name"")} help={t(""filament.fields_help.name"")} name={[""name""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,147,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/filaments/create.tsx,149,literal-control,"<Form.Item label={t(""filament.fields.vendor"")} name={[""vendor_id""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,158,literal-control,"<Select {...vendorSelect} allowClear filterSort={(a, b) =>",needs-semantic-review
+spoolman,pages/filaments/create.tsx,171,literal-control,"<Form.Item label={t(""filament.fields.color_hex"")}>",needs-semantic-review
+spoolman,pages/filaments/create.tsx,184,literal-control,"<Form.Item name={""color_hex""} rules={[ { required: false, }, ]} getValueFromEvent={(e) =>",needs-semantic-review
+spoolman,pages/filaments/create.tsx,199,literal-control,"<Form.Item name={""multi_color_direction""} help={t(""filament.fields_help.multi_color_direction"")} rules={[ { required: true, }, ]} initialValue={""coaxial""} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,216,literal-control,"<Form.Item name={""multi_color_hexes""} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,227,literal-control,"<Form.Item label={t(""filament.fields.material"")} help={t(""filament.fields_help.material"")} name={[""material""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,237,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/filaments/create.tsx,239,literal-control,"<Form.Item label={t(""filament.fields.price"")} help={t(""filament.fields_help.price"")} name={[""price""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,251,literal-control,"<InputNumber addonAfter={getCurrencySymbol(undefined, currency)} precision={2} formatter={formatNumberOnUserInput} parser={numberParserAllowEmpty} />",needs-semantic-review
+spoolman,pages/filaments/create.tsx,258,literal-control,"<Form.Item label={t(""filament.fields.density"")} name={[""density""]} rules={[ { required: true, type: ""number"", min: 0, max: 100, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,270,literal-control,"<InputNumber addonAfter=""g/cm³"" precision={2} formatter={formatNumberOnUserInput} parser={numberParser} />",needs-semantic-review
+spoolman,pages/filaments/create.tsx,272,literal-control,"<Form.Item label={t(""filament.fields.diameter"")} name={[""diameter""]} rules={[ { required: true, type: ""number"", min: 0, max: 10, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,284,literal-control,"<InputNumber addonAfter=""mm"" precision={2} formatter={formatNumberOnUserInput} parser={numberParser} />",needs-semantic-review
+spoolman,pages/filaments/create.tsx,286,literal-control,"<Form.Item label={t(""filament.fields.weight"")} help={t(""filament.fields_help.weight"")} name={[""weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,298,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/filaments/create.tsx,300,literal-control,"<Form.Item label={t(""filament.fields.spool_weight"")} help={t(""filament.fields_help.spool_weight"")} name={[""spool_weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,312,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/filaments/create.tsx,314,literal-control,"<Form.Item label={t(""filament.fields.settings_extruder_temp"")} name={[""settings_extruder_temp""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,325,literal-control,"<InputNumber addonAfter=""°C"" precision={0} />",needs-semantic-review
+spoolman,pages/filaments/create.tsx,327,literal-control,"<Form.Item label={t(""filament.fields.settings_bed_temp"")} name={[""settings_bed_temp""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,338,literal-control,"<InputNumber addonAfter=""°C"" precision={0} />",needs-semantic-review
+spoolman,pages/filaments/create.tsx,340,literal-control,"<Form.Item label={t(""filament.fields.article_number"")} help={t(""filament.fields_help.article_number"")} name={[""article_number""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/create.tsx,350,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/filaments/create.tsx,352,literal-control,"<Form.Item label={t(""filament.fields.comment"")} name={[""comment""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,84,literal-control,<Edit saveButtonProps={saveButtonProps}>,needs-semantic-review
+spoolman,pages/filaments/edit.tsx,87,literal-control,"<Form.Item label={t(""filament.fields.id"")} name={[""id""]} rules={[ { required: true, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,96,literal-control,<Input readOnly disabled />,needs-semantic-review
+spoolman,pages/filaments/edit.tsx,98,literal-control,"<Form.Item label={t(""filament.fields.registered"")} name={[""registered""]} rules={[ { required: true, }, ]} getValueProps={(value) =>",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,110,literal-control,"<DatePicker disabled showTime format=""YYYY-MM-DD HH:mm:ss"" />",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,112,literal-control,"<Form.Item label={t(""filament.fields.name"")} help={t(""filament.fields_help.name"")} name={[""name""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,122,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/filaments/edit.tsx,124,literal-control,"<Form.Item label={t(""filament.fields.vendor"")} name={[""vendor_id""]} rules={[ { required: false, }, ]} // Applying this to Form.Item Select's causes a cleared select to send null normalize={(value) =>",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,140,literal-control,"<Select {...selectProps} allowClear filterSort={(a, b) =>",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,153,literal-control,"<Form.Item label={t(""filament.fields.color_hex"")}>",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,166,literal-control,"<Form.Item name={""color_hex""} rules={[ { required: false, }, ]} getValueFromEvent={(e) =>",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,181,literal-control,"<Form.Item name={""multi_color_direction""} help={t(""filament.fields_help.multi_color_direction"")} rules={[ { required: true, }, ]} initialValue={""coaxial""} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,198,literal-control,"<Form.Item name={""multi_color_hexes""} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,209,literal-control,"<Form.Item label={t(""filament.fields.material"")} help={t(""filament.fields_help.material"")} name={[""material""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,219,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/filaments/edit.tsx,221,literal-control,"<Form.Item label={t(""filament.fields.price"")} help={t(""filament.fields_help.price"")} name={[""price""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,233,literal-control,"<InputNumber addonAfter={getCurrencySymbol(undefined, currency)} precision={2} formatter={formatNumberOnUserInput} parser={numberParserAllowEmpty} />",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,240,literal-control,"<Form.Item label={t(""filament.fields.density"")} name={[""density""]} rules={[ { required: true, type: ""number"", min: 0, max: 100, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,252,literal-control,"<InputNumber addonAfter=""g/cm³"" precision={2} formatter={formatNumberOnUserInput} parser={numberParser} />",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,254,literal-control,"<Form.Item label={t(""filament.fields.diameter"")} name={[""diameter""]} rules={[ { required: true, type: ""number"", min: 0, max: 10, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,266,literal-control,"<InputNumber addonAfter=""mm"" precision={2} formatter={formatNumberOnUserInput} parser={numberParser} />",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,268,literal-control,"<Form.Item label={t(""filament.fields.weight"")} help={t(""filament.fields_help.weight"")} name={[""weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,280,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,282,literal-control,"<Form.Item label={t(""filament.fields.spool_weight"")} help={t(""filament.fields_help.spool_weight"")} name={[""spool_weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,294,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,296,literal-control,"<Form.Item label={t(""filament.fields.settings_extruder_temp"")} name={[""settings_extruder_temp""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,307,literal-control,"<InputNumber addonAfter=""°C"" precision={0} />",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,309,literal-control,"<Form.Item label={t(""filament.fields.settings_bed_temp"")} name={[""settings_bed_temp""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,320,literal-control,"<InputNumber addonAfter=""°C"" precision={0} />",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,322,literal-control,"<Form.Item label={t(""filament.fields.article_number"")} help={t(""filament.fields_help.article_number"")} name={[""article_number""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,332,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/filaments/edit.tsx,334,literal-control,"<Form.Item label={t(""filament.fields.external_id"")} name={[""external_id""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/edit.tsx,343,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/filaments/edit.tsx,345,literal-control,"<Form.Item label={t(""filament.fields.comment"")} name={[""comment""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/filaments/list.tsx,169,literal-control,<List headerButtons={({ defaultButtons }) =>,needs-semantic-review
+spoolman,pages/filaments/list.tsx,172,literal-control,"<Button type=""primary"" icon={<FilterOutlined />",needs-semantic-review
+spoolman,pages/filaments/list.tsx,211,literal-control,"<Button type=""primary"" icon={<EditOutlined />",needs-semantic-review
+spoolman,pages/filaments/show.tsx,60,literal-control,"<Show isLoading={isLoading} title={record ? formatTitle(record) : """"} headerButtons={({ defaultButtons }) =>",needs-semantic-review
+spoolman,pages/filaments/show.tsx,65,literal-control,"<Button type=""primary"" onClick={gotoSpools}>",needs-semantic-review
+spoolman,pages/filaments/show.tsx,75,literal-control,"<button onClick={gotoVendor} style={{ background: ""none"", border: ""none"", color: ""blue"", cursor: ""pointer"", paddingLeft: 0 }} >",needs-semantic-review
+spoolman,pages/help/index.tsx,44,literal-control,"<List itemLayout=""horizontal"" size=""large"" dataSource={[ { title: t(""filament.filament""), description: t(""help.resources.filament""), icon: <HighlightOutlined />",needs-semantic-review
+spoolman,pages/help/index.tsx,65,literal-control,<List.Item>,needs-semantic-review
+spoolman,pages/help/index.tsx,66,literal-control,<List.Item.Meta avatar={item.icon} title={item.title} description={item.description} />,needs-semantic-review
+spoolman,pages/locations/components/location.tsx,155,literal-control,"<Input autoFocus variant=""borderless"" value={newTitle} onBlur={() =>",needs-semantic-review
+spoolman,pages/locations/components/location.tsx,180,literal-control,<Button icon={<DeleteOutlined />,needs-semantic-review
+spoolman,pages/locations/components/locationContainer.tsx,184,literal-control,"<Button type=""dashed"" shape=""circle"" icon={<PlusOutlined />",needs-semantic-review
+spoolman,pages/locations/components/spoolCard.tsx,169,literal-control,<Button icon={<EditOutlined />,needs-semantic-review
+spoolman,pages/locations/components/spoolCard.tsx,172,literal-control,<Button icon={<EyeOutlined />,needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,280,literal-control,"<Form.Item label={t(""printing.generic.skipItems"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,294,literal-control,"<InputNumber min={0} style={{ margin: ""0 16px"" }} value={skipItems} onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,306,literal-control,"<Form.Item label={t(""printing.generic.itemCopies"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,320,literal-control,"<InputNumber min={1} style={{ margin: ""0 16px"" }} value={itemCopies} onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,332,literal-control,"<Form.Item label={t(""printing.generic.showBorder"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,351,literal-control,"<Form.Item label={t(""printing.generic.previewScale"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,365,literal-control,"<InputNumber min={0.1} max={3} step={0.01} style={{ margin: ""0 16px"" }} value={previewScale} onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,395,literal-control,"<Form.Item label={t(""printing.generic.paperSize"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,396,literal-control,<Select value={paperSize} onChange={(value) =>,needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,404,literal-control,<Select.Option key={key} value={key}>,needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,408,literal-control,"<Select.Option value=""custom"">",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,411,literal-control,"<Form.Item label={t(""printing.generic.dimensions"")} hidden={paperSize !== ""custom""}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,414,literal-control,"<InputNumber value={customPaperSize.width} min={0.1} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,429,literal-control,"<InputNumber value={customPaperSize.height} min={0.1} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,442,literal-control,"<Form.Item label={t(""printing.generic.columns"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,456,literal-control,"<InputNumber min={1} style={{ margin: ""0 16px"" }} value={paperColumns} onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,468,literal-control,"<Form.Item label={t(""printing.generic.rows"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,482,literal-control,"<InputNumber min={1} style={{ margin: ""0 16px"" }} value={paperRows} onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,496,literal-control,"<Form.Item label={t(""printing.generic.marginLeft"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,513,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={margin.left} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,527,literal-control,"<Form.Item label={t(""printing.generic.marginTop"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,544,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={margin.top} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,558,literal-control,"<Form.Item label={t(""printing.generic.marginRight"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,575,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={margin.right} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,589,literal-control,"<Form.Item label={t(""printing.generic.marginBottom"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,606,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={margin.bottom} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,622,literal-control,"<Form.Item label={t(""printing.generic.printerMarginLeft"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,639,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={printerMargin.left} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,653,literal-control,"<Form.Item label={t(""printing.generic.printerMarginTop"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,670,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={printerMargin.top} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,684,literal-control,"<Form.Item label={t(""printing.generic.printerMarginRight"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,701,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={printerMargin.right} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,715,literal-control,"<Form.Item label={t(""printing.generic.printerMarginBottom"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,732,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={printerMargin.bottom} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,747,literal-control,"<Form.Item label={t(""printing.generic.horizontalSpacing"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,764,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={spacing.horizontal} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,778,literal-control,"<Form.Item label={t(""printing.generic.verticalSpacing"")}>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,795,literal-control,"<InputNumber step={0.1} style={{ margin: ""0 16px"" }} value={spacing.vertical} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,818,literal-control,"<Button type=""primary"" icon={<FileImageOutlined />",needs-semantic-review
+spoolman,pages/printing/printingDialog.tsx,821,literal-control,"<Button type=""primary"" icon={<PrinterOutlined />",needs-semantic-review
+spoolman,pages/printing/qrCodePrintingDialog.tsx,81,literal-control,"<Form.Item label={t(""printing.qrcode.showQRCode"")}>",needs-semantic-review
+spoolman,pages/printing/qrCodePrintingDialog.tsx,102,literal-control,"<Form.Item label={t(""printing.qrcode.useHTTPUrl.label"")} tooltip={t(""printing.qrcode.useHTTPUrl.tooltip"")} style={{ marginBottom: 0 }} >",needs-semantic-review
+spoolman,pages/printing/qrCodePrintingDialog.tsx,112,literal-control,"<Form.Item label={t(""printing.qrcode.useHTTPUrl.preview"")}>",needs-semantic-review
+spoolman,pages/printing/qrCodePrintingDialog.tsx,117,literal-control,"<Form.Item label={t(""printing.qrcode.showContent"")}>",needs-semantic-review
+spoolman,pages/printing/qrCodePrintingDialog.tsx,118,literal-control,<Switch checked={showContent} onChange={(checked) =>,needs-semantic-review
+spoolman,pages/printing/qrCodePrintingDialog.tsx,126,literal-control,"<Form.Item label={t(""printing.qrcode.textSize"")}>",needs-semantic-review
+spoolman,pages/printing/qrCodePrintingDialog.tsx,143,literal-control,"<InputNumber disabled={!showContent} min={0.01} step={0.1} style={{ margin: ""0 16px"" }} value={textSize} addonAfter=""mm"" onChange={(value) =>",needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,246,literal-control,"<Form.Item label={t(""printing.generic.settings"")}>",needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,248,literal-control,<Select value={selectedPresetState} onChange={(value) =>,needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,261,literal-control,"<Button style={{ width: ""3em"" }} icon={<PlusOutlined />",needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,267,literal-control,"<Button style={{ width: ""3em"" }} icon={<CopyOutlined />",needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,274,literal-control,"<Popconfirm title={t(""printing.generic.deleteSettings"")} description={t(""printing.generic.deleteSettingsConfirm"")} onConfirm={deleteCurrentPreset} okText={t(""buttons.delete"")} cancelText={t(""buttons.cancel"")} >",needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,281,literal-control,"<Button style={{ width: ""3em"" }} danger icon={<DeleteOutlined />",needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,291,literal-control,"<Form.Item label={t(""printing.generic.settingsName"")}>",needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,292,literal-control,<Input value={curPreset.labelSettings.printSettings?.name} onChange={(e) =>,needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,319,literal-control,"<Form.Item label={t(""printing.qrcode.template"")}>",needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,329,literal-control,<Modal open={templateHelpOpen} footer={null} onCancel={() =>,needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,341,literal-control,"<Button size=""small"" onClick={() =>",needs-semantic-review
+spoolman,pages/printing/spoolQrCodePrintingDialog.tsx,349,literal-control,"<Button type=""primary"" size=""large"" icon={<SaveOutlined />",needs-semantic-review
+spoolman,pages/printing/spoolSelectModal.tsx,134,literal-control,<Checkbox checked={selectedItems.includes(item.id)} onChange={() =>,needs-semantic-review
+spoolman,pages/printing/spoolSelectModal.tsx,161,literal-control,<Checkbox checked={isAllFilteredSelected} indeterminate={isSomeButNotAllFilteredSelected} onChange={(e) =>,needs-semantic-review
+spoolman,pages/printing/spoolSelectModal.tsx,179,literal-control,<Checkbox checked={showArchived} onChange={(e) =>,needs-semantic-review
+spoolman,pages/printing/spoolSelectModal.tsx,197,literal-control,"<Button type=""primary"" icon={<RightOutlined />",needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,172,literal-control,<Input />,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,189,literal-control,"<Select options={[ { label: t(`settings.extra_fields.field_type.${FieldType.text}`), value: FieldType.text, }, { label: t(`settings.extra_fields.field_type.${FieldType.integer}`), value: FieldType.integer, }, { label: t(`settings.extra_fields.field_type.${FieldType.integer_range}`), value: FieldType.integer_range, }, { label: t(`settings.extra_fields.field_type.${FieldType.float}`), value: FieldType.float, }, { label: t(`settings.extra_fields.field_type.${FieldType.float_range}`), value: FieldType.float_range, }, { label: t(`settings.extra_fields.field_type.${FieldType.datetime}`), value: Fiel",needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,236,literal-control,<Input />,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,243,literal-control,"<InputNumber style={{ width: ""60px"" }} />",needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,256,literal-control,"<Input style={{ width: ""60px"" }} />",needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,266,literal-control,<Checkbox />,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,272,literal-control,<Input />,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,277,literal-control,<InputNumber />,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,282,literal-control,<InputNumber />,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,302,literal-control,"<Select mode={form.getFieldValue(""multi_choice"") ? ""multiple"" : undefined} options={choices.map((choice) =>",needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,314,literal-control,"<Select mode=""tags"" tokenSeparators={["",""]} open={false} tagRender={(props) =>",needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,353,literal-control,<Checkbox onChange={() =>,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,376,literal-control,<Form.Item name={dataIndex} messageVariables={{ label: title }} style={{ margin: 0 }} rules={rules} {...formItemProps} >,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,641,literal-control,<Button onClick={() =>,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,644,literal-control,<Button onClick={() =>,needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,651,literal-control,"<Button disabled={editingKey !== """"} onClick={() =>",needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,654,literal-control,"<Popconfirm title={t(""settings.extra_fields.delete_confirm"", { name: record.field.name })} description={t(""settings.extra_fields.delete_confirm_description"", { name: record.field.name })} onConfirm={() =>",needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,662,literal-control,"<Button disabled={editingKey !== """"} danger size=""small"">",needs-semantic-review
+spoolman,pages/settings/extraFieldsSettings.tsx,732,literal-control,"<Button type=""primary"" shape=""circle"" icon={<PlusOutlined />",needs-semantic-review
+spoolman,pages/settings/generalSettings.tsx,67,literal-control,"<Form.Item label={t(""settings.general.currency.label"")} name=""currency"" rules={[ { required: true, }, { pattern: /^[A-Z]{3}$/, }, ]} >",needs-semantic-review
+spoolman,pages/settings/generalSettings.tsx,79,literal-control,<Input />,needs-semantic-review
+spoolman,pages/settings/generalSettings.tsx,82,literal-control,"<Form.Item label={t(""settings.general.base_url.label"")} tooltip={t(""settings.general.base_url.tooltip"")} name=""base_url"" rules={[ { required: false, }, { pattern: /^https?:\/\/.+(?<!\/)$/, }, ]} >",needs-semantic-review
+spoolman,pages/settings/generalSettings.tsx,95,literal-control,"<Input placeholder=""https://example.com:8000"" />",needs-semantic-review
+spoolman,pages/settings/generalSettings.tsx,98,literal-control,"<Form.Item label={t(""settings.general.round_prices.label"")} tooltip={t(""settings.general.round_prices.tooltip"")} name=""round_prices"" valuePropName=""checked"" >",needs-semantic-review
+spoolman,pages/settings/generalSettings.tsx,104,literal-control,<Checkbox />,needs-semantic-review
+spoolman,pages/settings/generalSettings.tsx,107,literal-control,"<Form.Item wrapperCol={{ offset: 8, span: 16 }}>",needs-semantic-review
+spoolman,pages/settings/generalSettings.tsx,108,literal-control,"<Button type=""primary"" htmlType=""submit"" loading={settings.isFetching || setCurrency.isPending}>",needs-semantic-review
+spoolman,pages/settings/index.tsx,89,literal-control,<Route index element={<GeneralSettings />,needs-semantic-review
+spoolman,pages/settings/index.tsx,90,literal-control,"<Route path=""/extra/:entityType"" element={<ExtraFieldsSettings />",needs-semantic-review
+spoolman,pages/spools/create.tsx,253,literal-control,"<Create title={props.mode === ""create"" ? t(""spool.titles.create"") : t(""spool.titles.clone"")} isLoading={formLoading} footerButtons={() =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,261,literal-control,"<Button type=""text"" style={{ padding: 0, width: 32, height: 32 }} onClick={decrementQty}>",needs-semantic-review
+spoolman,pages/spools/create.tsx,264,literal-control,"<InputNumber name=""Quantity"" min={1} id=""qty-input"" controls={false} value={quantity}>",needs-semantic-review
+spoolman,pages/spools/create.tsx,265,literal-control,"<Button type=""text"" style={{ padding: 0, width: 32, height: 32 }} onClick={incrementQty}>",needs-semantic-review
+spoolman,pages/spools/create.tsx,269,literal-control,"<Button type=""primary"" onClick={() =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,272,literal-control,"<Button type=""primary"" onClick={() =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,279,literal-control,"<Form.Item label={t(""spool.fields.first_used"")} name={[""first_used""]} rules={[ { required: false, }, ]} getValueProps={(value) =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,291,literal-control,"<DatePicker showTime format=""YYYY-MM-DD HH:mm:ss"" />",needs-semantic-review
+spoolman,pages/spools/create.tsx,293,literal-control,"<Form.Item label={t(""spool.fields.last_used"")} name={[""last_used""]} rules={[ { required: false, }, ]} getValueProps={(value) =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,305,literal-control,"<DatePicker showTime format=""YYYY-MM-DD HH:mm:ss"" />",needs-semantic-review
+spoolman,pages/spools/create.tsx,307,literal-control,"<Form.Item label={t(""spool.fields.filament"")} name={[""filament_id""]} rules={[ { required: true, }, ]} >",needs-semantic-review
+spoolman,pages/spools/create.tsx,316,literal-control,"<Select options={filamentOptions} showSearch filterOption={(input, option) =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,325,literal-control,"<Form.Item label={t(""spool.fields.price"")} help={t(""spool.fields_help.price"")} name={[""price""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/spools/create.tsx,337,literal-control,"<InputNumber addonAfter={getCurrencySymbol(undefined, currency)} precision={2} formatter={formatNumberOnUserInput} parser={numberParserAllowEmpty} />",needs-semantic-review
+spoolman,pages/spools/create.tsx,344,literal-control,"<Form.Item label={t(""spool.fields.initial_weight"")} help={t(""spool.fields_help.initial_weight"")} name={[""initial_weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/spools/create.tsx,356,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/spools/create.tsx,359,literal-control,"<Form.Item label={t(""spool.fields.spool_weight"")} help={t(""spool.fields_help.spool_weight"")} name={[""spool_weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/spools/create.tsx,371,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/spools/create.tsx,374,literal-control,"<Form.Item hidden={true} name={[""used_weight""]} initialValue={0}>",needs-semantic-review
+spoolman,pages/spools/create.tsx,375,literal-control,<InputNumber value={usedWeight} />,needs-semantic-review
+spoolman,pages/spools/create.tsx,378,literal-control,"<Form.Item label={t(""spool.fields.weight_to_use"")} help={t(""spool.fields_help.weight_to_use"")}>",needs-semantic-review
+spoolman,pages/spools/create.tsx,396,literal-control,"<Form.Item label={t(""spool.fields.used_weight"")} help={t(""spool.fields_help.used_weight"")} initialValue={0}>",needs-semantic-review
+spoolman,pages/spools/create.tsx,397,literal-control,"<InputNumber min={0} addonAfter=""g"" precision={1} formatter={formatNumberOnUserInput} parser={numberParser} disabled={weightToEnter != WeightToEnter.used_weight} value={usedWeight} onChange={(value) =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,410,literal-control,"<Form.Item label={t(""spool.fields.remaining_weight"")} help={t(""spool.fields_help.remaining_weight"")} initialValue={0} >",needs-semantic-review
+spoolman,pages/spools/create.tsx,415,literal-control,"<InputNumber min={0} addonAfter=""g"" precision={1} formatter={formatNumberOnUserInput} parser={numberParser} disabled={weightToEnter != WeightToEnter.remaining_weight} value={getRemainingWeight()} onChange={(value) =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,428,literal-control,"<Form.Item label={t(""spool.fields.measured_weight"")} help={t(""spool.fields_help.measured_weight"")} initialValue={0} >",needs-semantic-review
+spoolman,pages/spools/create.tsx,433,literal-control,"<InputNumber min={0} addonAfter=""g"" precision={1} formatter={formatNumberOnUserInput} parser={numberParser} disabled={weightToEnter != WeightToEnter.measured_weight} value={getMeasuredWeight()} onChange={(value) =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,447,literal-control,"<Form.Item label={t(""spool.fields.location"")} help={t(""spool.fields_help.location"")} name={[""location""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/spools/create.tsx,457,literal-control,<Select dropdownRender={(menu) =>,needs-semantic-review
+spoolman,pages/spools/create.tsx,462,literal-control,"<Input placeholder={t(""spool.form.new_location_prompt"")} value={newLocation} onChange={(event) =>",needs-semantic-review
+spoolman,pages/spools/create.tsx,473,literal-control,"<Form.Item label={t(""spool.fields.lot_nr"")} help={t(""spool.fields_help.lot_nr"")} name={[""lot_nr""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/spools/create.tsx,483,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/spools/create.tsx,485,literal-control,"<Form.Item label={t(""spool.fields.comment"")} name={[""comment""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/spools/edit.tsx,234,literal-control,<Edit saveButtonProps={saveButtonProps}>,needs-semantic-review
+spoolman,pages/spools/edit.tsx,237,literal-control,"<Form.Item label={t(""spool.fields.id"")} name={[""id""]} rules={[ { required: true, }, ]} >",needs-semantic-review
+spoolman,pages/spools/edit.tsx,246,literal-control,<Input readOnly disabled />,needs-semantic-review
+spoolman,pages/spools/edit.tsx,248,literal-control,"<Form.Item label={t(""spool.fields.registered"")} name={[""registered""]} rules={[ { required: true, }, ]} getValueProps={(value) =>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,260,literal-control,"<DatePicker disabled showTime format=""YYYY-MM-DD HH:mm:ss"" />",needs-semantic-review
+spoolman,pages/spools/edit.tsx,262,literal-control,"<Form.Item label={t(""spool.fields.first_used"")} name={[""first_used""]} rules={[ { required: false, }, ]} getValueProps={(value) =>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,274,literal-control,"<DatePicker showTime format=""YYYY-MM-DD HH:mm:ss"" />",needs-semantic-review
+spoolman,pages/spools/edit.tsx,276,literal-control,"<Form.Item label={t(""spool.fields.last_used"")} name={[""last_used""]} rules={[ { required: false, }, ]} getValueProps={(value) =>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,288,literal-control,"<DatePicker showTime format=""YYYY-MM-DD HH:mm:ss"" />",needs-semantic-review
+spoolman,pages/spools/edit.tsx,290,literal-control,"<Form.Item label={t(""spool.fields.filament"")} name={[""filament_id""]} rules={[ { required: true, }, ]} >",needs-semantic-review
+spoolman,pages/spools/edit.tsx,299,literal-control,"<Select options={filamentOptions} showSearch filterOption={(input, option) =>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,308,literal-control,"<Form.Item label={t(""spool.fields.price"")} help={t(""spool.fields_help.price"")} name={[""price""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/spools/edit.tsx,320,literal-control,"<InputNumber addonAfter={getCurrencySymbol(undefined, currency)} precision={2} formatter={formatNumberOnUserInput} parser={numberParserAllowEmpty} />",needs-semantic-review
+spoolman,pages/spools/edit.tsx,327,literal-control,"<Form.Item label={t(""spool.fields.initial_weight"")} help={t(""spool.fields_help.initial_weight"")} name={[""initial_weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/spools/edit.tsx,339,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/spools/edit.tsx,342,literal-control,"<Form.Item label={t(""spool.fields.spool_weight"")} help={t(""spool.fields_help.spool_weight"")} name={[""spool_weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/spools/edit.tsx,354,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/spools/edit.tsx,357,literal-control,"<Form.Item hidden={true} name={[""used_weight""]} initialValue={0}>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,358,literal-control,<InputNumber value={usedWeight} />,needs-semantic-review
+spoolman,pages/spools/edit.tsx,361,literal-control,"<Form.Item label={t(""spool.fields.weight_to_use"")} help={t(""spool.fields_help.weight_to_use"")}>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,378,literal-control,"<Form.Item label={t(""spool.fields.used_weight"")} help={t(""spool.fields_help.used_weight"")}>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,379,literal-control,"<InputNumber min={0} addonAfter=""g"" precision={1} formatter={formatNumberOnUserInput} parser={numberParser} disabled={weightToEnter != WeightToEnter.used_weight} value={usedWeight} onChange={(value) =>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,392,literal-control,"<Form.Item label={t(""spool.fields.remaining_weight"")} help={t(""spool.fields_help.remaining_weight"")}>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,393,literal-control,"<InputNumber min={0} addonAfter=""g"" precision={1} formatter={formatNumberOnUserInput} parser={numberParser} disabled={weightToEnter != WeightToEnter.remaining_weight} value={getRemainingWeight()} onChange={(value) =>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,406,literal-control,"<Form.Item label={t(""spool.fields.measured_weight"")} help={t(""spool.fields_help.measured_weight"")}>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,407,literal-control,"<InputNumber min={0} addonAfter=""g"" precision={1} formatter={formatNumberOnUserInput} parser={numberParser} disabled={weightToEnter != WeightToEnter.measured_weight} value={getMeasuredWeight()} onChange={(value) =>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,421,literal-control,"<Form.Item label={t(""spool.fields.location"")} help={t(""spool.fields_help.location"")} name={[""location""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/spools/edit.tsx,431,literal-control,<Select dropdownRender={(menu) =>,needs-semantic-review
+spoolman,pages/spools/edit.tsx,436,literal-control,"<Input placeholder={t(""spool.form.new_location_prompt"")} value={newLocation} onChange={(event) =>",needs-semantic-review
+spoolman,pages/spools/edit.tsx,447,literal-control,"<Form.Item label={t(""spool.fields.lot_nr"")} help={t(""spool.fields_help.lot_nr"")} name={[""lot_nr""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/spools/edit.tsx,457,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/spools/edit.tsx,459,literal-control,"<Form.Item label={t(""spool.fields.comment"")} name={[""comment""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/spools/functions.tsx,241,literal-control,"<Modal title={t(""spool.titles.adjust"")} open onCancel={() =>",needs-semantic-review
+spoolman,pages/spools/functions.tsx,244,literal-control,"<Form.Item label={t(""spool.form.measurement_type_label"")} name=""measurement_type"">",needs-semantic-review
+spoolman,pages/spools/functions.tsx,254,literal-control,"<Form.Item label={t(""spool.form.adjust_filament_value"")} name=""filament_value"">",needs-semantic-review
+spoolman,pages/spools/functions.tsx,255,literal-control,"<InputNumber ref={inputNumberRef} precision={1} addonAfter={measurementType === ""length"" ? ""mm"" : ""g""} />",needs-semantic-review
+spoolman,pages/spools/list.tsx,263,literal-control,<List headerButtons={({ defaultButtons }) =>,needs-semantic-review
+spoolman,pages/spools/list.tsx,266,literal-control,"<Button type=""primary"" icon={<PrinterOutlined />",needs-semantic-review
+spoolman,pages/spools/list.tsx,275,literal-control,"<Button type=""primary"" icon={<InboxOutlined />",needs-semantic-review
+spoolman,pages/spools/list.tsx,284,literal-control,"<Button type=""primary"" icon={<FilterOutlined />",needs-semantic-review
+spoolman,pages/spools/list.tsx,323,literal-control,"<Button type=""primary"" icon={<EditOutlined />",needs-semantic-review
+spoolman,pages/spools/show.tsx,115,literal-control,"<Show isLoading={isLoading} title={record ? formatTitle(record) : """"} headerButtons={({ defaultButtons }) =>",needs-semantic-review
+spoolman,pages/spools/show.tsx,120,literal-control,"<Button type=""primary"" icon={<ToolOutlined />",needs-semantic-review
+spoolman,pages/spools/show.tsx,123,literal-control,"<Button type=""primary"" icon={<PrinterOutlined />",needs-semantic-review
+spoolman,pages/spools/show.tsx,137,literal-control,<Button icon={<ToTopOutlined />,needs-semantic-review
+spoolman,pages/spools/show.tsx,141,literal-control,<Button danger icon={<InboxOutlined />,needs-semantic-review
+spoolman,pages/vendors/create.tsx,56,literal-control,"<Create title={props.mode === ""create"" ? t(""vendor.titles.create"") : t(""vendor.titles.clone"")} isLoading={formLoading} footerButtons={() =>",needs-semantic-review
+spoolman,pages/vendors/create.tsx,61,literal-control,"<Button type=""primary"" onClick={() =>",needs-semantic-review
+spoolman,pages/vendors/create.tsx,64,literal-control,"<Button type=""primary"" onClick={() =>",needs-semantic-review
+spoolman,pages/vendors/create.tsx,71,literal-control,"<Form.Item label={t(""vendor.fields.name"")} name={[""name""]} rules={[ { required: true, }, ]} >",needs-semantic-review
+spoolman,pages/vendors/create.tsx,80,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/vendors/create.tsx,82,literal-control,"<Form.Item label={t(""vendor.fields.comment"")} name={[""comment""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/vendors/create.tsx,93,literal-control,"<Form.Item label={t(""vendor.fields.empty_spool_weight"")} help={t(""vendor.fields_help.empty_spool_weight"")} name={[""empty_spool_weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/vendors/create.tsx,105,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/vendors/edit.tsx,56,literal-control,<Edit saveButtonProps={saveButtonProps}>,needs-semantic-review
+spoolman,pages/vendors/edit.tsx,59,literal-control,"<Form.Item label={t(""vendor.fields.id"")} name={[""id""]} rules={[ { required: true, }, ]} >",needs-semantic-review
+spoolman,pages/vendors/edit.tsx,68,literal-control,<Input readOnly disabled />,needs-semantic-review
+spoolman,pages/vendors/edit.tsx,70,literal-control,"<Form.Item label={t(""vendor.fields.registered"")} name={[""registered""]} rules={[ { required: true, }, ]} getValueProps={(value) =>",needs-semantic-review
+spoolman,pages/vendors/edit.tsx,82,literal-control,"<DatePicker disabled showTime format=""YYYY-MM-DD HH:mm:ss"" />",needs-semantic-review
+spoolman,pages/vendors/edit.tsx,84,literal-control,"<Form.Item label={t(""vendor.fields.name"")} name={[""name""]} rules={[ { required: true, }, ]} >",needs-semantic-review
+spoolman,pages/vendors/edit.tsx,93,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/vendors/edit.tsx,95,literal-control,"<Form.Item label={t(""vendor.fields.comment"")} name={[""comment""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/vendors/edit.tsx,106,literal-control,"<Form.Item label={t(""vendor.fields.empty_spool_weight"")} help={t(""vendor.fields_help.empty_spool_weight"")} name={[""empty_spool_weight""]} rules={[ { required: false, type: ""number"", min: 0, }, ]} >",needs-semantic-review
+spoolman,pages/vendors/edit.tsx,118,literal-control,"<InputNumber addonAfter=""g"" precision={1} />",needs-semantic-review
+spoolman,pages/vendors/edit.tsx,120,literal-control,"<Form.Item label={t(""vendor.fields.external_id"")} name={[""external_id""]} rules={[ { required: false, }, ]} >",needs-semantic-review
+spoolman,pages/vendors/edit.tsx,129,literal-control,<Input maxLength={64} />,needs-semantic-review
+spoolman,pages/vendors/list.tsx,112,literal-control,<List headerButtons={({ defaultButtons }) =>,needs-semantic-review
+spoolman,pages/vendors/list.tsx,115,literal-control,"<Button type=""primary"" icon={<FilterOutlined />",needs-semantic-review
+spoolman,pages/vendors/list.tsx,154,literal-control,"<Button type=""primary"" icon={<EditOutlined />",needs-semantic-review
+spoolman,pages/vendors/show.tsx,31,literal-control,"<Show isLoading={isLoading} title={record ? formatTitle(record) : """"}>",needs-semantic-review

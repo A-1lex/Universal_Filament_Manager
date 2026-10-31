@@ -1,0 +1,497 @@
+{
+  "format": 1,
+  "roots": {
+    "spoolman": "D:\\Filament_Manager\\localization\\spoolman\\client\\src",
+    "haspelsync-downloaded": "D:\\Filament_Manager\\localization\\haspelsync\\public",
+    "haspelsync-own": "D:\\Bot\\Universal_Filament_Manager\\linked-stack\\haspelsync\\public"
+  },
+  "source_files": [
+    {
+      "project": "spoolman",
+      "file": "App.tsx",
+      "sha256": "e2ac80cdeac94734862f802ae345aa19da250d28c708a369e0866709982d8953"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/column.tsx",
+      "sha256": "aa975979b3bf04f46e833b51f87d32b3caac016066950b5f75ed47bd4ca6ee21"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/dateTimePicker.tsx",
+      "sha256": "e367ca0637ab74ebf9ff1f4b68b2fadedaa964c1e9acb2092d2220d190d504e9"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/extraFields.tsx",
+      "sha256": "5274c0f71603bd6bb24b1171635f9f2d1cad7fce3f725c1432d9704daf66ac89"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/favicon.tsx",
+      "sha256": "88be01da5ed37716b13800fb07766713eab3146c5d2434b999f2e167c8761b81"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/filamentImportModal.tsx",
+      "sha256": "a845c567f1ee354087235c57ab7140e1e88b438349e19b761cf6bab53be7596a"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/header/index.tsx",
+      "sha256": "17d117ae17fa9aa8a38b33193d7329934dabc570d91f2d33fd341946e8f6f5e7"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/inputNumberRange.tsx",
+      "sha256": "4f224a7429754aa3a3f37fc9776ce9f895ecd3c7c9bc537831b88026080dd63d"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/layout.tsx",
+      "sha256": "9ef85c68a89b3acd0a9a22b1aee6670498fdb2eb4e4f9926d0336291cc1738ef"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/multiColorPicker.tsx",
+      "sha256": "8a5c6097b2015c3bc90639947a206b79a7a3ab42219d0b2226abbaec372a3b29"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/notificationProvider.tsx",
+      "sha256": "d7488c0586df5e337811e2fb5e716d92fb67bc4dd72b1d63187300029cbae2cd"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/numberField.tsx",
+      "sha256": "2036b1bd3b2e0c58a886b85ac7efa0f64db9ee99e2ed64c62f47933691878ac8"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/otherModels.tsx",
+      "sha256": "1428851ced7e392b6cc4aa6f94aed06cab9ca172ce4035cf3c84c942f7a98177"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/qrCodeScanner.tsx",
+      "sha256": "18f8bee558f9a4f6e8e3820d510ea7e49f7af0567049438b3df4f3d5162af73e"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/spoolIcon.tsx",
+      "sha256": "940fc47e8c38af482efb53c2cc8dc1197459e3c149c743c70e68f0b162836b34"
+    },
+    {
+      "project": "spoolman",
+      "file": "components/version.tsx",
+      "sha256": "74943f51450880b42c2dd72737267d6ad2b488d6c7504386df384fbb9303b69b"
+    },
+    {
+      "project": "spoolman",
+      "file": "contexts/color-mode/index.tsx",
+      "sha256": "88cf4ffc9408072c038bddef77f19f121615532a994cf1a266ef78e638cbfd75"
+    },
+    {
+      "project": "spoolman",
+      "file": "index.tsx",
+      "sha256": "d80a608dc28d6d6e6b890d95ebb8210059f585732928c06922833ea22e758c6d"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/filaments/create.tsx",
+      "sha256": "7e6e9d86f5fadf6c9564fc81d5091e18fc9b7ad5d0930705626996fc3a233343"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/filaments/edit.tsx",
+      "sha256": "84d1ed0b58864e875b997e903d2030f6d4a463fa8ba743264e288c50eafd5175"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/filaments/list.tsx",
+      "sha256": "55a7d101ddc5904f9614317cdf6014b2d633233e4f43441b31c06ed2b072e8b8"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/filaments/model.tsx",
+      "sha256": "79820e321ee89e44c9467d0ac4485d6a52b2554a3cbb5818e46ca0847049ecd9"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/filaments/show.tsx",
+      "sha256": "35981cd86a679e14a9c3057f9189b005605436b2f9443002a1093719c6544e07"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/help/index.tsx",
+      "sha256": "4dd3eba335e0826255d5d7e6ef42fe1b50eafcea8eda4729093ac8e192fbe3fe"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/home/index.tsx",
+      "sha256": "aa6140e77cb49e84e4ca0f7386e451d2d6f168e14530ff3712ca56ec0cbb3802"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/locations/components/location.tsx",
+      "sha256": "f757133d7091334eb490e3485da9d024ee5f1fc9ee1a271fb5662c72f1995c3c"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/locations/components/locationContainer.tsx",
+      "sha256": "e1782a5de3f23f95ef23cc82f123b62fdb6010ed9e5c0975576c6023576b310f"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/locations/components/spoolCard.tsx",
+      "sha256": "b8a573f5970f98f9931e34ebb3d76b5e407fe64b20e487dde85071307fec2121"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/locations/components/spoolList.tsx",
+      "sha256": "11f5d0d9c9023bb80b96eafa0abe2784adac98736312f0083e99c0e1b5e6d31f"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/locations/index.tsx",
+      "sha256": "182238c4b0c01f9b172d2161a9e0ac6ce02ca7beb0e12629672b04c9a5223122"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/printing/index.tsx",
+      "sha256": "fd6423fa4f740586a0172d906896402736b2a75f4587b428cf3bfbf7966c3e80"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/printing/printing.tsx",
+      "sha256": "8ea63773b85927e8beb2e8a77b76f8bea1e503d00f73972d033a8126cfbf8e00"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/printing/printingDialog.tsx",
+      "sha256": "d2d0671f00ed333b102853cb11534b1c9bf57517b548c8bd7ba3f5d3d67d8be3"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/printing/qrCodePrintingDialog.tsx",
+      "sha256": "555107892e612d5ae05d858ab867eb52e19cb9121a4a009e236385c3373f8ce8"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/printing/spoolQrCodePrintingDialog.tsx",
+      "sha256": "d0557370dec25f17dce59f3b8322a45e4674573ba001b40ae300c2b2190811d7"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/printing/spoolSelectModal.tsx",
+      "sha256": "0adfc1565644b8dc9f79d3bb7cd012d1074e5556e8fbc6fccebd379b6608a659"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/settings/extraFieldsSettings.tsx",
+      "sha256": "6a407383072804873019ff9d209729566045d099f87738c864da38859f7d6afb"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/settings/generalSettings.tsx",
+      "sha256": "2487ccd5cda440d6f00e3eec2491eeb67b2a4110cc5c583fcc0a1f6641593efd"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/settings/index.tsx",
+      "sha256": "cca1139670801add0c2ff07e30d4740cc9716340c8dc1f7183f23b5ac8697bc6"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/spools/create.tsx",
+      "sha256": "ef4c0a819cbfa55f2203234cc3da8ffd610bccbbf4acd31773303c3f9902db16"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/spools/edit.tsx",
+      "sha256": "3f50279219f3976a45c8893c215980ad1f8ded4afb4dcce60f4bfaa78567e663"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/spools/functions.tsx",
+      "sha256": "a2e5f31355a3f6b952040ff2a41a8d358b156b36575f0fb99f676e6fa6b46083"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/spools/list.tsx",
+      "sha256": "e1205576daa82c7c11ec863ed689b6acba41d7f850cb75c841943ee0e9924e1c"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/spools/model.tsx",
+      "sha256": "f71821bebfa1a667f92b591fb4ca93c3fc7e3183cca4b8773e2449c082d9ca5a"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/spools/show.tsx",
+      "sha256": "f0fc35613429a772f1b7fa26229e39a3221a8753cc07428f746a6b7b741e553d"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/vendors/create.tsx",
+      "sha256": "af61006441ecca9b15794288e21724cb7c9e08b8123ce51a197d768a4ee352c5"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/vendors/edit.tsx",
+      "sha256": "6340d786e4077e57ce61f87b88d5fce98dc849c707e0ecd7d6bf16952845bfad"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/vendors/list.tsx",
+      "sha256": "13b05d4b7cd4249719f61b2f00f1350d19f2de1b416a253ace150d1fa65b962a"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/vendors/model.tsx",
+      "sha256": "bff11ef19589f278ed9fe794075a29203f27fcb36d84c1aaa3b63aa5f1cfed1a"
+    },
+    {
+      "project": "spoolman",
+      "file": "pages/vendors/show.tsx",
+      "sha256": "8d503058b1c1e2b7afa6f5c3b6cd970fb1c0b45812c48da6b1f7d62e708cb5d9"
+    },
+    {
+      "project": "spoolman",
+      "file": "utils/parsing.tsx",
+      "sha256": "ec298a6f3a2c3ff96a9aeb3de4deb6f0707ba056c150160ac4cea4b2958c3d47"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "api.html",
+      "sha256": "a916c4f53b0a2d8c61506395ade9e348416bf3a1167a3ff926d3221f1ae146cd"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "api.js",
+      "sha256": "91a04b1225e75b0ce30d62b24932484ff3265bf23d8f618b1cf0f7bbccdd8214"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "export.js",
+      "sha256": "b79a3edabff1a9f3f0f32dc921390700f2d3425081aab77fcc5b12813e0b3380"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "frontend.js",
+      "sha256": "c7bc6763ce5514f60986d1627304ff01ea68a4cc0289e550762f728508dca7a5"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "i18n/de.js",
+      "sha256": "b66f27f7fe704ba293424c288f4d1d7b48f8f2e3956b88ba804733c45dd8ea41"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "i18n/en.js",
+      "sha256": "8fd183c81a63b1b49b11582d3a3a861df43fecf447e7d4802d561a7386dcfc61"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "i18n/pl.js",
+      "sha256": "cf5b5030fa076435c782d79c6d671f4576110027b5e75821301c8d2efb550382"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "i18n/uk.js",
+      "sha256": "21f6e8a8e8215cbb4af7b57aac09e357e6db65d1cdcc59b04b1aa8df6ec6c77e"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "i18n.js",
+      "sha256": "0f4fce0fd42164562abcc0d8ac58bce2f3c6acdfbdb0dd3690320262c0d135a6"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "index.html",
+      "sha256": "84fe44410e22b946e4f707fb78afc99f15d4ac24e0207d51e4ecf69428799cab"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "login.html",
+      "sha256": "0d98160a6b6bf2afea4d1fbca7b9fc52e179a57572cdd062573bd6e887b161b4"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "login.js",
+      "sha256": "d16e37d0407fa19e6d4efeb571a8b27c88f4e36554073cd98f9712dd94ae728e"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "logs.html",
+      "sha256": "00aa6ce18e2047e5c74b61ca08cfeda9248ec3397e6711babf7d93760c1fc428"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "logs.js",
+      "sha256": "9ccdf36e009568f38d68b919ee2f5237830ad5f8fc6f4c8642211f6a93fcbb0a"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "match.js",
+      "sha256": "eb0df99e1df8e0a7c477aa9702a02fb7154b08bbb254fa81720f67ef13930735"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "materials.js",
+      "sha256": "46df4359dad30e4436d22b3688009d6eb4ab11407b2b0e0e7c9128313fd18b4a"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "menu.js",
+      "sha256": "a4785ecae511dd0aa178f223eba5db0ad4e61d42b57689b1efa38a6124667202"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "settings.html",
+      "sha256": "2a9c0b0061d4f9ef14a2ab1440c11c0a4fa05a4f70431060897bc4bf58e29933"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "settings.js",
+      "sha256": "b6c59be146abb5353a72bb676d18779a081f8ce8c3a4efd2a573b7963977f260"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "shared.js",
+      "sha256": "be542b172214d1541baddc4efdaf114cf2eae0cb6dbd23b23d63cfb150103bb1"
+    },
+    {
+      "project": "haspelsync-downloaded",
+      "file": "ui.js",
+      "sha256": "b12c2c3216f37108ebc9a77466f9cfed8a15280e0cb15baa8e4adb94a753e9f8"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "accounting.html",
+      "sha256": "f8fd9ec6a3aa8eea1801a21740214f543f8b5f175159727ae57ebf1ceb2a815c"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "accounting.js",
+      "sha256": "2ff69894e4ed4449cb5480d8153bef394848e3b6d25ed5834b85f3e34b8b6640"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "api.html",
+      "sha256": "a916c4f53b0a2d8c61506395ade9e348416bf3a1167a3ff926d3221f1ae146cd"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "api.js",
+      "sha256": "91a04b1225e75b0ce30d62b24932484ff3265bf23d8f618b1cf0f7bbccdd8214"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "export.js",
+      "sha256": "b79a3edabff1a9f3f0f32dc921390700f2d3425081aab77fcc5b12813e0b3380"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "frontend.js",
+      "sha256": "c7bc6763ce5514f60986d1627304ff01ea68a4cc0289e550762f728508dca7a5"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "i18n/de.js",
+      "sha256": "8c8e111dc05d7a2e926b7203e53b0ea19b660a84247f8926370e740438aab4a5"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "i18n/en.js",
+      "sha256": "a90a4401a8e55e19f1c5fe455c3c4a26cbf65b3a2d541eca50ffe00529aaaa8d"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "i18n/pl.js",
+      "sha256": "1baf48c3f2c53c27e206119ee05ee016675ea2414b79971980352c770ba56ef0"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "i18n/uk.js",
+      "sha256": "3d65ded059c182fb3082c81445edb46d10210f8542452ebdcf0df151e5b40fcb"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "i18n.js",
+      "sha256": "0f4fce0fd42164562abcc0d8ac58bce2f3c6acdfbdb0dd3690320262c0d135a6"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "index.html",
+      "sha256": "84fe44410e22b946e4f707fb78afc99f15d4ac24e0207d51e4ecf69428799cab"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "login.html",
+      "sha256": "0d98160a6b6bf2afea4d1fbca7b9fc52e179a57572cdd062573bd6e887b161b4"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "login.js",
+      "sha256": "d16e37d0407fa19e6d4efeb571a8b27c88f4e36554073cd98f9712dd94ae728e"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "logs.html",
+      "sha256": "00aa6ce18e2047e5c74b61ca08cfeda9248ec3397e6711babf7d93760c1fc428"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "logs.js",
+      "sha256": "9ccdf36e009568f38d68b919ee2f5237830ad5f8fc6f4c8642211f6a93fcbb0a"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "match.js",
+      "sha256": "eb0df99e1df8e0a7c477aa9702a02fb7154b08bbb254fa81720f67ef13930735"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "materials.js",
+      "sha256": "46df4359dad30e4436d22b3688009d6eb4ab11407b2b0e0e7c9128313fd18b4a"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "menu.js",
+      "sha256": "e1b5ff9f64a64bfa44cd460861278d02f57c4ba70c29425a25d099d3fb7142f5"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "settings.html",
+      "sha256": "2a9c0b0061d4f9ef14a2ab1440c11c0a4fa05a4f70431060897bc4bf58e29933"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "settings.js",
+      "sha256": "b6c59be146abb5353a72bb676d18779a081f8ce8c3a4efd2a573b7963977f260"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "shared.js",
+      "sha256": "be542b172214d1541baddc4efdaf114cf2eae0cb6dbd23b23d63cfb150103bb1"
+    },
+    {
+      "project": "haspelsync-own",
+      "file": "ui.js",
+      "sha256": "b12c2c3216f37108ebc9a77466f9cfed8a15280e0cb15baa8e4adb94a753e9f8"
+    }
+  ],
+  "candidates": 777,
+  "per_project": {
+    "haspelsync-downloaded": 210,
+    "haspelsync-own": 238,
+    "spoolman": 329
+  },
+  "limitations": [
+    "Lexical candidates may include comments and hidden controls.",
+    "Dynamically/framework-generated controls may be absent.",
+    "Downloaded source is not necessarily latest upstream.",
+    "This file does not prove any native UI parity."
+  ]
+}

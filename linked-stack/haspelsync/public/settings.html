@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="settings.tabTitle">Settings · HaspelSync</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <script>
+      // Applies the stored theme before the first paint so page changes do not flash.
+      try {
+        if (localStorage.getItem("dark-mode") === "true") {
+          document.documentElement.classList.add("dark-mode");
+        }
+      } catch (error) { /* Storage blocked: stay in light mode. */ }
+    </script>
+    <script src="i18n.js"></script>
+    <script src="i18n/all.js"></script>
+</head>
+<body class="hide-footer settings-page">
+    <div id="menubar">
+        <!-- The whole bar, including the dark mode button, is filled by menu.js -->
+        <div id="menu-root"></div>
+    </div>
+
+    <div class="set-page">
+        <div class="set-page-head">
+            <h1 data-i18n="settings.pageTitle">Settings</h1>
+            <span class="set-page-note" data-i18n="settings.pageNote">Stored in printers/settings.json and applied without a restart, unless a field says otherwise.</span>
+        </div>
+
+        <!-- Filled by settings.js from /api/notices, and hidden while nothing
+             on this installation is still configured from the environment.
+             Apart from #set-banner, which carries one message at a time. -->
+        <div id="set-env-info" class="set-page-info" hidden></div>
+
+        <div id="set-banner" class="set-banner"></div>
+
+        <!-- One form over every section, so a save takes what was changed on
+             any of them and the sticky save bar stays the last element of the
+             page. The navigation at the left is built by settings.js from
+             SECTIONS; a section shows the cards it names, the schema groups
+             rendered into the data-group hosts and the hand written cards
+             around them. type="button" keeps every action out of the submit. -->
+        <form id="settings-form">
+            <div class="set-side">
+                <nav class="set-nav" id="set-nav" aria-label="Settings sections" data-i18n-aria-label="settings.sections"></nav>
+
+                <div class="set-sections">
+                    <section class="set-section" data-section="printers" hidden>
+                        <div class="set-card">
+                            <div class="set-card-head">
+                                <h2 data-i18n="settings.printers.title">Printers</h2>
+                                <button class="btn btn-primary" type="button" id="add-printer" data-i18n="settings.printers.add">Add printer</button>
+                            </div>
+                            <div id="printer-table"></div>
+                        </div>
+                        <div data-group="printer"></div>
+                    </section>
+
+                    <section class="set-section" data-section="spoolman" hidden>
+                        <div data-group="spoolman"></div>
+                    </section>
+
+                    <section class="set-section" data-section="tracking" hidden>
+                        <div data-group="tracking"></div>
+                        <div data-group="sync"></div>
+                    </section>
+
+                    <section class="set-section" data-section="logging" hidden>
+                        <div data-group="logging"></div>
+                    </section>
+
+                    <section class="set-section" data-section="access" hidden>
+                        <div data-group="network"></div>
+                    </section>
+
+                    <!-- Choices of this browser rather than of the installation:
+                         kept in the browser, never in settings.json. The fields
+                         carry no schema key, so a save never reads them, and
+                         settings.js fills and wires them. -->
+                    <section class="set-section" data-section="webui" hidden>
+                        <div class="set-card">
+                            <div class="set-card-head">
+                                <h2 data-i18n="settings.ui.title">Web UI</h2>
+                            </div>
+                            <div class="set-form">
+                                <div class="set-field">
+                                    <label class="set-field-label" for="ui-language">
+                                        <span data-i18n="settings.ui.language">Language</span><span class="pill pill-gcode" data-i18n="settings.ui.thisBrowser">this browser</span>
+                                    </label>
+                                    <select id="ui-language"></select>
+                                    <small data-i18n="settings.ui.languageHelp">The language of the pages, applied at once and kept per browser. Log lines and everything the API hands out stay English.</small>
+                                </div>
+                                <div class="set-field">
+                                    <label class="set-field-label" for="ui-theme">
+                                        <span data-i18n="settings.ui.theme">Theme</span><span class="pill pill-gcode" data-i18n="settings.ui.thisBrowser">this browser</span>
+                                    </label>
+                                    <select id="ui-theme">
+                                        <option value="light" data-i18n="settings.ui.themeLight">Light</option>
+                                        <option value="dark" data-i18n="settings.ui.themeDark">Dark</option>
+                                    </select>
+                                    <small data-i18n="settings.ui.themeHelp">The same switch as the moon in the menu bar, kept per browser.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="set-section" data-section="system" hidden>
+                        <div class="set-card">
+                            <div class="set-card-head">
+                                <h2 data-i18n="settings.service.title">Service</h2>
+                            </div>
+                            <p class="set-note" data-i18n="settings.service.note">What this installation is running, and the actions that work on the
+                                running service itself rather than on a stored setting.</p>
+
+                            <dl class="set-facts" id="system-info"></dl>
+                            <p class="set-note set-note-warn" id="image-note" hidden></p>
+                            <p class="set-note" id="update-note"></p>
+                            <p class="set-note" id="service-note"></p>
+
+                            <!-- The restart sits at the end of this row, apart from the three
+                                 that leave the process running. -->
+                            <div class="set-service-actions">
+                                <button class="btn" type="button" id="download-diagnostics" data-i18n="settings.service.diagnostics">Download diagnostics...</button>
+                                <button class="btn" type="button" id="reconnect-printers" data-i18n="settings.service.reconnect">Reconnect all printers</button>
+                                <button class="btn" type="button" id="toggle-monitoring" data-i18n="settings.service.pauseMonitoring">Pause all monitoring</button>
+                                <button class="btn btn-danger-solid set-action-end" type="button" id="restart-service" data-i18n="settings.service.restart">Restart service</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="set-actions">
+                <button class="btn btn-primary" type="submit" id="save-settings" disabled data-i18n="settings.save">Save settings</button>
+                <button class="btn" type="button" id="reload-settings" disabled data-i18n="settings.discard">Discard changes</button>
+                <span class="set-actions-hint" id="dirty-hint"></span>
+            </div>
+        </form>
+    </div>
+
+    <script src="menu.js"></script>
+    <script src="export.js"></script>
+    <script type="module" src="settings.js"></script>
+
+    <dialog id="printer-dialog">
+        <h3 id="printer-dialog-title"></h3>
+        <div class="set-form" id="printer-dialog-fields"></div>
+        <p class="set-error" id="printer-dialog-error"></p>
+        <div id="printer-test-result" class="set-test-result"></div>
+        <div class="button-container">
+            <button class="btn" id="printer-dialog-test" type="button" data-i18n="settings.testConnection">Test connection</button>
+            <button class="btn" id="printer-dialog-cancel" type="button" data-i18n="settings.cancel">Cancel</button>
+            <button class="btn btn-primary" id="printer-dialog-save" type="button" data-i18n="settings.saveButton">Save</button>
+        </div>
+    </dialog>
+
+    <dialog id="apikey-dialog">
+        <h3 id="apikey-dialog-title" data-i18n="settings.apikeys.newTitle">New API key</h3>
+        <div id="apikey-dialog-body"></div>
+        <p class="set-error" id="apikey-dialog-error"></p>
+        <div class="button-container">
+            <button class="btn" id="apikey-dialog-cancel" type="button" data-i18n="settings.cancel">Cancel</button>
+            <button class="btn btn-primary" id="apikey-dialog-save" type="button" data-i18n="settings.apikeys.create">Create key</button>
+        </div>
+    </dialog>
+
+    <!-- Level, areas and the raw MQTT trace. Opened from the Logging card for
+         the global settings and from a printer row for that printer's own. -->
+    <dialog id="logdetail-dialog">
+        <h3 id="logdetail-dialog-title"></h3>
+        <div id="logdetail-dialog-body"></div>
+        <p class="set-error" id="logdetail-dialog-error"></p>
+        <div class="button-container">
+            <button class="btn" id="logdetail-dialog-cancel" type="button" data-i18n="settings.cancel">Cancel</button>
+            <button class="btn btn-primary" id="logdetail-dialog-save" type="button" data-i18n="settings.saveButton">Save</button>
+        </div>
+    </dialog>
+
+    <dialog id="confirm-dialog">
+        <h3 id="confirm-dialog-title"></h3>
+        <div id="confirm-dialog-text"></div>
+        <div class="button-container">
+            <button class="btn" id="confirm-dialog-cancel" type="button" data-i18n="settings.cancel">Cancel</button>
+            <button class="btn btn-danger" id="confirm-dialog-ok" type="button" data-i18n="settings.delete">Delete</button>
+        </div>
+    </dialog>
+</body>
+</html>

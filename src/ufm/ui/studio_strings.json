@@ -1,0 +1,1855 @@
+{
+  "title": [
+    "UFM Studio · Філамент і принтери",
+    "UFM Studio · Filament and printers"
+  ],
+  "inventory": [
+    "Філамент",
+    "Filament"
+  ],
+  "printers": [
+    "Пристрої",
+    "Devices"
+  ],
+  "materials": [
+    "Матеріали",
+    "Materials"
+  ],
+  "settings": [
+    "Система",
+    "System"
+  ],
+  "workspace": [
+    "РОБОЧИЙ ПРОСТІР",
+    "WORKSPACE"
+  ],
+  "subtitle": [
+    "Ваші котушки, матеріали та локальні пристрої",
+    "Your spools, materials and local devices"
+  ],
+  "local": [
+    "Локальна база • без браузера та Docker",
+    "Local database • no browser or Docker"
+  ],
+  "demo": [
+    "ДЕМОНСТРАЦІЯ • окрема тестова база • немає зв’язку з обладнанням",
+    "DEMO • isolated database • no hardware connections"
+  ],
+  "search": [
+    "Пошук за назвою, матеріалом або профілем…",
+    "Search by name, material or profile…"
+  ],
+  "filter_all_materials": [
+    "Усі матеріали",
+    "All materials"
+  ],
+  "filter_all_locations": [
+    "Усі місця",
+    "All locations"
+  ],
+  "filter_all_lifecycle": [
+    "Усі стани",
+    "All states"
+  ],
+  "view_table": [
+    "Таблиця",
+    "Table"
+  ],
+  "view_cards": [
+    "Картки",
+    "Cards"
+  ],
+  "choose_columns": [
+    "Колонки…",
+    "Columns…"
+  ],
+  "columns_hint": [
+    "Оберіть поля таблиці. Назва залишається видимою, щоб зберегти вибір котушки.",
+    "Choose table fields. Name stays visible so spool selection remains clear."
+  ],
+  "filter_all_stock": [
+    "Будь-який залишок",
+    "Any stock"
+  ],
+  "filter_known_stock": [
+    "Залишок відомий",
+    "Known stock"
+  ],
+  "filter_unknown_stock": [
+    "Залишок невідомий",
+    "Unknown stock"
+  ],
+  "filter_no_results": [
+    "За цими фільтрами котушок не знайдено.",
+    "No spools match these filters."
+  ],
+  "spools_count": [
+    "Котушок",
+    "Spools"
+  ],
+  "known_mass": [
+    "Відомий залишок, г",
+    "Known stock, g"
+  ],
+  "unknown_count": [
+    "Без початкової маси",
+    "Unknown stock"
+  ],
+  "printers_count": [
+    "Налаштованих принтерів",
+    "Configured printers"
+  ],
+  "new_spool": [
+    "+ Котушка",
+    "+ Spool"
+  ],
+  "new_location": [
+    "+ Місце зберігання",
+    "+ Storage location"
+  ],
+  "location_name": [
+    "Назва місця",
+    "Location name"
+  ],
+  "location_type": [
+    "Тип місця",
+    "Location type"
+  ],
+  "location_select": [
+    "Оберіть місце або зніміть прив’язку.",
+    "Choose a location or clear the assignment."
+  ],
+  "no_location": [
+    "Без місця",
+    "No location"
+  ],
+  "location_created": [
+    "Місце зберігання створено.",
+    "Storage location created."
+  ],
+  "assign_location": [
+    "Розташування котушки",
+    "Spool location"
+  ],
+  "location_assigned": [
+    "Розташування котушки оновлено. Залишок не змінювався.",
+    "Spool location updated. Stock was unchanged."
+  ],
+  "edit_spool": [
+    "Редагувати котушку",
+    "Edit spool"
+  ],
+  "low_threshold": [
+    "Поріг малого залишку, г (порожньо — без порога)",
+    "Low stock threshold, g (blank disables the threshold)"
+  ],
+  "archive_spool": [
+    "Архівувати котушку",
+    "Archive spool"
+  ],
+  "rebuild_projection": [
+    "Перебудувати облік",
+    "Rebuild stock projection"
+  ],
+  "rebuild_projection_confirm": [
+    "Заново обчислити показаний залишок із незміненої історії операцій? Самі записи журналу не редагуються.",
+    "Recalculate the displayed balance from the unchanged transaction history? Ledger entries will not be edited."
+  ],
+  "rebuild_projection_done": [
+    "Показаний облік перебудовано з журналу.",
+    "Stock projection rebuilt from the ledger."
+  ],
+  "archive_confirm": [
+    "Перемістити «{name}» в архів? Активні котушки/резервування можуть заборонити операцію. Залишок не зміниться.",
+    "Archive “{name}”? Active mounts/reservations may prevent this operation. Stock will not change."
+  ],
+  "spool_saved": [
+    "Дані котушки оновлено. Залишок і журнал витрат не змінені.",
+    "Spool details updated. Stock and usage history were not changed."
+  ],
+  "batch_number": [
+    "Номер партії",
+    "Batch number"
+  ],
+  "lot_number": [
+    "Номер лоту",
+    "Lot number"
+  ],
+  "nominal_filament": [
+    "Номінальна маса пластику, г",
+    "Nominal filament mass, g"
+  ],
+  "empty_spool": [
+    "Маса порожньої котушки, г",
+    "Empty spool mass, g"
+  ],
+  "purchase_price": [
+    "Ціна закупівлі (порожньо — невідомо)",
+    "Purchase price (blank means unknown)"
+  ],
+  "purchase_basis": [
+    "Базова маса ціни, г",
+    "Price basis mass, g"
+  ],
+  "currency": [
+    "Валюта (UAH/EUR/USD/PLN; інші 3-літерні коди поки не оцінюються)",
+    "Currency (UAH/EUR/USD/PLN; other 3-letter codes are not costed yet)"
+  ],
+  "purchase_date": [
+    "Дата закупівлі (РРРР-ММ-ДД)",
+    "Purchase date (YYYY-MM-DD)"
+  ],
+  "opened_date": [
+    "Дата відкриття (РРРР-ММ-ДД)",
+    "Opened date (YYYY-MM-DD)"
+  ],
+  "manufactured_date": [
+    "Дата виробництва (РРРР-ММ-ДД)",
+    "Manufactured date (YYYY-MM-DD)"
+  ],
+  "expires_date": [
+    "Придатний до (РРРР-ММ-ДД)",
+    "Expires on (YYYY-MM-DD)"
+  ],
+  "color_hex": [
+    "Колір HEX (#RRGGBB)",
+    "Color HEX (#RRGGBB)"
+  ],
+  "secondary_color_hex": [
+    "Другий колір HEX",
+    "Secondary color HEX"
+  ],
+  "image_uri": [
+    "Шлях або URI зображення",
+    "Image path or URI"
+  ],
+  "notes": [
+    "Примітки профілю",
+    "Profile notes"
+  ],
+  "spool_archived": [
+    "Котушку переміщено в архів. Залишок не змінено.",
+    "Spool archived. Stock was not changed."
+  ],
+  "compensate": [
+    "Компенсувати операцію",
+    "Compensate transaction"
+  ],
+  "compensate_select": [
+    "Оберіть одну некомпенсовану операцію. Буде створено протилежний запис у журналі.",
+    "Choose one uncompensated transaction. A reversing ledger entry will be created."
+  ],
+  "compensate_choice": [
+    "#{sequence} · {kind} · {amount} г",
+    "#{sequence} · {kind} · {amount} g"
+  ],
+  "compensate_confirm": [
+    "Створити компенсацію для операції #{sequence} ({amount} г)? Це додасть протилежний запис; історія не видаляється.",
+    "Create a compensation for transaction #{sequence} ({amount} g)? This appends a reversing entry; history is never deleted."
+  ],
+  "compensate_done": [
+    "Компенсацію записано в журнал.",
+    "Compensation was added to the ledger."
+  ],
+  "new_material": [
+    "+ Профіль матеріалу",
+    "+ Material profile"
+  ],
+  "refresh": [
+    "Оновити",
+    "Refresh"
+  ],
+  "theme": [
+    "Світла / темна",
+    "Light / dark"
+  ],
+  "name": [
+    "Назва",
+    "Name"
+  ],
+  "profile": [
+    "Профіль",
+    "Profile"
+  ],
+  "material": [
+    "Матеріал",
+    "Material"
+  ],
+  "brand": [
+    "Виробник",
+    "Manufacturer"
+  ],
+  "no_brand": [
+    "Без виробника",
+    "No manufacturer"
+  ],
+  "archived_brand_option": [
+    "{name} · архівний зв’язок",
+    "{name} · archived link"
+  ],
+  "product_line": [
+    "Лінійка продукту",
+    "Product line"
+  ],
+  "density": [
+    "Щільність, г/см³ (необов’язково)",
+    "Density, g/cm³ (optional)"
+  ],
+  "custom_material_name": [
+    "Назва матеріалу (для CUSTOM)",
+    "Custom material name (for CUSTOM)"
+  ],
+  "abrasive": [
+    "Абразивний",
+    "Abrasive"
+  ],
+  "flexible": [
+    "Гнучкий",
+    "Flexible"
+  ],
+  "hygroscopic": [
+    "Гігроскопічний",
+    "Hygroscopic"
+  ],
+  "soluble": [
+    "Розчинний",
+    "Soluble"
+  ],
+  "filled_material": [
+    "Наповнений композит",
+    "Filled composite"
+  ],
+  "subtype": [
+    "Підтип матеріалу",
+    "Material subtype"
+  ],
+  "nozzle_min_c": [
+    "Сопло від, °C",
+    "Nozzle minimum, °C"
+  ],
+  "nozzle_max_c": [
+    "Сопло до, °C",
+    "Nozzle maximum, °C"
+  ],
+  "bed_min_c": [
+    "Стіл від, °C",
+    "Bed minimum, °C"
+  ],
+  "bed_max_c": [
+    "Стіл до, °C",
+    "Bed maximum, °C"
+  ],
+  "chamber_min_c": [
+    "Камера від, °C",
+    "Chamber minimum, °C"
+  ],
+  "chamber_max_c": [
+    "Камера до, °C",
+    "Chamber maximum, °C"
+  ],
+  "max_volumetric_speed_mm3_s": [
+    "Макс. об’ємна швидкість, мм³/с",
+    "Maximum volumetric speed, mm³/s"
+  ],
+  "drying_temp_c": [
+    "Температура сушіння, °C",
+    "Drying temperature, °C"
+  ],
+  "drying_duration_min": [
+    "Тривалість сушіння, хв",
+    "Drying duration, min"
+  ],
+  "default_color_name": [
+    "Типовий колір",
+    "Default color name"
+  ],
+  "edit_material": [
+    "Редагувати профіль",
+    "Edit profile"
+  ],
+  "new_brand": [
+    "+ Виробник",
+    "+ Manufacturer"
+  ],
+  "edit_brand": [
+    "Редагувати виробника",
+    "Edit manufacturer"
+  ],
+  "archive_brand": [
+    "Архівувати виробника",
+    "Archive manufacturer"
+  ],
+  "brand_edit_scope": [
+    "Назва оновиться в усіх пов’язаних профілях і котушках. Продовжити?",
+    "The name will update on linked profiles and spools. Continue?"
+  ],
+  "brand_archive_confirm": [
+    "Архівувати виробника «{name}»? Старі зв’язки збережуться, вибрати його для нових записів не можна буде.",
+    "Archive manufacturer “{name}”? Existing links stay intact; it will no longer be selectable for new records."
+  ],
+  "brand_saved": [
+    "Виробника оновлено.",
+    "Manufacturer updated."
+  ],
+  "brand_archived": [
+    "Виробника архівовано; пов’язані записи збережено.",
+    "Manufacturer archived; linked records were preserved."
+  ],
+  "profile_edit_scope": [
+    "Зміни профілю поширяться на всі котушки, пов’язані з ним. Продовжити?",
+    "Profile changes affect every spool linked to it. Continue?"
+  ],
+  "profile_saved": [
+    "Профіль матеріалу оновлено.",
+    "Material profile updated."
+  ],
+  "color": [
+    "Колір",
+    "Color"
+  ],
+  "location": [
+    "Місце",
+    "Location"
+  ],
+  "remaining": [
+    "Залишок, г",
+    "Remaining, g"
+  ],
+  "state": [
+    "Стан",
+    "State"
+  ],
+  "health": [
+    "Облік",
+    "Accounting"
+  ],
+  "unknown": [
+    "Невідомо",
+    "Unknown"
+  ],
+  "select": [
+    "Виберіть котушку для операцій та історії",
+    "Select a spool for operations and history"
+  ],
+  "inspector": [
+    "ДЕТАЛІ КОТУШКИ",
+    "SPOOL DETAILS"
+  ],
+  "opening": [
+    "Початковий залишок",
+    "Opening stock"
+  ],
+  "deduct": [
+    "Списати вручну",
+    "Deduct manually"
+  ],
+  "add": [
+    "Додати до залишку",
+    "Add to stock"
+  ],
+  "grams": [
+    "Маса у грамах (до 3 знаків після коми)",
+    "Mass in grams (up to 3 decimal places)"
+  ],
+  "history": [
+    "Історія руху пластику",
+    "Filament transaction history"
+  ],
+  "cost_entry": [
+    "Знімок собівартості: {amount} {currency}",
+    "Cost snapshot: {amount} {currency}"
+  ],
+  "cost_summary": [
+    "Підтверджені друки · за валютами: {totals} · без відомої ціни: {unknown} ({unknown_mass} г)",
+    "Confirmed prints · by currency: {totals} · no known price: {unknown} ({unknown_mass} g)"
+  ],
+  "cost_none_known": [
+    "немає відомих сум",
+    "no known totals"
+  ],
+  "cost_report": [
+    "Звіт витрат філаменту",
+    "Filament cost report"
+  ],
+  "close": [
+    "Закрити",
+    "Close"
+  ],
+  "printer": [
+    "Принтер",
+    "Printer"
+  ],
+  "cost_from": [
+    "Друки від дати",
+    "Prints from date"
+  ],
+  "cost_until": [
+    "Друки до дати включно",
+    "Prints through date"
+  ],
+  "all_printers": [
+    "Усі принтери",
+    "All printers"
+  ],
+  "cost_load": [
+    "Сформувати звіт",
+    "Load report"
+  ],
+  "cost_export": [
+    "Експортувати CSV",
+    "Export CSV"
+  ],
+  "cost_report_summary": [
+    "Друків: {prints} · витрачено: {mass} г · собівартість за валютами: {totals} · без ціни: {unknown} ({unknown_mass} г)",
+    "Prints: {prints} · consumed: {mass} g · cost by currency: {totals} · unknown cost: {unknown} ({unknown_mass} g)"
+  ],
+  "cost_unknown": [
+    "Собівартість невідома",
+    "Cost unknown"
+  ],
+  "cost_date": [
+    "Дата друку",
+    "Print date"
+  ],
+  "cost_job": [
+    "Завдання",
+    "Job"
+  ],
+  "cost_spool": [
+    "Котушка",
+    "Spool"
+  ],
+  "cost_amount": [
+    "Собівартість",
+    "Cost"
+  ],
+  "cost_source": [
+    "Джерело",
+    "Source"
+  ],
+  "cost_confirmed": [
+    "Підтверджено",
+    "Booked"
+  ],
+  "cost_report_failed": [
+    "Не вдалося сформувати звіт. Перевірте вибраний період і повторіть.",
+    "The report could not be loaded. Check the selected period and retry."
+  ],
+  "cost_export_failed": [
+    "Не вдалося зберегти CSV. Перевірте доступ до вибраного файла.",
+    "CSV could not be saved. Check access to the selected file."
+  ],
+  "export_qr_label": [
+    "Експортувати QR-етикетку",
+    "Export QR label"
+  ],
+  "qr_label_export_failed": [
+    "Не вдалося зберегти SVG-етикетку. Перевірте доступ до вибраного файла.",
+    "Could not save the SVG label. Check access to the selected file."
+  ],
+  "print_qr_label": [
+    "Друкувати QR-етикетку",
+    "Print QR label"
+  ],
+  "batch_export_qr_labels": [
+    "Експортувати кілька етикеток…",
+    "Export multiple labels…"
+  ],
+  "batch_print_qr_labels": [
+    "Друкувати кілька етикеток…",
+    "Print multiple labels…"
+  ],
+  "batch_labels_title": [
+    "Вибір котушок",
+    "Select spools"
+  ],
+  "batch_labels_hint": [
+    "Позначте котушки, для яких потрібно підготувати етикетки.",
+    "Select the spools to prepare labels for."
+  ],
+  "print": [
+    "Друкувати",
+    "Print"
+  ],
+  "qr_label_batch_export_failed": [
+    "Не вдалося експортувати всі етикетки. Перевірте папку: {path}",
+    "Could not export all labels. Check the folder: {path}"
+  ],
+  "qr_label_batch_export_done": [
+    "Експортовано етикеток: {count}. Папка: {path}",
+    "Exported labels: {count}. Folder: {path}"
+  ],
+  "label_size_dialog": [
+    "Розмір етикетки",
+    "Label size"
+  ],
+  "label_width": [
+    "Ширина",
+    "Width"
+  ],
+  "label_height": [
+    "Висота",
+    "Height"
+  ],
+  "continue": [
+    "Продовжити",
+    "Continue"
+  ],
+  "form_required": [
+    "Заповніть поле «{field}».",
+    "Enter a value for “{field}”."
+  ],
+  "form_invalid_value": [
+    "Перевірте значення поля «{field}».",
+    "Check the value in “{field}”."
+  ],
+  "qr_label_print_failed": [
+    "Не вдалося надрукувати QR-етикетку. Перевірте принтер і його параметри.",
+    "Could not print the QR label. Check the printer and its settings."
+  ],
+  "calculated_consumption": [
+    "Розрахункова витрата",
+    "Estimated consumption"
+  ],
+  "calculated_job_detail": [
+    "Завдання друку: {job_id}",
+    "Print job: {job_id}"
+  ],
+  "calculated_receipt_detail": [
+    "Квитанція події: {receipt_id}",
+    "Event receipt: {receipt_id}"
+  ],
+  "calculated_file_plate_detail": [
+    "3MF · файл SHA-256 {sha256}… · пластина {plate}",
+    "3MF · file SHA-256 {sha256}… · plate {plate}"
+  ],
+  "history_empty": [
+    "Операцій ще немає. Початковий залишок вводиться окремо.",
+    "No transactions yet. Set opening stock separately."
+  ],
+  "no_profiles": [
+    "Спочатку створіть профіль матеріалу або імпортуйте Spoolman.",
+    "Create a material profile or import Spoolman first."
+  ],
+  "diameter": [
+    "Діаметр, мм",
+    "Diameter, mm"
+  ],
+  "backup": [
+    "Створити резервну копію",
+    "Create backup"
+  ],
+  "import": [
+    "Імпортувати базу Spoolman",
+    "Import Spoolman database"
+  ],
+  "import_confirm": [
+    "Джерело: {source_instance_key}. Імпортувати котушки: {spools}; профілі: {profiles}; відомі залишки: {known}; невідомі залишки: {unknown}; ціни закупівлі: {prices}; ціни без бази/валюти: {prices_unknown}; номери партій у джерелі: {lots}; кольори у джерелі: {colors}; місця у джерелі: {locations}; непідтримувані значення метаданих: {metadata_unknown}. Будуть створені резервні копії. Джерело не змінюється.",
+    "Source: {source_instance_key}. Import spools: {spools}; profiles: {profiles}; known stock: {known}; unknown stock: {unknown}; purchase prices: {prices}; prices without basis/currency: {prices_unknown}; source lot numbers: {lots}; source colors: {colors}; source locations: {locations}; unsupported metadata values: {metadata_unknown}. Backups will be created. The source is preserved."
+  ],
+  "import_done": [
+    "Оброблено котушок: {count}. Ключ джерела: {source_instance_key}. Звіт відповідності ID: {mapping_report}. Резервна копія джерела: {path}",
+    "Processed spools: {count}. Source key: {source_instance_key}. ID mapping report: {mapping_report}. Source backup: {path}"
+  ],
+  "import_preview_title": [
+    "Перегляд імпорту Spoolman",
+    "Spoolman import preview"
+  ],
+  "import_col_spool": ["ID котушки", "Spool ID"],
+  "import_col_filament": ["Назва", "Name"],
+  "import_col_material": ["Матеріал", "Material"],
+  "import_col_vendor": ["Виробник", "Vendor"],
+  "import_col_nominal": ["Номінал", "Nominal"],
+  "import_col_tare": ["Маса порожньої котушки", "Empty spool mass"],
+  "import_col_remaining": ["Залишок", "Remaining"],
+  "import_col_price": ["Ціна / база", "Price / basis"],
+  "import_col_state": ["Стан", "State"],
+  "import_col_metadata": ["Метадані", "Metadata"],
+  "import_col_omitted": ["Не перенесено", "Not imported"],
+  "import_page_previous": ["Попередні 200", "Previous 200"],
+  "import_page_next": ["Наступні 200", "Next 200"],
+  "import_page_status": ["Сторінка {page}/{pages}; котушки {start}–{end} із {total}", "Page {page}/{pages}; spools {start}–{end} of {total}"],
+  "import_state_archived": ["Архівна", "Archived"],
+  "import_state_active": ["Активна", "Active"],
+  "import_omitted_lot": ["номер партії", "lot number"],
+  "import_omitted_color": ["колір", "color"],
+  "import_omitted_location": ["місце зберігання", "storage location"],
+  "import_omitted_price": ["ціна (невідома валюта або база)", "price (currency or basis unknown)"],
+  "none": ["—", "—"],
+  "discover": [
+    "Знайти у локальній мережі",
+    "Discover on local network"
+  ],
+  "probe": [
+    "Прочитати стан",
+    "Read status"
+  ],
+  "provider": [
+    "Адаптер",
+    "Adapter"
+  ],
+  "model": [
+    "Модель",
+    "Model"
+  ],
+  "host": [
+    "Адреса",
+    "Address"
+  ],
+  "discovery_hint": [
+    "Знайдені відкриті порти — кандидати. Модель, серійний номер і довіру до сертифіката потрібно перевірити під час підключення.",
+    "Open ports identify candidates. Verify model, serial number and certificate trust during enrollment."
+  ],
+  "no_candidates": [
+    "Кандидатів не знайдено у вибраній локальній мережі.",
+    "No candidates found on the selected local network."
+  ],
+  "searching_candidates": [
+    "Шукаю пристрої у вибраній локальній мережі…",
+    "Searching for devices on the selected local network…"
+  ],
+  "discovery_candidate": [
+    "{name} · порт {port} · {confidence}",
+    "{name} · port {port} · {confidence}"
+  ],
+  "discovery_identified": [
+    "розпізнано відповіддю API; принтер ще не підтверджено",
+    "API response matched; printer is not yet verified"
+  ],
+  "discovery_unverified": [
+    "не підтверджено — перевірте під час підключення",
+    "unverified — verify during enrollment"
+  ],
+  "discovery_failed": [
+    "Не вдалося показати результати пошуку пристроїв.",
+    "Could not display the device discovery results."
+  ],
+  "probe_done": [
+    "З’єднання: {state}\nСопло: {nozzle} °C\nСтіл: {bed} °C\nЧас спостереження: {time}",
+    "Connection: {state}\nNozzle: {nozzle} °C\nBed: {bed} °C\nObserved at: {time}"
+  ],
+  "feed_mapping_heading": [
+    "Котушки в лотках · лише точне підтвердження",
+    "Spools in feed slots · exact verified matches only"
+  ],
+  "feed_mapping_matched": [
+    "{system} · {slot}: {spool} (підтверджено)",
+    "{system} · {slot}: {spool} (verified)"
+  ],
+  "feed_mapping_unknown": [
+    "{system} · {slot}: котушку не зіставлено",
+    "{system} · {slot}: no verified spool match"
+  ],
+  "feed_mapping_conflict": [
+    "{system} · {slot}: конфлікт ідентифікаторів; зіставлення зупинено",
+    "{system} · {slot}: identifier conflict; matching stopped"
+  ],
+  "verify_identity_button": [
+    "Підтвердити котушку…",
+    "Verify spool…"
+  ],
+  "verify_identity": [
+    "Підтвердити ідентичність котушки",
+    "Verify spool identity"
+  ],
+  "identity_probe_first": [
+    "Спочатку прочитайте стан принтера, щоб отримати актуальні tray/tag ID.",
+    "Read printer status first to load current tray/tag IDs."
+  ],
+  "no_spools_for_identity": [
+    "Спочатку додайте котушку до інвентарю.",
+    "Add a spool to inventory first."
+  ],
+  "observed_identity": [
+    "Ідентифікатор із принтера",
+    "Printer identifier"
+  ],
+  "spool": [
+    "Котушка UFM",
+    "UFM spool"
+  ],
+  "confirm": [
+    "Підтвердити",
+    "Confirm"
+  ],
+  "identity_confirm_message": [
+    "Прив’язати {kind} «{value}» із {system} · {slot} до котушки «{spool}»? Це збереже довірений ID, але не змонтує котушку й не змінить залишок.",
+    "Bind {kind} “{value}” from {system} · {slot} to spool “{spool}”? This verifies the ID but does not mount the spool or change stock."
+  ],
+  "identity_verified_reprobe": [
+    "Ідентифікатор перевірено й записано в журнал. Повторно прочитайте стан, щоб побачити зіставлення.",
+    "Identifier verified and audited. Read printer status again to see the match."
+  ],
+  "mount_verified_button": [
+    "Змонтувати підтверджену котушку…",
+    "Mount verified spool…"
+  ],
+  "mount_verified_title": [
+    "Змонтувати котушку у принтер",
+    "Mount spool in printer"
+  ],
+  "mount_probe_first": [
+    "Спочатку прочитайте стан принтера та підтвердьте точну ідентичність котушки.",
+    "Read printer status and verify an exact spool identity first."
+  ],
+  "mount_target": [
+    "Підтверджений слот і котушка",
+    "Verified slot and spool"
+  ],
+  "mount_confirm_message": [
+    "Змонтувати котушку «{spool}» у принтер «{printer}», система {system}, слот {slot}? Будуть записані топологія та журнал операції; залишок філаменту не зміниться.",
+    "Mount spool “{spool}” in printer “{printer}”, system {system}, slot {slot}? Topology and audit records will be written; filament stock will not change."
+  ],
+  "mount_done": [
+    "Котушку змонтовано. Залишок не змінено; прочитайте стан принтера повторно для звірки.",
+    "Spool mounted. Stock was not changed; read printer status again to reconcile."
+  ],
+  "inspect_slice_file": [
+    "Перевірити локальний 3MF/G-code",
+    "Review local 3MF/G-code"
+  ],
+  "inspect_3mf_title": [
+    "Перевірка файлу 3MF",
+    "3MF file review"
+  ],
+  "inspect_3mf_plate_prompt": [
+    "Виберіть пластину зі списку, сформованого з перевірених Metadata/slice_info.config і наявних plate G-code.",
+    "Choose a plate listed from validated Metadata/slice_info.config entries with a corresponding plate G-code file."
+  ],
+  "inspect_3mf_material_line": [
+    "Логічний канал {index}: {grams} г",
+    "Logical channel {index}: {grams} g"
+  ],
+  "inspect_3mf_summary": [
+    "Локальний файл пройшов перевірку для перегляду.\nSHA-256: {sha256}\nПластина: {plate}\nВерсія парсера: {parser}\nЛогічних каналів: {count}\nСумарна оцінка: {grams} г\n\nЦе оцінка зі sliced 3MF. Вона не прив’язана до завдання, не підтверджує витрачений матеріал і нічого не списує. Покриття purge/flush може бути невідомим.",
+    "The local file passed review validation.\nSHA-256: {sha256}\nPlate: {plate}\nParser version: {parser}\nLogical channels: {count}\nEstimated total: {grams} g\n\nThis is an estimate from sliced 3MF. It is not bound to a print job, does not confirm consumed material, and does not debit stock. Purge/flush coverage may be unknown."
+  ],
+  "control_gate": [
+    "Керування нагрівом, рухом і завданнями буде доступне після реалізації та перевірки команд адаптера. Поточне підключення читає стан.",
+    "Heat, motion and job controls require implemented and verified adapter commands. Current connections read status."
+  ],
+  "auto_gate": [
+    "Автоматичне списування: у розробці. Потрібні прив’язка завдання до котушки, перевірка витрат і захист від повторних подій. Ручні операції вже записуються у журнал.",
+    "Automatic accounting: in development. Requires job-to-spool assignment, validated consumption and duplicate-event protection. Manual operations already use the ledger."
+  ],
+  "system_hint": [
+    "UFM Studio • тестова збірка\nНативний Qt інтерфейс, Python ядро, SQLite.\nPortable-збірка доступна для внутрішньої перевірки. Публічний реліз ще не прийнято: потрібні повна SBOM, підпис і приймання Windows-збірки та пристроїв.\nДані та облікові записи принтерів не передаються у хмару.",
+    "UFM Studio • test build\nNative Qt interface, Python core, SQLite.\nA portable build is available for internal review. Public release is not approved: complete SBOM, code signing, and Windows/device acceptance are still required.\nInventory and printer credentials are not uploaded to a cloud."
+  ],
+  "build_label": [
+    "UFM 0.1 • тестова збірка",
+    "UFM 0.1 • test build"
+  ],
+  "export_inventory": [
+    "Експортувати інвентар CSV…",
+    "Export inventory CSV…"
+  ],
+  "inventory_exported": [
+    "Інвентар експортовано: {path}",
+    "Inventory exported: {path}"
+  ],
+  "application_language": [
+    "Мова програми",
+    "Application language"
+  ],
+  "language_ukrainian": [
+    "Українська",
+    "Ukrainian"
+  ],
+  "language_english": [
+    "Англійська",
+    "English"
+  ],
+  "save_language": [
+    "Зберегти мову",
+    "Save language"
+  ],
+  "language_restart_required": [
+    "Мову збережено. Перезапустіть UFM Studio, щоб застосувати її до всіх екранів.",
+    "Language saved. Restart UFM Studio to apply it across the interface."
+  ],
+  "log_level": [
+    "Рівень журналу",
+    "Log level"
+  ],
+  "log_level_DEBUG": [
+    "Докладний (DEBUG)",
+    "Verbose (DEBUG)"
+  ],
+  "log_level_INFO": [
+    "Інформаційний (INFO)",
+    "Informational (INFO)"
+  ],
+  "log_level_WARNING": [
+    "Попередження (WARNING)",
+    "Warnings (WARNING)"
+  ],
+  "log_level_ERROR": [
+    "Помилки (ERROR)",
+    "Errors (ERROR)"
+  ],
+  "log_level_CRITICAL": [
+    "Критичні (CRITICAL)",
+    "Critical (CRITICAL)"
+  ],
+  "save_log_level": [
+    "Зберегти рівень",
+    "Save level"
+  ],
+  "view_safe_logs": [
+    "Переглянути журнал",
+    "View event log"
+  ],
+  "export_diagnostics": [
+    "Експортувати діагностику",
+    "Export diagnostics"
+  ],
+  "diagnostics_consent_title": [
+    "Перегляд і згода на експорт",
+    "Review and consent to export"
+  ],
+  "diagnostics_preview": [
+    "Пакет містить лише час, рівень і код події журналу. Сирі поля, номери принтерів/котушок, шляхи, адреси, налаштування, база даних і секрети не додаються. Записів включено: {included}, пропущено: {omitted}. SHA-256 подій: {digest}. Перед передаванням перевірте, чи прийнятні самі назви подій і час.",
+    "The bundle contains only log timestamps, levels, and event codes. Raw fields, printer/spool identifiers, paths, addresses, settings, databases, and secrets are excluded. Records included: {included}; omitted: {omitted}. Event SHA-256: {digest}. Review whether event names and times are acceptable before sharing."
+  ],
+  "diagnostics_save_title": [
+    "Зберегти діагностичний пакет",
+    "Save diagnostic bundle"
+  ],
+  "diagnostics_saved": [
+    "Знеособлений пакет збережено. Перед надсиланням ще раз перегляньте його вміст.",
+    "The redacted bundle was saved. Review its contents again before sending it."
+  ],
+  "diagnostics_failed": [
+    "Не вдалося безпечно сформувати або зберегти пакет. Дані не передано.",
+    "Could not safely build or save the bundle. No data was sent."
+  ],
+  "logs_empty": [
+    "Журнал подій поки порожній.",
+    "The event log is empty."
+  ],
+  "log_record_omitted": [
+    "Запис журналу пропущено: формат не підтримується.",
+    "Log entry omitted: unsupported format."
+  ],
+  "logs.unavailable": [
+    "Не вдалося прочитати журнал подій.",
+    "Could not read the event log."
+  ],
+  "busy": [
+    "Виконується операція…",
+    "Working…"
+  ],
+  "ready": [
+    "Готово",
+    "Ready"
+  ],
+  "error": [
+    "Не вдалося виконати операцію",
+    "Operation failed"
+  ],
+  "error_hint": [
+    "Перевірте вхідні дані, доступний залишок, стан обліку та локальні налаштування. Код: {code}",
+    "Check input, available stock, accounting state and local configuration. Code: {code}"
+  ],
+  "save": [
+    "Зберегти",
+    "Save"
+  ],
+  "cancel": [
+    "Скасувати",
+    "Cancel"
+  ],
+  "empty_inventory": [
+    "Створіть профіль і котушку або імпортуйте наявну базу Spoolman.",
+    "Create a profile and spool, or import an existing Spoolman database."
+  ],
+  "inventory_unavailable": [
+    "Не вдалося прочитати локальні дані. Перевірте файл бази та права доступу, потім натисніть «Оновити дані». Зміни інвентарю тимчасово вимкнено.",
+    "Local data could not be read. Check the database file and access permissions, then select Refresh. Inventory changes are temporarily disabled."
+  ],
+  "record_measurement": [
+    "Записати зважування",
+    "Record weighing"
+  ],
+  "gross_weight": [
+    "Повна вага котушки на вагах, г",
+    "Full spool weight on scale, g"
+  ],
+  "tare_weight": [
+    "Маса порожньої котушки (тара), г",
+    "Empty spool mass (tare), g"
+  ],
+  "measurement_saved": [
+    "Вимір {net} г збережено як доказ. Залишок не змінено; звіряння потребує окремого підтвердження.",
+    "Measurement {net} g saved as evidence. Stock was not changed; reconciliation requires separate confirmation."
+  ],
+  "measurement_confirm_title": [
+    "Підтвердити звіряння залишку",
+    "Confirm inventory reconciliation"
+  ],
+  "measurement_confirm_prompt": [
+    "Виміряно {net} г. Поточний облік: {current} г. Корекція: {delta} г. Прийняти вимір і записати корекцію в залишок та історію?",
+    "Measured {net} g. Current stock record: {current} g. Adjustment: {delta} g. Accept the measurement and record the adjustment in stock and history?"
+  ],
+  "measurement_opening_prompt": [
+    "Виміряно {net} г. Це встановить початковий залишок і створить запис в історії. Прийняти вимір?",
+    "Measured {net} g. This will establish opening stock and add a history entry. Accept the measurement?"
+  ],
+  "measurement_applied": [
+    "Зважування прийнято. Залишок та історію оновлено.",
+    "Weighing accepted. Stock and history were updated."
+  ],
+  "manual_measurement_reason": [
+    "Підтверджене ручне зважування",
+    "Confirmed manual weighing"
+  ],
+  "measurement_record_line": [
+    "ЗВАЖУВАННЯ · {source} · {captured}\nПовна маса {gross} г − тара {tare} г = net {net} г · зріз журналу {ledger_cutoff}\n{state}",
+    "WEIGHING · {source} · {captured}\nGross {gross} g − tare {tare} g = net {net} g · ledger cutoff {ledger_cutoff}\n{state}"
+  ],
+  "measurement_not_applied": [
+    "Збережено як доказ; звіряння не прийнято",
+    "Saved as evidence; reconciliation not accepted"
+  ],
+  "measurement_accepted_state": [
+    "Звіряння прийнято: {remaining} г",
+    "Reconciled: {remaining} g"
+  ],
+  "enrollment": [
+    "Майстер підключення принтерів",
+    "Printer enrollment"
+  ],
+  "network_autofill": [
+    "Автозаповнити з мережі",
+    "Autofill from network"
+  ],
+  "network_hint": [
+    "Вкажіть IP або залиште порожнім для пошуку одного Bambu-принтера у мережі. Модель і серійний номер визначаються без коду доступу.",
+    "Enter an IP or leave blank to discover one Bambu printer on the LAN. Model and serial identification needs no access code."
+  ],
+  "network_filled": [
+    "Дані визначено. Введіть LAN-код з екрана принтера. Він залишиться прихованим і збережеться лише після успішної перевірки з’єднання.",
+    "Printer identified. Enter its LAN access code from the printer screen. It stays masked and is stored only after a successful connection test."
+  ],
+  "network_required": [
+    "Спочатку визначте пристрій у мережі або заповніть профіль із Bambu Studio та підтвердьте відбиток. Перевірте назву й модель; LAN-код можна ввести вручну або заповнити з профілю Studio.",
+    "Identify the device on the network or fill from Bambu Studio and confirm the fingerprint first. Check its name and model; enter the LAN code manually or fill it from the Studio profile."
+  ],
+  "network_identify_failed": [
+    "Не вдалося визначити принтер. Перевірте локальне підключення або введіть IP вручну й повторіть спробу. Дані не збережено.",
+    "Could not identify the printer. Check the local connection or enter its IP manually and retry. Nothing was saved."
+  ],
+  "studio_profile_autofill": [
+    "Автозаповнити з Bambu Studio",
+    "Autofill from Bambu Studio"
+  ],
+  "studio_profile_importing": [
+    "Перевіряю профіль Bambu Studio…",
+    "Checking Bambu Studio profile…"
+  ],
+  "studio_profile_filled": [
+    "Профіль Studio збігається з підтвердженим принтером. Код лишається прихованим і буде збережений тільки після успішної перевірки з’єднання.",
+    "The Studio profile matches the confirmed printer. The code stays hidden and is saved only after a successful connection test."
+  ],
+  "studio_profile_trust": [
+    "Перевірте, що IP {host}, серійний номер {serial} та відбиток SHA-256 належать вашому принтеру:\n{fingerprint}\nДозволити профілю Bambu Studio заповнити форму? Код не буде збережено до успішної перевірки з’єднання та натискання «Перевірити та зберегти».",
+    "Verify that IP {host}, serial number {serial}, and this SHA-256 fingerprint belong to your printer:\n{fingerprint}\nAllow the Bambu Studio profile to fill this form? The code is not saved until the connection test succeeds and you choose “Test and save”."
+  ],
+  "studio_profile_enter_ip": [
+    "Спочатку введіть локальну IP-адресу принтера або визначте його в мережі.",
+    "Enter the printer's local IP address or identify it on the network first."
+  ],
+  "studio_profile_certificate_failed": [
+    "Не вдалося прочитати TLS-сертифікат. Перевірте приватне мережеве з’єднання принтера.",
+    "Could not read the TLS certificate. Check the printer's private network connection."
+  ],
+  "studio_profile_identity_failed": [
+    "У сертифікаті не вдалося підтвердити серійний номер принтера.",
+    "Could not confirm the printer serial number from its certificate."
+  ],
+  "studio_profile_settings_missing": [
+    "Не знайдено локальні налаштування Bambu Studio для поточного облікового запису Windows.",
+    "Bambu Studio settings were not found for the current Windows account."
+  ],
+  "studio_profile_settings_invalid": [
+    "Налаштування Bambu Studio пошкоджені або мають невідомий формат.",
+    "Bambu Studio settings are damaged or have an unknown format."
+  ],
+  "studio_profile_missing": [
+    "У Bambu Studio не знайдено профіль, що збігається з IP і серійним номером принтера.",
+    "No Bambu Studio profile matching the printer IP and serial number was found."
+  ],
+  "studio_profile_ambiguous": [
+    "Знайдено суперечливі LAN-коди у профілях Bambu Studio. Введіть код вручну.",
+    "Conflicting LAN codes were found in Bambu Studio profiles. Enter the code manually."
+  ],
+  "studio_profile_identity_mismatch": [
+    "Дані Bambu Studio не збігаються з раніше підтвердженим сертифікатом принтера. Повторно визначте пристрій.",
+    "Bambu Studio data does not match the printer certificate already confirmed. Identify the device again."
+  ],
+  "studio_profile_failed": [
+    "Не вдалося прочитати профіль Bambu Studio. Перевірте локальні налаштування й повторіть спробу.",
+    "Could not read the Bambu Studio profile. Check local settings and retry."
+  ],
+  "serial": [
+    "Серійний номер",
+    "Serial number"
+  ],
+  "access_code": [
+    "Код доступу LAN",
+    "LAN access code"
+  ],
+  "test_save": [
+    "Перевірити та зберегти",
+    "Test and save"
+  ],
+  "bambu_import": [
+    "Bambu: знайти профіль Studio",
+    "Bambu: find Studio profile"
+  ],
+  "manufacturer": [
+    "Виробник",
+    "Manufacturer"
+  ],
+  "endpoint": [
+    "Локальна адреса http(s)://…",
+    "Local address http(s)://…"
+  ],
+  "token": [
+    "API-токен (за потреби)",
+    "API token (if required)"
+  ],
+  "bambu_host": [
+    "Локальна IP-адреса Bambu-принтера",
+    "Bambu printer local IP address"
+  ],
+  "trust": [
+    "Перевірте серійний номер {serial} та відбиток SHA-256:\n{fingerprint}\nДовіряти цьому пристрою і підключити його?",
+    "Verify serial number {serial} and SHA-256 fingerprint:\n{fingerprint}\nTrust and enroll this device?"
+  ],
+  "enrolled": [
+    "Принтер перевірено та додано. Секрет зберігається у системному сховищі Windows.",
+    "Printer verified and enrolled. The credential is kept in the Windows secret store."
+  ],
+  "remove_printer": [
+    "Видалити підключення",
+    "Remove connection"
+  ],
+  "edit_printer": [
+    "Змінити назву й модель",
+    "Edit name and model"
+  ],
+  "edit_printer_connection": [
+    "Змінити LAN-підключення",
+    "Edit LAN connection"
+  ],
+  "edit_printer_connection_hint": [
+    "Нове підключення буде перевірено до збереження. Поточний TLS-сертифікат і його відбиток буде збережено.",
+    "The replacement connection is tested before saving. The current TLS certificate and fingerprint are retained."
+  ],
+  "access_code_required": [
+    "Введіть LAN-код із екрана принтера",
+    "Enter the LAN access code shown on the printer"
+  ],
+  "printer_connection_updated": [
+    "Підключення «{name}» перевірено й оновлено.",
+    "Connection for “{name}” was tested and updated."
+  ],
+  "edit_printer_details": [
+    "Редагування підпису принтера",
+    "Edit printer label"
+  ],
+  "printer_details_updated": [
+    "Дані принтера «{name}» оновлено. Адресу та секрет не змінено.",
+    "Details for “{name}” updated. The endpoint and secret were not changed."
+  ],
+  "remove_printer_confirmation": [
+    "Видалити підключення принтера «{name}»? Історія друку залишиться.",
+    "Remove printer connection for “{name}”? Print history will be kept."
+  ],
+  "printer_removed": [
+    "Підключення «{name}» видалено. Історію друку збережено.",
+    "Connection for “{name}” removed. Print history was kept."
+  ],
+  "monitor_start": [
+    "Почати моніторинг",
+    "Start monitoring"
+  ],
+  "monitor_stop": [
+    "Зупинити моніторинг",
+    "Stop monitoring"
+  ],
+  "monitor_idle": [
+    "Автомоніторинг вимкнено. Підключення запускається лише після явного підтвердження.",
+    "Automatic monitoring is off. A connection starts only after explicit confirmation."
+  ],
+  "monitor_confirmation": [
+    "Запустити постійне читання стану принтера «{name}»? Це створить тривале локальне з'єднання. Для Bambu LAN воно може конкурувати за підключення з Bambu Studio.",
+    "Start continuous read-only monitoring for “{name}”? This opens a long-lived local connection. For Bambu LAN it may compete with Bambu Studio for the printer connection."
+  ],
+  "monitor_select_printer": [
+    "Спочатку виберіть принтер зі списку.",
+    "Select a printer first."
+  ],
+  "monitor_connecting": [
+    "Підключення до {name}…",
+    "Connecting to {name}…"
+  ],
+  "monitor_online": [
+    "{name} · онлайн, очікування стану",
+    "{name} · online, waiting for status"
+  ],
+  "monitor_offline": [
+    "{name} · з’єднання втрачено",
+    "{name} · connection lost"
+  ],
+  "monitor_stale": [
+    "{name} · стан не підтверджено, перевіряю зв’язок…",
+    "{name} · status not confirmed, checking connection…"
+  ],
+  "monitor_retrying": [
+    "{name} · повторне підключення з паузою",
+    "{name} · reconnecting with backoff"
+  ],
+  "monitor_stopping": [
+    "Завершення підключення до принтера…",
+    "Closing the printer connection…"
+  ],
+  "monitor_no_job": [
+    "Зараз немає активного завдання",
+    "No active job"
+  ],
+  "monitor_observed": [
+    "{name} · {state} · {progress} · шар {layer}",
+    "{name} · {state} · {progress} · layer {layer}"
+  ],
+  "monitor_job_preparing": [
+    "Підготовка",
+    "Preparing"
+  ],
+  "monitor_job_detected": [
+    "Завдання виявлено",
+    "Job detected"
+  ],
+  "monitor_job_running": [
+    "Друк триває",
+    "Printing"
+  ],
+  "monitor_job_paused": [
+    "Призупинено",
+    "Paused"
+  ],
+  "monitor_job_completing": [
+    "Завершення",
+    "Completing"
+  ],
+  "monitor_job_completed": [
+    "Завершено",
+    "Completed"
+  ],
+  "monitor_job_failed": [
+    "Помилка завдання",
+    "Print failed"
+  ],
+  "monitor_job_cancelled": [
+    "Скасовано",
+    "Cancelled"
+  ],
+  "monitor_details_idle": [
+    "Деталі принтера з’являться після першого підтвердженого оновлення.",
+    "Printer details will appear after the first confirmed refresh."
+  ],
+  "monitor_details": [
+    "Останні підтверджені дані · сопло {nozzle} · стіл {bed} · прогрес {progress} · шар {layer} · подавання: {feeds}",
+    "Last confirmed data · nozzle {nozzle} · bed {bed} · progress {progress} · layer {layer} · feed systems: {feeds}"
+  ],
+  "monitor_capabilities_idle": [
+    "Можливості адаптера з’являться після підключення.",
+    "Adapter capabilities appear after connecting."
+  ],
+  "monitor_capabilities": [
+    "Можливості з адаптера {provider} · {time} · {features}",
+    "Capabilities from {provider} adapter · {time} · {features}"
+  ],
+  "monitor_provider_bambu_lan": [
+    "Bambu LAN",
+    "Bambu LAN"
+  ],
+  "monitor_provider_moonraker": [
+    "Moonraker",
+    "Moonraker"
+  ],
+  "monitor_provider_octoprint": [
+    "OctoPrint",
+    "OctoPrint"
+  ],
+  "monitor_provider_unknown": [
+    "невідомий адаптер",
+    "unknown adapter"
+  ],
+  "monitor_capability_yes": [
+    "Так",
+    "Yes"
+  ],
+  "monitor_capability_no": [
+    "Ні",
+    "No"
+  ],
+  "monitor_capability_unknown": [
+    "Невідомо",
+    "Unknown"
+  ],
+  "monitor_capability_unavailable": [
+    "Недоступно",
+    "Unavailable"
+  ],
+  "monitor_capability_unsupported": [
+    "Не підтримується",
+    "Unsupported"
+  ],
+  "capability_job_detection": [
+    "Виявлення завдання",
+    "Job detection"
+  ],
+  "capability_progress": [
+    "Прогрес",
+    "Progress"
+  ],
+  "capability_layers": [
+    "Шари",
+    "Layers"
+  ],
+  "capability_temperature": [
+    "Температура",
+    "Temperature"
+  ],
+  "capability_camera": [
+    "Камера",
+    "Camera"
+  ],
+  "capability_pause": [
+    "Пауза",
+    "Pause"
+  ],
+  "capability_resume": [
+    "Продовження",
+    "Resume"
+  ],
+  "capability_cancel": [
+    "Скасування",
+    "Cancel"
+  ],
+  "capability_filament_usage": [
+    "Витрата філаменту",
+    "Filament usage"
+  ],
+  "capability_multi_material": [
+    "Кілька матеріалів",
+    "Multiple materials"
+  ],
+  "capability_file_metadata": [
+    "Метадані файлу",
+    "File metadata"
+  ],
+  "capability_local_connection": [
+    "Локальне підключення",
+    "Local connection"
+  ],
+  "capability_cloud_connection": [
+    "Хмарне підключення",
+    "Cloud connection"
+  ],
+  "capability_push_events": [
+    "Події принтера",
+    "Printer push events"
+  ],
+  "capability_polling": [
+    "Опитування",
+    "Polling"
+  ],
+  "monitor_no_feed_system": [
+    "не повідомлено",
+    "not reported"
+  ],
+  "monitor_slots_idle": [
+    "Стан AMS-слотів з’явиться після першого підтвердженого оновлення.",
+    "AMS slot details will appear after the first confirmed refresh."
+  ],
+  "monitor_slots": [
+    "Слоти подавання: {slots}",
+    "Feed slots: {slots}"
+  ],
+  "monitor_slot": [
+    "{system} · {slot}: {occupancy} · маса {mass} · за даними принтера {percent}",
+    "{system} · {slot}: {occupancy} · mass {mass} · printer-reported {percent}"
+  ],
+  "monitor_slot_loaded": [
+    "заповнено",
+    "loaded"
+  ],
+  "monitor_slot_empty": [
+    "порожньо",
+    "empty"
+  ],
+  "grams_short": [
+    "г",
+    "g"
+  ],
+  "feed_kind_ams": [
+    "AMS",
+    "AMS"
+  ],
+  "feed_kind_ams_lite": [
+    "AMS Lite",
+    "AMS Lite"
+  ],
+  "feed_kind_external": [
+    "Зовнішня котушка",
+    "External spool"
+  ],
+  "feed_kind_mmu": [
+    "MMU",
+    "MMU"
+  ],
+  "feed_kind_idex": [
+    "IDEX",
+    "IDEX"
+  ],
+  "feed_kind_tool_changer": [
+    "Змінювач інструментів",
+    "Tool changer"
+  ],
+  "feed_kind_generic": [
+    "Система подавання",
+    "Feed system"
+  ],
+  "monitor_failed": [
+    "Моніторинг завершився помилкою ({error}). Перевірте підключення принтера.",
+    "Monitoring stopped with an error ({error}). Check the printer connection."
+  ],
+  "monitor_error_authentication": [
+    "Не вдалося пройти автентифікацію. Перевірте LAN-код принтера.",
+    "Authentication failed. Check the printer LAN access code."
+  ],
+  "monitor_error_tls": [
+    "Сертифікат принтера не підтверджено. Перевірте довіру до його сертифіката.",
+    "The printer certificate was not verified. Review certificate trust."
+  ],
+  "monitor_error_unavailable": [
+    "Принтер недоступний у мережі.",
+    "The printer is unavailable on the network."
+  ],
+  "monitor_error_unsupported": [
+    "Принтер не підтримує це читання.",
+    "The printer does not support this read operation."
+  ],
+  "monitor_error_invalid_data": [
+    "Принтер надіслав неочікувані дані.",
+    "The printer returned unexpected data."
+  ],
+  "monitor_error_event_overflow": [
+    "Черга подій переповнена. Моніторинг зупинено, щоб не втратити їхній порядок.",
+    "The event queue is full. Monitoring stopped to preserve event order."
+  ],
+  "monitor_error_generic": [
+    "Не вдалося прочитати стан принтера.",
+    "The printer state could not be read."
+  ],
+  "monitor_stop_before_probe": [
+    "Зупиніть постійний моніторинг перед одноразовим читанням стану.",
+    "Stop continuous monitoring before requesting a one-time status read."
+  ],
+  "enrollment_hint": [
+    "Майстер підключення та довіри до сертифіката вже є у класичному інтерфейсі ufm-desktop. Перенесення майстра в Studio заплановано; збережені там принтери відображаються тут у спільній базі.",
+    "Enrollment and certificate trust are available in the classic ufm-desktop interface. The Studio wizard is planned; enrolled printers appear here in the shared database."
+  ],
+  "NEW": [
+    "Нова",
+    "New"
+  ],
+  "OPEN": [
+    "Відкрита",
+    "Open"
+  ],
+  "CONSISTENT": [
+    "Узгоджено",
+    "Consistent"
+  ],
+  "INITIAL_STOCK": [
+    "Початковий залишок",
+    "Opening stock"
+  ],
+  "PRINT_CONSUMPTION": [
+    "Витрати на друк",
+    "Print consumption"
+  ],
+  "PURGE": [
+    "Продування",
+    "Purge"
+  ],
+  "LOAD": [
+    "Завантаження",
+    "Load"
+  ],
+  "UNLOAD": [
+    "Вивантаження",
+    "Unload"
+  ],
+  "WASTE": [
+    "Відходи",
+    "Waste"
+  ],
+  "FAILED_PRINT": [
+    "Невдалий друк",
+    "Failed print"
+  ],
+  "MANUAL_USE": [
+    "Ручне списування",
+    "Manual use"
+  ],
+  "MEASUREMENT_CORRECTION": [
+    "Корекція за вимірюванням",
+    "Measurement correction"
+  ],
+  "TRANSFER_IN": [
+    "Надходження",
+    "Transfer in"
+  ],
+  "TRANSFER_OUT": [
+    "Передача",
+    "Transfer out"
+  ],
+  "RETURN": [
+    "Повернення",
+    "Return"
+  ],
+  "INVENTORY_ADJUSTMENT": [
+    "Коригування залишку",
+    "Inventory adjustment"
+  ],
+  "ACTIVE": [
+    "Активна",
+    "Active"
+  ],
+  "ARCHIVED": [
+    "Архів",
+    "Archived"
+  ],
+  "NORMAL": [
+    "Норма",
+    "Normal"
+  ],
+  "HEALTHY": [
+    "Норма",
+    "Healthy"
+  ],
+  "QUARANTINED": [
+    "Потрібна перевірка",
+    "Review required"
+  ],
+  "import_source_title": [
+    "Джерело імпорту Spoolman",
+    "Spoolman import source"
+  ],
+  "import_source_prompt": [
+    "Виберіть раніше зареєстроване джерело, щоб зберегти ті самі ID після переміщення бази. Для окремої інсталяції створіть нове джерело.",
+    "Choose a registered source to preserve the same IDs after moving its database. Create a new source for a separate Spoolman installation."
+  ],
+  "import_source_new": [
+    "Створити нове джерело Spoolman",
+    "Create a new Spoolman source"
+  ],
+  "import_source_unverified": [
+    "знімок імпорту не підтверджено — перевірте/продовжте імпорт",
+    "import snapshot unverified — review/resume this import"
+  ],
+  "import_source_recovery_counts": [
+    "попередня звірка котушок: збіги {matched}/{total}, розбіжності {mismatch}, відсутні {missing}, зайві {extra}",
+    "preliminary spool reconciliation: matched {matched}/{total}, mismatched {mismatch}, missing {missing}, extra {extra}"
+  ],
+  "haspel_import_preview": [
+    "Попередній перегляд HaspelSync",
+    "HaspelSync preview"
+  ],
+  "haspel_import_preview_description": [
+    "Оберіть файли HaspelSync для локального зіставлення. Нічого не буде застосовано.",
+    "Select HaspelSync files for local mapping review. Nothing will be applied."
+  ],
+  "haspel_select_printers": [
+    "Оберіть printers.json HaspelSync",
+    "Select HaspelSync printers.json"
+  ],
+  "haspel_select_mappings": [
+    "Оберіть mappings.json HaspelSync",
+    "Select HaspelSync mappings.json"
+  ],
+  "haspel_select_id_map": [
+    "Оберіть ID map Spoolman з UFM",
+    "Select the Spoolman ID map exported by UFM"
+  ],
+  "haspel_no_printers": [
+    "Принтерів не знайдено.",
+    "No printers found."
+  ],
+  "haspel_no_mappings": [
+    "Прив’язок слотів не знайдено.",
+    "No slot assignments found."
+  ],
+  "haspel_unresolved": [
+    "не зіставлено",
+    "unresolved"
+  ],
+  "haspel_import_summary": [
+    "Локальний попередній перегляд. Налаштування не застосовано; мережа та залишки не змінювалися.\n\nНалаштування HaspelSync не читаються й не переносяться. Код доступу вводиться окремо у UFM; адресу та з’єднання підтверджуйте через виявлення принтера. Режими обліку й автоматичного списання не переносяться.\n\nПринтери:\n{printers}\n\nСлоти → UFM котушки:\n{mappings}\n\nПоказано перші 100 прив’язок; приховано: {omitted}.\n\nБез зіставлення: {unresolved}; непідтримувані слоти: {unsupported}; принтери без відповідності: {orphan}; повторні котушки: {duplicates}. Код доступу, IP та значення fingerprint не показуються.",
+    "Local preview only. Settings were not applied; no network or inventory changes were made.\n\nHaspelSync settings are not read or transferred. Enter the access code separately in UFM; verify the address and connection through printer discovery. Tracking and automatic-debit modes are not transferred.\n\nPrinters:\n{printers}\n\nSlots → UFM spools:\n{mappings}\n\nShowing first 100 assignments; omitted: {omitted}.\n\nUnresolved: {unresolved}; unsupported slots: {unsupported}; unmatched printers: {orphan}; duplicate spools: {duplicates}. Access codes, IP addresses and fingerprint values are not shown."
+  ],
+  "haspel_unsupported": [
+    "непідтримуваний слот",
+    "unsupported slot"
+  ],
+  "haspel_matched_printer": [
+    "{source} ({serial}) → наявний принтер UFM: {target}",
+    "{source} ({serial}) → existing UFM printer: {target}"
+  ],
+  "haspel_unmatched_printer": [
+    "{source} ({serial}) → принтер UFM не зіставлено; додайте його через пошук мережі",
+    "{source} ({serial}) → no UFM match; add through network discovery"
+  ],
+  "accounting_authority": [
+    "Власник обліку філаменту",
+    "Filament accounting owner"
+  ],
+  "authority_current": [
+    "Принтер: {printer} | Режим: {mode} | Ревізія: {revision} | SHA-256 доказу cutover: {snapshot} | Writer зупинено: {writer_time} | Звіряння: {reconciled_time}",
+    "Printer: {printer} | Mode: {mode} | Revision: {revision} | Cutover evidence SHA-256: {snapshot} | Writer stopped: {writer_time} | Reconciled: {reconciled_time}"
+  ],
+  "authority_local_notice": [
+    "Цей режим зберігає локальне рішення UFM. Він не зупиняє службу HaspelSync і не є розподіленим блокуванням. Автоматичне списання окремо вимкнене, доки його явно не налаштовано.",
+    "This stores UFM's local decision. It does not stop HaspelSync or provide a distributed lock. Automatic debit remains separately disabled unless explicitly configured."
+  ],
+  "authority_remote_endpoint": [
+    "Адреса HaspelSync API (origin)",
+    "HaspelSync API origin"
+  ],
+  "authority_remote_printer": [
+    "ID принтера у HaspelSync",
+    "HaspelSync printer ID"
+  ],
+  "authority_remote_key": [
+    "API key (зберігається в захищеному сховищі ОС)",
+    "API key (stored in the OS credential vault)"
+  ],
+  "authority_remote_key_optional": [
+    "Новий ключ — лише для першого налаштування або заміни",
+    "Enter a new key only for first setup or replacement"
+  ],
+  "authority_remote_verify": [
+    "Перевірити зв’язок і прочитати стан",
+    "Verify connection and read status"
+  ],
+  "authority_remote_unknown": [
+    "Стан HaspelSync ще не перевірено",
+    "HaspelSync status has not been checked"
+  ],
+  "authority_remote_status": [
+    "Стан вибраного HaspelSync: {owner}; ревізія {revision}; очікує {pending}, невизначених {uncertain}, активних {active}",
+    "Selected HaspelSync state: {owner}; revision {revision}; pending {pending}, uncertain {uncertain}, active {active}"
+  ],
+  "authority_review_bookings": [
+    "Переглянути невизначені списання",
+    "Review unresolved bookings"
+  ],
+  "authority_bookings_failed": [
+    "Не вдалося безпечно прочитати журнал HaspelSync. Рішення не записано.",
+    "Could not safely read the HaspelSync journal. No resolution was recorded."
+  ],
+  "authority_no_unresolved_bookings": [
+    "У журналі вибраного принтера немає очікуваних або невизначених списань серед останніх записів.",
+    "No pending or uncertain bookings were found in the selected printer's latest journal entries."
+  ],
+  "authority_booking_row": [
+    "{status} · {job} · котушка {spool} · {grams} г · {terminal}",
+    "{status} · {job} · spool {spool} · {grams} g · {terminal}"
+  ],
+  "authority_booking_select": [
+    "Виберіть запис, звірте котушку й завдання у HaspelSync та Spoolman.",
+    "Select a record and compare its spool and job in HaspelSync and Spoolman."
+  ],
+  "authority_booking_details": [
+    "ID: {id}\nКлюч завдання: {item}\nПочаток (Unix ms): {started}\nСтворено в журналі (Unix ms): {created}",
+    "ID: {id}\nJob key: {item}\nStarted (Unix ms): {started}\nJournal created (Unix ms): {created}"
+  ],
+  "authority_booking_applied": [
+    "Вже списано",
+    "Already debited"
+  ],
+  "authority_booking_not_applied": [
+    "Не списано",
+    "Not debited"
+  ],
+  "authority_booking_note_title": [
+    "Нотатка перевірки",
+    "Review note"
+  ],
+  "authority_booking_note_prompt": [
+    "Опишіть, що саме перевірили. Нотатка буде записана в журнал HaspelSync.",
+    "Describe what you checked. This note will be stored in the HaspelSync journal."
+  ],
+  "authority_booking_note_invalid": [
+    "Введіть нотатку довжиною від 1 до 500 символів.",
+    "Enter a note between 1 and 500 characters."
+  ],
+  "authority_booking_confirm_title": [
+    "Підтвердити результат перевірки",
+    "Confirm reviewed outcome"
+  ],
+  "authority_booking_confirm": [
+    "Зафіксувати результат «{resolution}»? Це змінить лише журнал HaspelSync. UFM не спише пластик, не змінить залишок Spoolman і не повторить запит.",
+    "Record the outcome “{resolution}”? This changes only the HaspelSync journal. UFM will not debit filament, change Spoolman stock, or retry the request."
+  ],
+  "authority_booking_saved": [
+    "Результат перевірки записано в журналі HaspelSync. Це не змінює залишок Spoolman. Перевірте актуальний стан перед іншими діями.",
+    "The review outcome was recorded in the HaspelSync journal. Spoolman stock was not changed. Verify the current state before other actions."
+  ],
+  "authority_booking_unknown": [
+    "Відповідь на запис рішення невідома. UFM не надсилала повторний запит. Оновіть перегляд і перевірте журнал HaspelSync перед будь-якою наступною дією.",
+    "The resolution write outcome is unknown. UFM did not resend it. Refresh the review and inspect the HaspelSync journal before taking another action."
+  ],
+  "authority_booking_conflict": [
+    "Запис змінився або більше не підлягає перевірці. Оновіть журнал і звірте його стан; повторне списання не виконується.",
+    "The record changed or is no longer reviewable. Refresh the journal and verify its state; no consumption retry was made."
+  ],
+  "authority_remote_warning": [
+    "Ключ HaspelSync має повний доступ до його API. UFM збереже його лише у сховищі облікових даних ОС після успішної перевірки. Віддалений HTTP без TLS не приймається; дозволено лише HTTPS із перевіркою сертифіката або HTTP на цьому самому ПК. Відповідь стосується лише вибраної служби й не виявляє інші процеси чи каталоги даних.",
+    "The HaspelSync API key has full API access. UFM stores it only in the OS credential vault after a successful check. Remote HTTP without TLS is rejected; only certificate-verified HTTPS or same-machine HTTP is accepted. The response covers only the selected service and cannot detect other processes or data directories."
+  ],
+  "authority_remote_failed": [
+    "Перевірка не пройшла. Зв’язок або capability відсутні; нічого не активовано.",
+    "Verification failed. The connection or capability is unavailable; nothing was activated."
+  ],
+  "authority_remote_activation_required": [
+    "Перед активацією UFM перевірте HaspelSync. Потрібен свіжий стан LEGACY_ACTIVE без активних, очікуваних або невизначених операцій.",
+    "Verify HaspelSync before activating UFM. A fresh LEGACY_ACTIVE state with no active, pending, or uncertain operations is required."
+  ],
+  "authority_remote_activation_failed": [
+    "Не вдалося безпечно завершити передачу обліку. Локальна активація не підтверджена; віддалений стан може бути невизначеним. Перевірте свіжий стан HaspelSync перед повтором.",
+    "The accounting handoff could not be safely completed. Local activation was not confirmed; the remote state may be unresolved. Read the current HaspelSync state before retrying."
+  ],
+  "authority_remote_transfer_warning": [
+    "Під час активації UFM спочатку передасть вибраній службі HaspelSync owner із LEGACY_ACTIVE до UFM_ACTIVE з перевіркою ревізії. Якщо локальна фіксація не завершиться, програма спробує перевести цю службу в REVIEW_ONLY. Це не контролює інші процеси HaspelSync чи інші DATA_DIR.",
+    "UFM activation first transfers the selected HaspelSync service owner from LEGACY_ACTIVE to UFM_ACTIVE with a revision check. If local persistence fails, the app will try to move that service to REVIEW_ONLY. This does not control other HaspelSync processes or DATA_DIRs."
+  ],
+  "authority_remote_transferred": [
+    "Вибрана служба HaspelSync передала облік UFM; ревізія {revision}.",
+    "The selected HaspelSync service transferred accounting to UFM; revision {revision}."
+  ],
+  "authority_remote_invalid": [
+    "Ключ має некоректний формат або завеликий. Його не збережено.",
+    "The key is invalid or too long. It was not saved."
+  ],
+  "authority_choose_snapshot": [
+    "Вибрати bookings.json HaspelSync",
+    "Choose HaspelSync bookings.json"
+  ],
+  "authority_snapshot_missing": [
+    "Журнали ще не вибрано",
+    "Journals not selected"
+  ],
+  "authority_legacy_stopped": [
+    "Підтверджую: старий writer HaspelSync зупинено й автозапуск вимкнено.",
+    "I confirm the legacy HaspelSync writer is stopped and auto-start is disabled."
+  ],
+  "authority_reconciled": [
+    "Підтверджую: залишки UFM і вибраного Spoolman snapshot звірено; автоматичні розбіжності відсутні.",
+    "I confirm UFM stock and the selected Spoolman snapshot were reconciled; automated comparison found no differences."
+  ],
+  "authority_active_confirm": [
+    "Підтверджую: попередні перевірки cutover досі чинні; паралельний writer не працює.",
+    "I confirm cutover checks remain valid and no parallel writer is running."
+  ],
+  "authority_timestamp_warning": [
+    "Журнали HaspelSync перевіряються лише для читання; невирішені booking-и/зважування блокують cutover. Snapshot Spoolman порівнюється з імпортованими котушками UFM, але його відповідність endpoint HaspelSync підтверджує оператор. Це не доводить зупинку віддаленої служби: окремо вимкніть writer та автозапуск.",
+    "HaspelSync journals are inspected read-only; unresolved bookings/weighings block cutover. The Spoolman snapshot is compared with imported UFM spools, but the operator confirms it matches HaspelSync’s endpoint. This does not prove the remote service has stopped: disable the writer and auto-start separately."
+  ],
+  "authority_evidence_required": [
+    "Необхідні докази або підтвердження відсутні. Стан не змінено.",
+    "Required evidence or confirmations are missing. No state was changed."
+  ],
+  "authority_snapshot_unreadable": [
+    "Не вдалося перевірити журнали HaspelSync або snapshot Spoolman. Перевірте вибрані файли й реєстрацію джерела.",
+    "Could not validate HaspelSync journals or Spoolman snapshot. Check the selected files and registered source."
+  ],
+  "authority_transition_confirm": [
+    "Змінити власника обліку принтера «{printer}» на «{mode}»?",
+    "Change accounting owner for “{printer}” to “{mode}”?"
+  ],
+  "authority_saved": [
+    "Збережено режим {mode}, ревізія {revision}. Це не запускає службу чи списання.",
+    "Saved mode {mode}, revision {revision}. This does not start a service or debit filament."
+  ],
+  "authority_mode_REVIEW_ONLY": [
+    "Лише перегляд",
+    "Review only"
+  ],
+  "authority_mode_LEGACY_ACTIVE": [
+    "Облік HaspelSync",
+    "HaspelSync accounting"
+  ],
+  "authority_mode_CUTOVER_READY": [
+    "Підготовка передачі UFM",
+    "UFM cutover prepared"
+  ],
+  "authority_mode_UFM_ACTIVE": [
+    "Облік UFM",
+    "UFM accounting"
+  ],
+  "authority_choose_accounting": [
+    "Вибрати accounting.json HaspelSync",
+    "Choose HaspelSync accounting.json"
+  ],
+  "authority_cutover_preview": [
+    "Haspel bookings принтера: очікують {booking_pending}, проведені {booking_booked}, невизначені {booking_uncertain}, відхилені {booking_dismissed}; global weighings: очікують {weighing_pending}, записані {weighing_recorded}, невизначені {weighing_uncertain}, відхилені {weighing_rejected}; журнал готовий {haspel_ready}. Spoolman незмінний від імпорту {source_unchanged}; Haspel activity не новіша за імпорт {events_current}; котушок у джерелі {stock_count}, збігів {stock_matched}, розбіжностей {stock_mismatch}, відсутніх {stock_missing}, додаткових в UFM {stock_extra}. Загальна готовність {ready}; SHA-256 доказу {digest}.",
+    "Haspel printer bookings: pending {booking_pending}, booked {booking_booked}, uncertain {booking_uncertain}, dismissed {booking_dismissed}; global weighings: pending {weighing_pending}, recorded {weighing_recorded}, uncertain {weighing_uncertain}, rejected {weighing_rejected}; journal ready {haspel_ready}. Spoolman unchanged since import {source_unchanged}; Haspel activity not newer than import {events_current}; source spools {stock_count}, matches {stock_matched}, mismatches {stock_mismatch}, missing {stock_missing}, extra in UFM {stock_extra}. Overall ready {ready}; evidence SHA-256 {digest}."
+  ],
+  "authority_choose_spoolman": [
+    "Вибрати snapshot БД Spoolman",
+    "Choose Spoolman database snapshot"
+  ],
+  "authority_source_title": [
+    "Джерело Spoolman",
+    "Spoolman source"
+  ],
+  "authority_source_prompt": [
+    "Виберіть джерело, зареєстроване під час імпорту в UFM.",
+    "Select the source registered during its import into UFM."
+  ],
+  "authority_source_missing": [
+    "У UFM немає зареєстрованого джерела Spoolman для звіряння. Спочатку імпортуйте його через «Система».",
+    "UFM has no registered Spoolman source to reconcile. Import it through System first."
+  ],
+  "authority_source_confirm": [
+    "Підтверджую: вибраний snapshot належить саме тому екземпляру Spoolman, до якого підключений HaspelSync.",
+    "I confirm this snapshot is from the exact Spoolman instance configured in HaspelSync."
+  ],
+  "inspect_slice_title": [
+    "Локальний аналіз файлу друку",
+    "Local print-file review"
+  ],
+  "inspect_gcode_bucket_line": [
+    "Інструмент {tool} · шар {layer}: {millimetres} мм свіжої екструзії",
+    "Tool {tool} · layer {layer}: {millimetres} mm fresh extrusion"
+  ],
+  "inspect_gcode_unknown_layer": [
+    "до першого маркера шару",
+    "before the first layer marker"
+  ],
+  "inspect_gcode_no_extrusion": [
+    "У файлі не знайдено підтриманої свіжої екструзії.",
+    "No supported fresh extrusion was found in the file."
+  ],
+  "inspect_gcode_summary": [
+    "Файл перевірено за суворим піднабором {dialect} ({parser}).\\nSHA-256: {sha256}\\nГруп екструзії: {buckets}. Деталі доступні нижче.\\n\\nЦе довжина оціненої свіжої екструзії, не маса й не фактична витрата. Файл не прив’язується до завдання, не виконується та не змінює залишок. Невідомі purge/flush та vendor-команди не оцінюються.",
+    "The file passed the strict {dialect} subset ({parser}).\\nSHA-256: {sha256}\\nExtrusion groups: {buckets}. Details are available below.\\n\\nThis is estimated fresh extrusion length, not mass or confirmed consumption. The file is not bound to a job, is not executed, and does not change stock. Unknown purge/flush and vendor commands are not estimated."
+  ]
+}

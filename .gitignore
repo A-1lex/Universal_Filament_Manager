@@ -1,0 +1,32 @@
+__pycache__/
+*.py[cod]
+.venv/
+.venv*/
+.tools/
+.runtime/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite*
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# Local databases, backups and generated analysis artifacts
+/backups/
+/graphify-out/
+
+# Local dependency checkouts and their package caches
+**/node_modules/
+**/.git/

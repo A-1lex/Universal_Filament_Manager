@@ -1,0 +1,40 @@
+// Shared mutable runtime state accessed by multiple modules
+export const state = {
+    spoolmanStatus: "Disconnected",
+    vendorID: null,
+    clients: [],       // SSE client connections
+    // Last known Spoolman spool list for change detection. null means "not yet
+    // seeded". Deliberately not [], which is a legitimate value for an empty
+    // Spoolman and must still be comparable against the next fetch.
+    lastSpoolData: null,
+    // Loaded only by bookings.js. A pending attempt must survive a process exit.
+    bookingJournal: null,
+    // Price bases and manual weighing attempts, owned by accounting.js.
+    accountingStore: null,
+    activeBookingIds: new Set(),
+    activeWeighingIds: new Set(),
+    // Startup bookkeeping. The monitor loops must be started exactly once, and
+    // the Spoolman bootstrap must not run twice in parallel when the endpoint is
+    // changed repeatedly in the Web UI.
+    monitorsRunning: false,
+    spoolmanBootstrapRunning: false,
+    // The SpoolmanDB catalogue, kept for the create-spool dialog. It is around
+    // seven thousand entries and a few megabytes, the dialog queries it while
+    // the user types, and it changes about as often as Spoolman ships a
+    // release, so it is fetched once and reused rather than pulled per request.
+    externalFilamentCache: { fetchedAt: 0, entries: [] },
+    // Request refusals already written to the server log, see security.js. A
+    // Web UI left open on a refused host retries forever, so each distinct
+    // reason is logged once instead of on every attempt.
+    refusedRequestsLogged: new Set(),
+    // Failed login attempts per remote address, see auth.js. Deliberately not
+    // persisted: a restart clearing the lockouts costs an attacker the seconds
+    // it takes to restart the service, which they cannot trigger anyway.
+    loginFailures: new Map(),
+    // Whether the dashboard dialog about the deprecated image name was closed
+    // since this process started, see imagenotice.js. Deliberately not
+    // persisted: the dialog comes back on every start, a new version included,
+    // because the switch is a one line change that a dialog dismissed once and
+    // forever is never acted on.
+    legacyImageNoticeDismissed: false,
+};

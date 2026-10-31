@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="dashboard.tabTitle">Dashboard · HaspelSync</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <script>
+    // Applies the stored theme before the first paint so page changes do not flash.
+    try {
+      if (localStorage.getItem("dark-mode") === "true") {
+        document.documentElement.classList.add("dark-mode");
+      }
+    } catch (error) { /* Storage blocked: stay in light mode. */ }
+  </script>
+    <script src="i18n.js"></script>
+    <script src="i18n/all.js"></script>
+</head>
+<body class="show-footer">
+  <div id="menubar">
+    <!-- The whole bar, including the dark mode button, is filled by menu.js -->
+    <div id="menu-root"></div>
+  </div>
+
+  <!-- App Content -->
+  <div id="app" class="page-width">
+    <div id="status" class="status-card">
+      <!-- The title in the middle, the two things that are not the title at
+           the two ends: what it is tracked with, and whether it is running.
+           The printer name is a picker, filled by menu.js. -->
+      <div class="status-head">
+        <div class="status-head-side">
+          <span id="tracking-mode" class="pill"></span>
+        </div>
+        <h1 class="status-title"><span data-i18n="dashboard.status.headline">Loaded Spools on</span> <span id="printer-name"></span></h1>
+        <div class="status-head-side status-head-side-end">
+          <label class="status-toggle" title="Reads this printer over MQTT and writes what it finds to Spoolman" data-i18n-title="dashboard.status.monitoringTitle">
+            <span data-i18n="dashboard.status.monitoring">Monitoring</span>
+            <span class="set-switch set-switch-alarm">
+              <input type="checkbox" id="monitoring-toggle">
+              <span class="set-switch-track"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="status-grid">
+        <div class="status-item">
+          <span class="status-label">Spoolman</span>
+          <span id="spoolman-status" class="status-value"></span>
+        </div>
+        <div class="status-item">
+          <span class="status-label" data-i18n="dashboard.status.printerMqtt">Printer (MQTT)</span>
+          <span id="mqtt-status" class="status-value"></span>
+        </div>
+        <div class="status-item">
+          <span class="status-label" data-i18n="dashboard.status.serialNumber">Serial number</span>
+          <span id="printer-serial" class="status-value"></span>
+        </div>
+        <div class="status-item">
+          <span class="status-label" data-i18n="dashboard.status.operationMode">Operation mode</span>
+          <span id="mode" class="status-value"></span>
+        </div>
+        <div class="status-item">
+          <span class="status-label" data-i18n="dashboard.status.lastUpdate">Last update</span>
+          <span id="last-mqtt-update" class="status-value"></span>
+        </div>
+        <div class="status-item">
+          <span class="status-label" data-i18n="dashboard.status.lastSlotUpdate">Last slot update</span>
+          <span id="last-mqtt-ams-update" class="status-value"></span>
+        </div>
+      </div>
+    </div>
+    <div id="spool-list"></div>
+  </div>
+  <footer id="dynamic-footer" class="footer">
+      <div class="container">
+          <div class="content">
+          </div>
+      </div>
+  </footer>
+
+  <script src="menu.js"></script>
+  <!-- A module, so it can import the decisions it shares with the server from
+       shared.js. Modules are deferred, so it still runs before DOMContentLoaded
+       and after menu.js, whose functions it calls as globals. -->
+  <script type="module" src="frontend.js"></script>
+
+  <dialog id="notice-dialog">
+    <h3 id="notice-dialog-title"></h3>
+    <div id="notice-dialog-content"></div>
+    <div class="button-container">
+      <button class="btn" id="notice-dialog-close" data-i18n="dashboard.notice.gotIt">Got it</button>
+      <button class="btn btn-primary" id="notice-dialog-open" data-i18n="dashboard.notice.openSettings">Open the settings</button>
+    </div>
+  </dialog>
+
+  <!-- Opened by clicking a filament name in either table. Its own dialog rather
+       than #info-dialog, because it carries tabs and edits its fields in place,
+       not the one confirm button that one is shaped around. -->
+  <dialog id="spool-detail-dialog">
+    <h3 id="spool-detail-title"></h3>
+    <div id="spool-detail-content"></div>
+    <div class="button-container">
+      <button class="btn" id="spool-detail-close" data-i18n="dashboard.dialog.close">Close</button>
+    </div>
+  </dialog>
+
+  <!-- The closing report of the last print. Its own dialog rather than
+       #info-dialog for the same reason as the one above: it only reads, so the
+       confirm button that one is shaped around has nothing to do here. -->
+  <dialog id="print-summary-dialog">
+    <h3 id="print-summary-title"></h3>
+    <div id="print-summary-content"></div>
+    <div class="button-container">
+      <button class="btn" id="print-summary-close" data-i18n="dashboard.dialog.close">Close</button>
+    </div>
+  </dialog>
+
+  <!-- Why the sliced file of the running print is not read, and what to do
+       about it. Opened from the i next to the line on the print card. It only
+       reads, like the two above. -->
+  <dialog id="lookup-help-dialog">
+    <h3 id="lookup-help-title"></h3>
+    <div id="lookup-help-content"></div>
+    <div class="button-container">
+      <button class="btn" id="lookup-help-close" data-i18n="dashboard.dialog.close">Close</button>
+    </div>
+  </dialog>
+
+  <dialog id="info-dialog">
+    <h3><span id="button-header" style="display: block; text-align: center;"></span></h3>
+    <div id="dialog-content"></div>
+    <div class="button-container">
+      <button class="btn" id="close-dialog" data-i18n="dashboard.dialog.close">Close</button>
+      <button class="btn btn-primary" id="action-button"><span id="action-button"></span></button>
+    </div>
+  </dialog>
+</body>
+</html>

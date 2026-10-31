@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="logs.tabTitle">Logs · HaspelSync</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <script>
+      // Applies the stored theme before the first paint so page changes do not flash.
+      try {
+        if (localStorage.getItem("dark-mode") === "true") {
+          document.documentElement.classList.add("dark-mode");
+        }
+      } catch (error) { /* Storage blocked: stay in light mode. */ }
+    </script>
+    <script src="i18n.js"></script>
+    <script src="i18n/all.js"></script>
+</head>
+<body class="hide-footer logs-page">
+    <div id="menubar">
+        <!-- The whole bar, including the dark mode button, is filled by menu.js -->
+        <div id="menu-root"></div>
+    </div>
+    <div class="page-width log-page">
+        <!-- Every choice the page offers is on this one line: which log, which
+             of a printer's two files, and the download. The picker used to be
+             the headline itself, and the trace a group inside its menu, which
+             the first person who needed one did not find. -->
+        <div class="log-toolbar">
+            <div class="log-field">
+                <span class="log-field-label" data-i18n="logs.source">Source</span>
+                <!-- The picker over the logs, filled by menu.js -->
+                <span id="headline"></span>
+            </div>
+            <!-- Hidden for the server log, which has no trace -->
+            <div class="log-field" id="log-stream-field" hidden>
+                <span class="log-field-label" data-i18n="logs.show">Show</span>
+                <div class="log-switch" id="log-stream" role="group" aria-label="Which file of the printer" data-i18n-aria-label="logs.whichFile">
+                    <button type="button" data-stream="log" aria-pressed="true" data-i18n="logs.stream.log">Log</button>
+                    <button type="button" data-stream="mqtt" aria-pressed="false" data-i18n="logs.stream.mqtt">Raw MQTT trace</button>
+                </div>
+            </div>
+            <div class="log-toolbar-end">
+                <button id="download-logs" class="log-button" data-i18n="logs.download.button">Download...</button>
+            </div>
+        </div>
+        <!-- The line under the toolbar names the file on disk, which is what a
+             bug report ends up naming, and describes it: whether the trace is
+             being captured, how much is on screen, how large the download
+             would be. It sat next to the download button once, where the long
+             sentence of a trace pushed the whole right end of the toolbar into
+             a second row. -->
+        <h3 class="log-title">
+            <span id="log-title"></span>
+            <span class="log-file" id="log-file"></span>
+            <span class="log-meta" id="log-meta"></span>
+        </h3>
+        <div id="log-box">
+            <div id="logs"></div>
+        </div>
+    </div>
+    <script src="menu.js"></script>
+    <script src="export.js"></script>
+    <script src="logs.js"></script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+name: Build & Publish Docker Image
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  # The name the image was published under before the rename to HaspelSync.
+  # GHCR does not redirect an image name, so every release is pushed there
+  # too until the old name is retired: an installation that still pulls it
+  # keeps updating instead of stopping without a word.
+  LEGACY_IMAGE_NAME: ${{ github.repository_owner }}/bambulab-ams-spoolman-filamentstatus
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      # The release step writes to the repository's releases, the image push
+      # writes to the package registry.
+      contents: write
+      packages: write
+
+    steps:
+      # The actions below run on the runner, not in the image: their Node is
+      # the runner's, and it is unrelated to the node:22-alpine the image is
+      # built from, which stays on 22 because linux/arm/v7 is published below
+      # and node:24-alpine has no armv7 build.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          # The whole history and every tag: the release notes below name the
+          # previous release to compare against, which cannot be found in the
+          # single commit a shallow checkout leaves behind.
+          fetch-depth: 0
+
+      - name: Set up QEMU (multi-arch support)
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Determine tags
+        id: tags
+        run: |
+          set -euo pipefail
+
+          # Only a tag may publish. A manual run sits on a branch, where
+          # GITHUB_REF_NAME is the branch name, which was treated as a version
+          # and moved :latest to whatever happened to be on that branch.
+          if [[ "${GITHUB_REF_TYPE}" != "tag" ]]; then
+            echo "::error::This workflow publishes from a tag only (got ${GITHUB_REF_TYPE} '${GITHUB_REF_NAME}'). Push a vX.Y.Z tag instead."
+            exit 1
+          fi
+
+          if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-.+)?$ ]]; then
+            echo "::error::Tag '${GITHUB_REF_NAME}' is not vX.Y.Z or vX.Y.Z-suffix."
+            exit 1
+          fi
+
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}"
+          IMAGE="${IMAGE,,}"  # lowercase
+          LEGACY_IMAGE="${{ env.REGISTRY }}/${{ env.LEGACY_IMAGE_NAME }}"
+          LEGACY_IMAGE="${LEGACY_IMAGE,,}"
+
+          VERSION="${GITHUB_REF_NAME#v}"
+
+          # Keep the image and the version the app reports in its Web UI in step
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          if [[ "${VERSION}" != "${PKG_VERSION}" ]]; then
+            echo "::error::Tag version '${VERSION}' does not match package.json '${PKG_VERSION}'."
+            exit 1
+          fi
+
+          # A suffix marks a pre-release and must never move :latest. A -dev
+          # suffix additionally moves the rolling :dev tag, further iterations
+          # (-dev.2 and so on) included. Any other suffix publishes its exact
+          # version only, so an -rc or -beta cannot reach users on :latest.
+          # The same suffix that keeps a version off :latest also makes its
+          # GitHub release a pre-release, so the two cannot drift apart: an
+          # image that is not :latest is never the release users are pointed at.
+          case "${VERSION}" in
+            *-dev|*-dev.*) NAMES="${VERSION} dev"    ; PRERELEASE=true  ;;
+            *-*)           NAMES="${VERSION}"        ; PRERELEASE=true  ;;
+            *)             NAMES="${VERSION} latest" ; PRERELEASE=false ;;
+          esac
+          # The HaspelSync image carries the tags; the image of the old name,
+          # built on top of it below, carries the same tags under its own
+          # name, or none while the repository still carries the old name.
+          TAGS=""
+          LEGACY_TAGS=""
+          for name in ${NAMES}; do
+            TAGS="${TAGS:+${TAGS},}${IMAGE}:${name}"
+            if [[ "${LEGACY_IMAGE}" != "${IMAGE}" ]]; then
+              LEGACY_TAGS="${LEGACY_TAGS:+${LEGACY_TAGS},}${LEGACY_IMAGE}:${name}"
+            fi
+          done
+          ALL_TAGS="${TAGS}${LEGACY_TAGS:+,${LEGACY_TAGS}}"
+
+          # The release these notes compare against. A pre-release compares
+          # against whatever came before it, dev builds included, so a -dev.7
+          # lists only what happened since -dev.6. A stable version skips the
+          # pre-releases and compares against the last stable one, so its notes
+          # carry the whole line of work rather than the last dev step of it.
+          # Ordered by when the tags were created, not by name: a version sort
+          # puts 1.3.0 before 1.3.0-dev without being told what a suffix means.
+          if [[ "${PRERELEASE}" == "true" ]]; then
+            CANDIDATES="$(git tag --sort=-creatordate | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' || true)"
+          else
+            CANDIDATES="$(git tag --sort=-creatordate | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' || true)"
+          fi
+          PREVIOUS="$(awk -v cur="${GITHUB_REF_NAME}" '
+            $0 == cur { seen = 1; next }
+            seen { print; exit }
+          ' <<< "${CANDIDATES}")"
+
+          echo "Publishing: ${ALL_TAGS} (prerelease: ${PRERELEASE}, previous: ${PREVIOUS:-none})"
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+          echo "legacy_tags=${LEGACY_TAGS}" >> $GITHUB_OUTPUT
+          echo "all_tags=${ALL_TAGS}" >> $GITHUB_OUTPUT
+          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
+          echo "previous=${PREVIOUS}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "prerelease=${PRERELEASE}" >> $GITHUB_OUTPUT
+          # Build time for the OCI created label. The repository's updated_at
+          # was used here, which is when the repo last changed, not when this
+          # image was built.
+          echo "created=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_OUTPUT
+
+      - name: Build and push multi-arch image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          tags: ${{ steps.tags.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=HaspelSync
+            org.opencontainers.image.description=Keeps a Bambu Lab AMS in sync with Spoolman
+            org.opencontainers.image.version=${{ steps.tags.outputs.version }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ steps.tags.outputs.created }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # The image of the old name: the image just pushed, with the name it is
+      # published under baked in, so the service can say that this name is
+      # deprecated. Built from the registry rather than from the context, which
+      # is what makes it the same bytes under another name, one layer apart.
+      - name: Build and push the image of the old name
+        if: steps.tags.outputs.legacy_tags != ''
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: docker/Dockerfile.legacy
+          push: true
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          tags: ${{ steps.tags.outputs.legacy_tags }}
+          build-args: |
+            BASE=${{ steps.tags.outputs.image }}:${{ steps.tags.outputs.version }}
+          labels: |
+            org.opencontainers.image.title=HaspelSync (deprecated image name)
+            org.opencontainers.image.description=Keeps a Bambu Lab AMS in sync with Spoolman. This image name is deprecated, pull ghcr.io/rdiger-36/haspelsync instead
+            org.opencontainers.image.version=${{ steps.tags.outputs.version }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ steps.tags.outputs.created }}
+
+      # Runs after the push on purpose: a release that points at an image which
+      # never got built would send people to a pull that fails.
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.tags.outputs.version }}
+          PRERELEASE: ${{ steps.tags.outputs.prerelease }}
+          TAGS: ${{ steps.tags.outputs.all_tags }}
+          PREVIOUS: ${{ steps.tags.outputs.previous }}
+        run: |
+          set -euo pipefail
+
+          # The section of CHANGELOG.md for exactly this version: everything
+          # between its "Version <x>" line and the next separator. An exact
+          # string compare rather than a pattern, so 1.3.0 cannot match the
+          # heading of 1.3.0-dev.2. The separator is matched as "starts with
+          # ---" rather than by a counted interval, which mawk, the awk on the
+          # runner, does not support.
+          NOTES="$(awk -v v="Version ${VERSION}" '
+            $0 == v { found = 1; next }
+            found && /^---/ { exit }
+            found { print }
+          ' CHANGELOG.md)"
+
+          # What GitHub itself knows about the release: every merged pull request
+          # since the previous one, grouped into the sections of
+          # .github/release.yml by the label it carries, each naming who wrote
+          # it, plus the first-time contributors and the compare link. This is
+          # why a pull request is labelled before it is merged; an unlabelled
+          # one lands under "Everything else".
+          #
+          # Not fatal on its own: a release whose overview is missing is worth
+          # more than no release at all, so a failure here leaves the hand
+          # written section standing alone.
+          GENERATED=""
+          if ! GENERATED="$(gh api "repos/${GITHUB_REPOSITORY}/releases/generate-notes" \
+                --method POST \
+                -f tag_name="${GITHUB_REF_NAME}" \
+                ${PREVIOUS:+-f previous_tag_name="${PREVIOUS}"} \
+                --jq '.body')"; then
+            echo "::warning::Could not generate the pull request overview for ${GITHUB_REF_NAME}."
+            GENERATED=""
+          fi
+
+          # Everyone the generated body credits, as one line. It attributes each
+          # pull request on its own line, which answers "who wrote this change"
+          # but not "who is behind this release".
+          CONTRIBUTORS="$(grep -oE 'by @[A-Za-z0-9-]+' <<< "${GENERATED}" \
+            | sed 's/^by //' | sort -u | tr '\n' ' ' || true)"
+
+          # The order is what a reader needs in the order they need it: what
+          # changed as one line per pull request, who wrote it, how to pull it,
+          # and only then the changelog section, which for a version like 1.3.0
+          # is sixty lines of prose. Above the fold it buried everything else,
+          # the docker pull included.
+          {
+            if [[ -n "${GENERATED//[[:space:]]/}" ]]; then
+              printf '%s\n' "${GENERATED}"
+            fi
+
+            if [[ -n "${CONTRIBUTORS// /}" ]]; then
+              echo
+              echo "### Contributors"
+              echo
+              echo "Thanks to ${CONTRIBUTORS% }."
+            fi
+
+            echo
+            echo "### Docker"
+            echo
+            echo '```bash'
+            # Every tag this run published, so the notes cannot claim a tag that
+            # was not pushed: for a stable version that is :latest as well.
+            echo "${TAGS}" | tr ',' '\n' | while read -r tag; do
+              [[ -n "${tag}" ]] && echo "docker pull ${tag}"
+            done
+            echo '```'
+            if [[ "${PRERELEASE}" == "true" ]]; then
+              echo
+              echo "This is a pre-release. \`:latest\` still points at the last stable version."
+            fi
+
+            echo
+            echo "### Detailed changes"
+            echo
+            if [[ -n "${NOTES//[[:space:]]/}" ]]; then
+              # Fenced, because the changelog is indented plain text: as
+              # markdown its deeper levels would collapse into code blocks
+              # halfway and read as a mess.
+              echo '```'
+              printf '%s\n' "${NOTES}"
+              echo '```'
+            else
+              echo "No CHANGELOG.md section for ${VERSION}."
+            fi
+          } > release-notes.md
+
+          # A re-run of the workflow for a tag that already has a release should
+          # update it rather than fail on the second attempt.
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            gh release edit "${GITHUB_REF_NAME}" \
+              --notes-file release-notes.md \
+              --prerelease="${PRERELEASE}" \
+              --latest="$([[ "${PRERELEASE}" == "true" ]] && echo false || echo true)"
+            echo "Updated the existing release ${GITHUB_REF_NAME}."
+          else
+            gh release create "${GITHUB_REF_NAME}" \
+              --title "${GITHUB_REF_NAME}" \
+              --notes-file release-notes.md \
+              --prerelease="${PRERELEASE}" \
+              --latest="$([[ "${PRERELEASE}" == "true" ]] && echo false || echo true)"
+            echo "Created the release ${GITHUB_REF_NAME} (prerelease: ${PRERELEASE})."
+          fi

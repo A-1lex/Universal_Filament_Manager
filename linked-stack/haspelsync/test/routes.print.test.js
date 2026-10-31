@@ -1,0 +1,255 @@
+import test, { after, before } from "node:test";
+import assert from "node:assert/strict";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+import { startTestApp, call } from "./helpers/app.js";
+
+// GET /api/print is where the dashboard learns which slot each sliced filament
+// will be consumed from. It runs the same match the booking runs and writes the
+// answer onto every entry as matchedAmsId, which is the only thing the Web UI
+// reads about it. This covers that wiring over HTTP.
+//
+// No FTPS is involved: the route only downloads the sliced file when the print
+// state has not cached one yet, so seeding printer.currentSliceInfo the way the
+// MQTT handler does is enough, and the fixture is real slicer output.
+
+let app;
+let printer;
+let sliceInfo;
+
+const SERIAL = "01P00A000000009";
+
+/** One loaded slot, shaped like the runtime UI spools mqtt.js keeps. */
+const loadedSlot = (amsId, { id, idx, type, color, cols = null, tag = true, mapped = false, state = "Loaded (Bambu Lab)" } = {}) => ({
+    amsId,
+    slotState: state,
+    connectedViaTag: tag,
+    connectedViaMapping: mapped,
+    existingSpool: id ? { id, remaining_weight: 500, initial_weight: 1000, filament: { name: `spool ${id}` } } : null,
+    slot: {
+        tray_uuid: `uuid-${amsId}`,
+        tray_type: type,
+        tray_info_idx: idx,
+        tray_color: color,
+        cols: cols ?? [color],
+        tray_weight: "1000",
+        remain: 50,
+    },
+});
+
+before(async () => {
+    app = await startTestApp({
+        seedPrinters: [{ id: SERIAL, code: "12345678", ip: "127.0.0.1", name: "Test Printer" }],
+    });
+
+    const { parseSliceInfo } = await import("../src/gcode.js");
+    const { printers } = await import("../src/printers.js");
+
+    const fixture = path.join(path.dirname(fileURLToPath(import.meta.url)), "fixtures", "four_colours.config");
+    sliceInfo = parseSliceInfo(fs.readFileSync(fixture, "utf-8"));
+
+    printer = printers.find(p => p.id === SERIAL);
+    printer.currentJobName    = "four colours";
+    printer.currentGcodeState = "RUNNING";
+    printer.currentLayerNum   = 40;
+    printer.currentSliceInfo  = sliceInfo;
+});
+
+after(async () => { await app.close(); });
+
+/** The four filaments of the fixture, in the order the slicer lists them. */
+const fixtureFilaments = () => sliceInfo.filaments.map(f => ({ idx: f.tray_info_idx, color: f.color.replace("#", "") }));
+
+test("every consumption entry carries the slot it will be consumed from", async () => {
+    const [f0, f1, f2, f3] = fixtureFilaments();
+    printer.currentMapping = null;
+    printer.spoolData = [
+        loadedSlot("A1", { id: 101, idx: f0.idx, type: "PLA", color: f0.color }),
+        loadedSlot("A2", { id: 102, idx: f1.idx, type: "PLA", color: f1.color }),
+        loadedSlot("A3", { id: 103, idx: f2.idx, type: "PLA", color: f2.color }),
+        loadedSlot("A4", { id: 104, idx: f3.idx, type: "PLA", color: f3.color }),
+    ];
+
+    const { status, body } = await call(`${app.url}/api/print/${SERIAL}`);
+
+    assert.equal(status, 200);
+    const entries = Object.values(body.fullConsumption);
+    assert.equal(entries.length, 4);
+    assert.deepEqual(entries.map(e => e.matchedAmsId), ["A1", "A2", "A3", "A4"]);
+
+    // The partial map is annotated as well, or the "printed" figure would land
+    // on no row at all.
+    assert.deepEqual(Object.values(body.consumption).map(e => e.matchedAmsId), ["A1", "A2", "A3", "A4"]);
+});
+
+test("what the printer reports beats the colours the file was sliced with", async () => {
+    const [f0, f1, f2, f3] = fixtureFilaments();
+    // The printer runs filament 0 from A4 and filament 3 from A1, which is the
+    // remap it reports and the sliced colours cannot know about.
+    const { decodePrintMapping } = await import("../src/utils.js");
+    printer.currentMapping = decodePrintMapping([0x0003, 0x0001, 0x0002, 0x0000]);
+    printer.spoolData = [
+        loadedSlot("A1", { id: 101, idx: f0.idx, type: "PLA", color: f0.color }),
+        loadedSlot("A2", { id: 102, idx: f1.idx, type: "PLA", color: f1.color }),
+        loadedSlot("A3", { id: 103, idx: f2.idx, type: "PLA", color: f2.color }),
+        loadedSlot("A4", { id: 104, idx: f3.idx, type: "PLA", color: f3.color }),
+    ];
+
+    const { body } = await call(`${app.url}/api/print/${SERIAL}`);
+    const entries = Object.values(body.fullConsumption);
+
+    assert.deepEqual(entries.map(e => e.matchedAmsId), ["A4", "A2", "A3", "A1"]);
+    // The slot the slice named stays next to it, because the two differ exactly
+    // where the printer remapped the job and both are worth reading.
+    assert.deepEqual(entries.map(e => e.amsId), ["A4", "A2", "A3", "A1"]);
+    assert.ok(entries.every(e => e.amsIdFromPrinter));
+
+    // No slot carries two filaments here, which is what the claim on a reported
+    // slot is for: the colours of A1 and A4 both appear in the file.
+    const claimed = entries.map(e => e.matchedAmsId);
+    assert.equal(new Set(claimed).size, claimed.length);
+});
+
+test("a filament nothing loaded can serve stays unplaced", async () => {
+    // Three of the four: the two generic ones, and the white PLA Basic that
+    // shares its profile with the loaded slot, see the test below.
+    const [f0] = fixtureFilaments();
+    printer.currentMapping = null;
+    printer.spoolData = [loadedSlot("A1", { id: 101, idx: f0.idx, type: "PLA", color: f0.color })];
+
+    const { body } = await call(`${app.url}/api/print/${SERIAL}`);
+    const unplaced = Object.values(body.fullConsumption).filter(e => e.matchedAmsId === null);
+
+    // What the dashboard lists as required but not loaded.
+    assert.equal(unplaced.length, 3);
+});
+
+test("a slot carries only the filament that is really its own", async () => {
+    // The fixture prints two filaments of one profile, black and white PLA
+    // Basic, and only the black spool is loaded. The white one must not reach
+    // that slot through the profile stage: the amount would be booked onto a
+    // spool that never printed it, and the dashboard would show it there.
+    const [f0] = fixtureFilaments();
+    printer.currentMapping = null;
+    printer.spoolData = [loadedSlot("A1", { id: 101, idx: f0.idx, type: "PLA", color: f0.color })];
+
+    const { body } = await call(`${app.url}/api/print/${SERIAL}`);
+    const entries = Object.values(body.fullConsumption);
+    const onA0 = entries.filter(e => e.matchedAmsId === "A1");
+
+    assert.equal(onA0.length, 1);
+    assert.equal(onA0[0].color.replace("#", "").toUpperCase(), f0.color.toUpperCase());
+    assert.equal(entries.filter(e => e.matchedAmsId === null).length, 3);
+});
+
+test("an empty slot is not offered to the match", async () => {
+    const [f0] = fixtureFilaments();
+    printer.currentMapping = null;
+    // An empty slot whose last reported payload still looks like the filament.
+    // Nothing may be booked or shown on it, so it must not become a candidate.
+    printer.spoolData = [loadedSlot("A1", { id: 101, idx: f0.idx, type: "PLA", color: f0.color, state: "Empty" })];
+
+    const { body } = await call(`${app.url}/api/print/${SERIAL}`);
+
+    assert.ok(Object.values(body.fullConsumption).every(e => e.matchedAmsId === null));
+});
+
+test("an unassigned 3rd party slot still shows what the print needs from it", async () => {
+    // It cannot be booked, and the dashboard has to show the amount anyway,
+    // which is why the route matches over every loaded slot and the booking
+    // over the bookable ones alone.
+    const [, f1] = fixtureFilaments();
+    printer.currentMapping = null;
+    printer.spoolData = [
+        loadedSlot("External", { id: null, idx: null, type: "PLA", color: f1.color, tag: false, state: "Loaded (3rd party)" }),
+    ];
+
+    const { body } = await call(`${app.url}/api/print/${SERIAL}`);
+    const matched = Object.values(body.fullConsumption).filter(e => e.matchedAmsId === "External");
+
+    assert.equal(matched.length, 1);
+    assert.equal(matched[0].color.replace("#", "").toUpperCase(), f1.color.toUpperCase());
+});
+
+test("a file the print handler did not find is not looked for again on every refresh", async () => {
+    // What the MQTT handler leaves behind after a fetch that found nothing.
+    // Without the guard the route would open an FTPS connection to 127.0.0.1
+    // on every call, which is one login per dashboard refresh for the whole
+    // print; with it the answer is the same empty one, at once.
+    printer.currentSliceInfo = null;
+    printer.lastSliceFetch = { jobName: "four colours", tried: ["/cache/four colours.3mf"], path: null, sliceInfo: false, at: Date.now() };
+
+    const started = Date.now();
+    const { status, body } = await call(`${app.url}/api/print/${SERIAL}`);
+    assert.equal(status, 200);
+    assert.equal(body.sliceInfo, null);
+    assert.equal(body.error, undefined);
+    assert.ok(Date.now() - started < 2000, "answered without an FTPS attempt");
+
+    printer.currentSliceInfo = sliceInfo;
+    printer.lastSliceFetch = null;
+});
+
+test("a job whose sliced file was not found says so, and whether attempts are left", async () => {
+    const { SLICE_FETCH_ATTEMPTS } = await import("../src/gcode.js");
+    const saved = printer.currentSliceInfo;
+    printer.currentSliceInfo = null;
+    printer.currentMapping = null;
+    try {
+        // The first attempt failed on every path, two more are due
+        printer.lastSliceFetch = {
+            jobName: "four colours", attempt: 1, path: null,
+            tried: ["/cache/four colours.gcode.3mf"], reasons: { "/cache/four colours.gcode.3mf": "550 Failed to open file." },
+        };
+        let { body } = await call(`${app.url}/api/print/${SERIAL}`);
+        assert.equal(body.sliceInfo, null);
+        assert.deepEqual(body.sliceFetch, {
+            attempt: 1, attempts: SLICE_FETCH_ATTEMPTS, final: false, kind: "missing",
+            reason: "No sliced file on the printer under /cache/four colours.gcode.3mf (550 Failed to open file.)",
+        });
+        assert.equal(body.modelTitle, null);
+
+        // The login failed, so no path was tried: the card gets its own line
+        // and the help for a printer whose file transfer does not answer
+        printer.lastSliceFetch.error = "wrong version number (control socket)";
+        ({ body } = await call(`${app.url}/api/print/${SERIAL}`));
+        assert.equal(body.sliceFetch.kind, "connection");
+        assert.equal(body.sliceFetch.reason, "FTPS login to the printer failed: wrong version number (control socket)");
+        delete printer.lastSliceFetch.error;
+
+        // The look before the print ran does not count: attempt 0, not final
+        printer.lastSliceFetch.attempt = 0;
+        printer.lastSliceFetch.beforeRunning = true;
+        ({ body } = await call(`${app.url}/api/print/${SERIAL}`));
+        assert.equal(body.sliceFetch.attempt, 0);
+        assert.equal(body.sliceFetch.final, false);
+        delete printer.lastSliceFetch.beforeRunning;
+
+        // The last attempt: nothing will be booked
+        printer.lastSliceFetch.attempt = SLICE_FETCH_ATTEMPTS;
+        ({ body } = await call(`${app.url}/api/print/${SERIAL}`));
+        assert.equal(body.sliceFetch.final, true);
+
+        // A file that was found but carried no slice info is not "not found"
+        printer.lastSliceFetch.path = "/cache/four colours.gcode.3mf";
+        ({ body } = await call(`${app.url}/api/print/${SERIAL}`));
+        assert.equal(body.sliceFetch, null);
+    } finally {
+        printer.currentSliceInfo = saved;
+        printer.lastSliceFetch = null;
+    }
+});
+
+test("the print view says whether the printer's removable storage is in", async () => {
+    // Null until a report carried the field, which none did here.
+    printer.storagePresent = null;
+    assert.equal((await call(`${app.url}/api/print/${SERIAL}`)).body.storagePresent, null);
+
+    printer.storagePresent = false;
+    assert.equal((await call(`${app.url}/api/print/${SERIAL}`)).body.storagePresent, false);
+
+    printer.storagePresent = true;
+    assert.equal((await call(`${app.url}/api/print/${SERIAL}`)).body.storagePresent, true);
+});
