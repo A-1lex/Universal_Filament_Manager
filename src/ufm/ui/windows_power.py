@@ -12,7 +12,12 @@ def _windows_clock_snapshot() -> tuple[float, float] | None:
     if os.name != "nt":
         return None
     try:
-        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        # WinDLL exists only on Windows; resolve it dynamically so the module
+        # remains type-checkable on the other CI platforms.
+        win_dll = getattr(ctypes, "WinDLL", None)
+        if win_dll is None:
+            return None
+        kernel32 = win_dll("kernel32", use_last_error=True)
         get_tick_count = kernel32.GetTickCount64
         get_tick_count.restype = ctypes.c_ulonglong
         query_unbiased = kernel32.QueryUnbiasedInterruptTime

@@ -85,11 +85,12 @@ class CalculationWorkerTransport:
                             "LOG_DIR": str(self.workdir / "logs")})
         process: asyncio.subprocess.Process | None = None
         try:
+            no_window = int(getattr(subprocess, "CREATE_NO_WINDOW", 0)) if os.name == "nt" else 0
             process = await asyncio.create_subprocess_exec(
                 str(self.executable), str(self.entrypoint), cwd=self.workdir, env=environment,
                 stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE, limit=MAX_WIRE_BYTES + 1,
-                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+                creationflags=no_window,
             )
             assert process.stdin is not None and process.stdout is not None and process.stderr is not None
 

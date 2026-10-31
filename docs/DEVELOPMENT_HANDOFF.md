@@ -3480,3 +3480,10 @@ Resume only from a safe window with no pending manual operation: open the enroll
 All three initial push-triggered CI runs failed at MyPy after Ruff succeeded; tests and wheel build were skipped. Representative logs show only missing `PySide6.Qt*` implementations, which cause cascading Any subclass/type errors. `.github/workflows/ci.yml` installed only the `dev` extra despite desktop UI modules being included in the mypy target. Corrected CI installation to `.[dev,desktop]` so PySide6-Essentials is present on the cross-platform matrix.
 
 Local Python 3.12 verification: Ruff clean, MyPy clean across 139 files, pytest 683 passed + 491 subtests (87.93s). Remote CI for Linux/macOS/Windows and Python 3.12–3.14 is still pending. After push, inspect each matrix result; if Qt wheel installation fails on a platform/version, adjust only from the observed logs.
+
+
+## 2026-10-31 — Guard Windows-only attributes in cross-platform typing
+
+CI run `41211558386` showed that the new desktop dependency fixed missing Qt imports but Linux/macOS MyPy then rejected `ctypes.WinDLL` and `subprocess.CREATE_NO_WINDOW`. Replaced direct attribute access with guarded `getattr`: suspend detector fails closed to `None` without WinDLL; the subprocess uses the Windows no-window flag only when present and on Windows.
+
+Local verification: Ruff clean, MyPy clean across 139 source files, focused Windows power/calculation-worker tests 10 passed + 5 subtests. Next, push and verify all CI matrix jobs on Linux/macOS/Windows and Python 3.12–3.14. Earlier CI results are historical and should not be treated as current after the follow-up commit.
