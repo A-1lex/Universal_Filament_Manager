@@ -3487,3 +3487,10 @@ Local Python 3.12 verification: Ruff clean, MyPy clean across 139 files, pytest 
 CI run `41211558386` showed that the new desktop dependency fixed missing Qt imports but Linux/macOS MyPy then rejected `ctypes.WinDLL` and `subprocess.CREATE_NO_WINDOW`. Replaced direct attribute access with guarded `getattr`: suspend detector fails closed to `None` without WinDLL; the subprocess uses the Windows no-window flag only when present and on Windows.
 
 Local verification: Ruff clean, MyPy clean across 139 source files, focused Windows power/calculation-worker tests 10 passed + 5 subtests. Next, push and verify all CI matrix jobs on Linux/macOS/Windows and Python 3.12–3.14. Earlier CI results are historical and should not be treated as current after the follow-up commit.
+
+
+## 2026-10-31 — Normalize expected Windows paths in CI tests
+
+The Windows matrix reached pytest after MyPy was fixed and exposed two incorrect assertions in `tests/unit/test_foundation.py`: the implementation uses `Path.resolve()`, which canonicalizes the GitHub runner's `runneradmin` profile path to its short `RUNNER~1` form. Updated the expected values to `config.resolve()` and `root.resolve() / "data"`; application path behavior and the no-write assertion are unchanged.
+
+Local evidence after this change: `test_foundation.py` 20 passed + 20 subtests; Ruff clean; MyPy clean for 139 source files; focused power/worker tests 10 passed + 5 subtests. Next, verify the complete GitHub matrix (Linux/macOS/Windows × Python 3.12/3.13/3.14), including packaging and installed-wheel checks.

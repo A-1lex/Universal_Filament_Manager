@@ -84,7 +84,7 @@ class SettingsTests(unittest.TestCase):
             (config / "settings.json").write_text('{"locale":"en-US"}', encoding="utf-8")
 
             paths, saved = resolve_settings(root, None)
-            self.assertEqual(paths.config, config)
+            self.assertEqual(paths.config, config.resolve())
             self.assertEqual(saved.locale, "en-US")
 
             _, overridden = resolve_settings(root, "uk-UA")
@@ -168,7 +168,7 @@ class PathsAndStartupTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "дані програми"
             paths = AppPaths.resolve(root)
-            self.assertEqual(paths.data, root / "data")
+            self.assertEqual(paths.data, root.resolve() / "data")
             self.assertFalse(root.exists())
             paths.create()
             paths.create()

@@ -2328,3 +2328,9 @@ Local verification with `.venv312`: Ruff passed; MyPy passed (139 files); full p
 Після додавання `.[dev,desktop]` усунено помилки відсутніх PySide6 imports, але CI Linux/macOS матриця під час MyPy виявила два платформні атрибути: `ctypes.WinDLL` і `subprocess.CREATE_NO_WINDOW`. Обидва валідні для Windows runtime, проте відсутні в non-Windows stubs. Використання замінено на guarded `getattr`: detector без `WinDLL` повертає `None`, а worker передає прапор створення вікна лише коли платформа його надає; Windows гілки зберігаються.
 
 Перевірено локально: Ruff чистий; MyPy чистий (139 source files); `tests/unit/test_windows_power.py` + `tests/integration/test_calculation_worker.py` — 10 passed + 5 subtests. Повний suite без цих останніх двох змін: 683 passed + 491 subtests; remote CI включає повний suite після наступного push. Наступне: запустити новий GitHub Actions matrix і підтвердити Linux/macOS/Windows на Python 3.12–3.14. Попередній workflow run `41211558386` є неуспішним через саме ці старі повідомлення до останнього виправлення.
+
+## 2026-10-31 — Виправлено CI path assertions на Windows
+
+Матриця після PySide6/type portability фіксів виявила дві невірні рівності в `tests/unit/test_foundation.py` на Windows runners: `Path.resolve()` canonicalizes `runneradmin` до короткого шляху `RUNNER~1`, а тести порівнювали із початковим неконанонізованим `Path`. Застосунок створював очікувані resolved paths; змінив лише очікування тестів на `config.resolve()` та `root.resolve() / "data"`, зберігши перевірку відсутності побічних записів.
+
+Локальна перевірка після правки: `test_foundation.py` — 20 passed + 20 subtests; Ruff для зміненого тесту чистий; MyPy clean у 139 файлах; фокусні Windows API тести — 10 passed + 5 subtests. Наступне: новий push-triggered CI має підтвердити всі 9 ОС/Python комбінацій, включно з wheel verification. Невдалі старі run-и — до цього виправлення.
