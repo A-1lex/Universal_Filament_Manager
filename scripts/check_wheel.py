@@ -34,7 +34,8 @@ def main() -> None:
             "for module in (ufm, ufm.ui.i18n)), 'Imported UFM outside wheel environment'"
         )
         subprocess.run(
-            [str(python), "-I", "-c", origin_check], cwd=root, env=env, check=True
+            [str(python), "-X", "utf8", "-I", "-c", origin_check],
+            cwd=root, env=env, check=True,
         )
         migration_check = (
             "from pathlib import Path; "
@@ -45,7 +46,8 @@ def main() -> None:
             "assert migrate_database(engine) == LATEST_REVISION; engine.dispose()"
         )
         subprocess.run(
-            [str(python), "-I", "-c", migration_check], cwd=root, env=env, check=True
+            [str(python), "-X", "utf8", "-I", "-c", migration_check],
+            cwd=root, env=env, check=True,
         )
         component_check = (
             "from importlib.resources import files; "
@@ -60,11 +62,12 @@ def main() -> None:
             "assert b'<svg' in spool_label_svg(identity)"
         )
         subprocess.run(
-            [str(python), "-I", "-c", component_check], cwd=root, env=env, check=True
+            [str(python), "-X", "utf8", "-I", "-c", component_check],
+            cwd=root, env=env, check=True,
         )
         for locale in ("uk-UA", "en-US"):
             subprocess.run(
-                [str(python), "-I", "-m", "ufm", "--check", "--locale", locale,
+                [str(python), "-X", "utf8", "-I", "-m", "ufm", "--check", "--locale", locale,
                  "--data-dir", str(root / "app")],
                 cwd=root,
                 env=env,

@@ -2527,6 +2527,7 @@ def test_printer_monitor_reconnects_after_provider_reports_stale(qt_application)
 
     attempts = []
     disconnected = []
+    streams_started = []
 
     class FakeProvider:
         def __init__(self, ordinal):
@@ -2549,6 +2550,7 @@ def test_printer_monitor_reconnects_after_provider_reports_stale(qt_application)
             )
 
         async def subscribe_events(self):
+            streams_started.append(self.ordinal)
             await asyncio.sleep(30)
             if False:
                 yield None
@@ -2564,12 +2566,15 @@ def test_printer_monitor_reconnects_after_provider_reports_stale(qt_application)
     task.state_changed.connect(states.append)
     task.start()
     deadline = time.monotonic() + 3
-    while (len(attempts) < 2 or "stale" not in states) and time.monotonic() < deadline:
+    while (
+        len(attempts) < 2 or "stale" not in states or 2 not in streams_started
+    ) and time.monotonic() < deadline:
         qt_application.processEvents()
         time.sleep(0.01)
 
     assert attempts[:2] == [1, 2]
     assert "stale" in states
+    assert 2 in streams_started
     assert disconnected.count(1) == 1
     task.stop()
     assert task.wait(3000)
@@ -2590,6 +2595,7 @@ def test_printer_monitor_reconnects_after_system_resume(qt_application):
 
     attempts = []
     disconnected = []
+    streams_started = []
 
     class FakeProvider:
         async def connect(self):
@@ -2607,6 +2613,7 @@ def test_printer_monitor_reconnects_after_system_resume(qt_application):
             )
 
         async def subscribe_events(self):
+            streams_started.append(len(attempts))
             await asyncio.sleep(30)
             if False:
                 yield None
@@ -2628,12 +2635,15 @@ def test_printer_monitor_reconnects_after_system_resume(qt_application):
     task.state_changed.connect(states.append)
     task.start()
     deadline = time.monotonic() + 3
-    while (len(attempts) < 2 or "stale" not in states) and time.monotonic() < deadline:
+    while (
+        len(attempts) < 2 or "stale" not in states or 2 not in streams_started
+    ) and time.monotonic() < deadline:
         qt_application.processEvents()
         time.sleep(0.01)
 
     assert attempts == [1, 2]
     assert "stale" in states
+    assert 2 in streams_started
     assert disconnected.count(1) == 1
     task.stop()
     assert task.wait(3000)

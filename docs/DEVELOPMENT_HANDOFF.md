@@ -3494,3 +3494,8 @@ Local verification: Ruff clean, MyPy clean across 139 source files, focused Wind
 The Windows matrix reached pytest after MyPy was fixed and exposed two incorrect assertions in `tests/unit/test_foundation.py`: the implementation uses `Path.resolve()`, which canonicalizes the GitHub runner's `runneradmin` profile path to its short `RUNNER~1` form. Updated the expected values to `config.resolve()` and `root.resolve() / "data"`; application path behavior and the no-write assertion are unchanged.
 
 Local evidence after this change: `test_foundation.py` 20 passed + 20 subtests; Ruff clean; MyPy clean for 139 source files; focused power/worker tests 10 passed + 5 subtests. Next, verify the complete GitHub matrix (Linux/macOS/Windows × Python 3.12/3.13/3.14), including packaging and installed-wheel checks.
+
+
+## 2026-10-31 — GitHub Actions cross-platform test fixes
+
+Run `41211711591` showed Ubuntu Qt import failures from missing `libEGL.so.1`; run `41211933317` confirmed that cause on all Ubuntu Python versions, exposed Windows wheel-smoke Unicode encoding failures, and had two single-occurrence macOS reconnect cleanup races. Added Ubuntu-only `libegl1` installation; changed isolated wheel-check child interpreter calls to `-X utf8 -I`; synchronized the two existing monitor tests on the second provider event stream before requesting stop. Local validation: wheel + installed-wheel script exit 0, Ruff/py_compile/diff-check clean, both focused tests passed in four consecutive runs (2 per run). The fresh GitHub matrix has not yet run; preserve E16.08 as Partial. No printer, production DB, account data, or stock was accessed.
