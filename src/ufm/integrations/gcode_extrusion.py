@@ -533,10 +533,7 @@ def estimate_mass(
     consistent = (
         not (set(modelled) | set(load) | set(incoming_flush) | set(conditional)) - known
         and close(slicer_total, modelled_total + flush)
-        and all(modelled[item.tool] - item.length_mm <= max(
-            absolute_tolerance_mm, item.length_mm * relative_tolerance)
-            and close(item.length_mm, modelled[item.tool] + min(flush, remainders[item.tool]))
-            for item in filaments))
+        and all(close(item.slicer_mm, item.modelled_mm + item.flush_share_mm) for item in tools))
     return GcodeMassEstimate(
         MASS_METHOD, report.parser_version, report.file_sha256, relative_tolerance,
         absolute_tolerance_mm, flush, tuple(tools), bool(consistent))

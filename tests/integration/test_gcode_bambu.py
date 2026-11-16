@@ -144,6 +144,15 @@ class BambuSubsetTests(unittest.TestCase):
                          [Decimal(0), Decimal(20)])
         self.assertFalse(estimate.consistent)
 
+    def test_per_tool_check_uses_assigned_flush_share(self):
+        # Totals agree within 1%, but T1 is assigned all 39 mm of flush: 1019 vs 1000.
+        body = (START + "G1 E1000\nM620 S1A\nM620.10 A1 L39 H0.4\nT1\nM621 S1A\nG1 E980\n")
+        report = synthetic(body, lengths="1000,1000", weights="3,3", filaments="1,2")
+        estimate = estimate_mass(report)
+        self.assertEqual([item.flush_share_mm for item in estimate.tools],
+                         [Decimal(0), Decimal(39)])
+        self.assertFalse(estimate.consistent)
+
     def test_marlin_report_has_no_material_facts(self):
         data = b"G21\nT0\nM83\nG1 E1\n"
         report = inspect_extrusion(data, expected_sha256=hashlib.sha256(data).hexdigest(),
