@@ -83,6 +83,8 @@ class BambuFixtureTests(unittest.TestCase):
         try:
             target.write_bytes(data)
             self.assertEqual(inspect_gcode_file_for_local_review(target).dialect, "bambu-v1")
+            target.write_bytes(b"\xef\xbb\xbf" + data)
+            self.assertEqual(inspect_gcode_file_for_local_review(target).dialect, "bambu-v1")
             with self.assertRaises(GcodeRejected):
                 inspect_extrusion(data, expected_sha256=hashlib.sha256(data).hexdigest(),
                                   dialect="marlin-linear-v1")

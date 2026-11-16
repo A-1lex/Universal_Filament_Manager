@@ -547,7 +547,7 @@ def inspect_gcode_file_for_local_review(path: str | Path) -> ExtrusionReport:
     except OSError:
         raise GcodeRejected("gcode.file_unreadable") from None
     digest = hashlib.sha256(data).hexdigest()
-    head = data[:4096]
+    head = data[:4096].removeprefix(b"\xef\xbb\xbf")
     bambu = head.startswith(b"; HEADER_BLOCK_START") and b"\n; BambuStudio " in head
     return inspect_extrusion(data, expected_sha256=digest,
                              dialect="bambu-v1" if bambu else "marlin-linear-v1")
