@@ -11,6 +11,7 @@ import os
 import re
 from collections.abc import Callable
 from datetime import date, datetime, time
+from decimal import Decimal
 from functools import partial
 from importlib.resources import files
 from pathlib import Path
@@ -118,6 +119,7 @@ from ufm.infrastructure.studio_backend import (
 )
 from ufm.integrations.gcode_extrusion import (
     ExtrusionReport,
+    estimate_mass,
     inspect_gcode_file_for_local_review,
 )
 from ufm.integrations.haspelsync import (
@@ -813,14 +815,39 @@ class StudioWindow(QMainWindow):
             )
             for bucket in report.buckets
         ) or self.text("inspect_gcode_no_extrusion")
-        message = QMessageBox(self)
-        message.setIcon(QMessageBox.Icon.Information)
-        message.setWindowTitle(self.text("inspect_slice_title"))
-        message.setText(self.text(
+        summary = self.text(
             "inspect_gcode_summary", sha256=report.file_sha256,
             parser=report.parser_version, dialect=report.dialect,
             buckets=len(report.buckets),
-        ))
+        )
+        if report.slicer is not None:
+            estimate = estimate_mass(report)
+            summary = self.text(
+                "inspect_gcode_mass_summary", sha256=report.file_sha256,
+                parser=report.parser_version, dialect=report.dialect,
+                method=estimate.method, generator=report.slicer.generator,
+                grams=f"{sum(item.estimated_mass_mg for item in estimate.tools) / 1000:.3f}",
+                slicer_grams=f"{sum(item.slicer_mass_mg for item in estimate.tools) / 1000:.3f}",
+                check=self.text("inspect_gcode_mass_consistent" if estimate.consistent
+                                else "inspect_gcode_mass_inconsistent"),
+            )
+            details = "\n".join(
+                self.text(
+                    "inspect_gcode_mass_line", tool=item.tool, filament=item.filament_id,
+                    grams=f"{item.estimated_mass_mg / 1000:.3f}",
+                    slicer_grams=f"{item.slicer_mass_mg / 1000:.3f}",
+                    millimetres=format(item.estimated_mm.quantize(Decimal("0.01")), "f"),
+                    modelled=format(item.modelled_mm.quantize(Decimal("0.01")), "f"),
+                    flush=format(item.flush_share_mm.quantize(Decimal("0.01")), "f"),
+                    load=format(item.load_line_mm.quantize(Decimal("0.01")), "f"),
+                    conditional=format(item.conditional_mm.quantize(Decimal("0.01")), "f"),
+                )
+                for item in estimate.tools
+            ) + "\n\n" + details
+        message = QMessageBox(self)
+        message.setIcon(QMessageBox.Icon.Information)
+        message.setWindowTitle(self.text("inspect_slice_title"))
+        message.setText(summary)
         message.setDetailedText(details)
         message.exec()
 

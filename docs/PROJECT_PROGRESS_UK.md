@@ -1,5 +1,13 @@
 # Поточна контрольна точка — Candidate16 (внутрішня portable-збірка) — 2026-10-30
 
+## 2026-11-16 — G-code `bambu-v1`: шари, маса й звірка зі слайсером
+
+У `src/ufm/integrations/gcode_extrusion.py` додано окремий явний діалект `bambu-v1` (`bambu-e-preflight-v1`) і `estimate_mass()` (`gcode-cylinder-mass-v1`). Парсер вимагає Bambu `HEADER_BLOCK`, розпізнає `; CHANGE_LAYER` і звіряє кількість шарів, M620/M621 зміну інструмента, окремо рахує умовні блоки M622/M623, G130 load line і M620.10 flush; невідомі команди та vendor-команди з ненульовим E відхиляються. Маса — π·(d/2)²·L·ρ, ROUND_HALF_UP до mg; `consistent=false`, якщо рух розходиться з заголовком понад 1%/5 мм. Локальний перегляд G-code у Studio автоматично вибирає `bambu-v1` лише за Bambu header і показує масу по інструментах із застереженням «оцінка, не залишок».
+
+Перевірки (Linux, Python 3.12): Ruff clean, mypy clean (139 файлів), `test_gcode_bambu.py` + `test_gcode_extrusion.py` + `test_sliced_files.py` + `test_studio_window.py` — 111 passed / 107 subtests. Три реальні P2S fixtures — consistent. E08.04/E08.05/E08.07 лишаються **Частково виконано**; статуси CSV не змінювалися: 29 Виконано / 71 Частково виконано / 17 Заплановано / 1 У роботі. Ledger не змінюється, автоматичне списання вимкнене (run identity і writer fence лишаються блокерами).
+
+Наступна конкретна дія: зібрати G-code з інших версій Bambu Studio/Orca та з кількома flush, перевірити семантику розподілу flush і M622-блоків; лише після цього проєктувати версійовану політику `verified-gcode-estimate-v1` (E09.01).
+
 ## 2026-10-31 — деталізований preview імпорту Spoolman
 
 Для E04.07 додано per-spool DTO у `src/ufm/integrations/spoolman/importer.py` та таблицю попереднього перегляду у Studio перед окремим підтвердженням імпорту. У таблиці видно назву/матеріал/виробника, номінал, тару, залишок, ціну з базою і валютою, стан, переносимі lot/color/location та поля, які не переносяться. Відсутній залишок відображається як невідомий. Усі маси переведено тим самим `_mass()` half-up до mg, що використовує імпортер. Цільова перевірка: `tests/integration/test_spoolman_importer.py` + вибірка Studio — 10 passed; Ruff clean; mypy для importer/Studio clean. Дані Spoolman і робоча UFM БД не відкривалися/не змінювалися.

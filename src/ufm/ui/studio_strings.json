@@ -1851,5 +1851,21 @@
   "inspect_gcode_summary": [
     "Файл перевірено за суворим піднабором {dialect} ({parser}).\\nSHA-256: {sha256}\\nГруп екструзії: {buckets}. Деталі доступні нижче.\\n\\nЦе довжина оціненої свіжої екструзії, не маса й не фактична витрата. Файл не прив’язується до завдання, не виконується та не змінює залишок. Невідомі purge/flush та vendor-команди не оцінюються.",
     "The file passed the strict {dialect} subset ({parser}).\\nSHA-256: {sha256}\\nExtrusion groups: {buckets}. Details are available below.\\n\\nThis is estimated fresh extrusion length, not mass or confirmed consumption. The file is not bound to a job, is not executed, and does not change stock. Unknown purge/flush and vendor commands are not estimated."
+  ],
+  "inspect_gcode_mass_summary": [
+    "Файл перевірено за суворим піднабором {dialect} ({parser}), слайсер: {generator}.\nSHA-256: {sha256}\n\nРозрахункова маса ({method}): {grams} г; заголовок слайсера: {slicer_grams} г.\n{check}\n\nЦе оцінка, не виміряна витрата. Файл не прив’язується до завдання чи котушки, не виконується та не змінює залишок. Екструзія в умовних блоках принтера (M622/M623) показана окремо й не входить в оцінку.",
+    "The file passed the strict {dialect} subset ({parser}), slicer: {generator}.\nSHA-256: {sha256}\n\nEstimated mass ({method}): {grams} g; slicer header: {slicer_grams} g.\n{check}\n\nThis is an estimate, not measured consumption. The file is not bound to a job or spool, is not executed, and does not change stock. Extrusion inside printer-side conditional blocks (M622/M623) is shown separately and excluded from the estimate."
+  ],
+  "inspect_gcode_mass_consistent": [
+    "Рух екструдера узгоджується з підсумками слайсера в межах допуску.",
+    "Extruder motion agrees with the slicer totals within tolerance."
+  ],
+  "inspect_gcode_mass_inconsistent": [
+    "Увага: рух екструдера НЕ узгоджується з підсумками слайсера — оцінку не можна використовувати без ручної перевірки.",
+    "Warning: extruder motion does NOT agree with the slicer totals; do not use the estimate without manual review."
+  ],
+  "inspect_gcode_mass_line": [
+    "Інструмент T{tool} (філамент {filament}): {grams} г (слайсер {slicer_grams} г) · {millimetres} мм = рух {modelled} + flush {flush} + лінія завантаження {load}; умовно {conditional} мм",
+    "Tool T{tool} (filament {filament}): {grams} g (slicer {slicer_grams} g) · {millimetres} mm = motion {modelled} + flush {flush} + load line {load}; conditional {conditional} mm"
   ]
 }
