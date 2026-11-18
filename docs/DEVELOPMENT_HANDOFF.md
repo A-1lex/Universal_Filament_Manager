@@ -3557,3 +3557,7 @@ Changes:
 - tests/integration/test_local_api.py (new): 4 tests over real HTTP on ephemeral port — health/info/empty catalog, full spool payload (brand, storage location, opening stock 250g -> remaining_weight 250.0), filament/vendor/material/location endpoints, 405/404, idempotent start/stop.
 
 Verification: pytest tests -q -> 700 passed / 491 subtests (100.20s); ruff clean; mypy clean (local_api.py, studio_backend.py). CSV E12.06 stays Частково виконано — remaining: write-compatible endpoints, auth/origin policy, app auto-start or UI toggle, consumer contract fixtures vs real slicer/Moonraker/OctoPrint/HA, live consumer verification. No printer, production DB, or secrets touched.
+
+### E12.06 follow-up: CLI serve mode
+
+`ufm --serve [--api-port PORT]` (default 7912) added to bootstrap/cli.py: resolves AppPaths, creates engine, migrate_database, StudioBackend, LocalApiServer; prints {"local_api":"listening","host":"127.0.0.1","port":N} and blocks until KeyboardInterrupt. Manual smoke on port 17923 returned health/spool JSON. cli.help documents --serve/--api-port in uk-UA and en-US. Remaining unchanged: writes/auth/auto-start-in-Studio/consumer fixtures.

@@ -3,6 +3,7 @@
 import argparse
 import json
 import sys
+import time
 from pathlib import Path
 from typing import Never
 
@@ -17,9 +18,11 @@ from ufm.domain.value_objects import EntityId
 from ufm.infrastructure.backup.sqlite_snapshot import BackupInvalid
 from ufm.infrastructure.logging import configure_logging
 from ufm.infrastructure.persistence.sqlite.engine import create_sqlite_engine
-from ufm.infrastructure.persistence.sqlite.migrate import MigrationRequired
+from ufm.infrastructure.persistence.sqlite.migrate import MigrationRequired, migrate_database
+from ufm.infrastructure.studio_backend import StudioBackend
 from ufm.integrations.catalog import load_material_catalog
 from ufm.integrations.haspelsync import preview_haspelsync_files
+from ufm.integrations.local_api import LocalApiServer
 from ufm.integrations.qr import spool_label_svg
 from ufm.integrations.spoolman.importer import (
     import_spoolman_database,
@@ -64,10 +67,12 @@ def main(argv: list[str] | None = None) -> int:
                        dest="spoolman_db_preview", type=Path)
     modes.add_argument("--spool-db-import", "--spoolman-db-import",
                        dest="spoolman_db_import", type=Path)
+    modes.add_argument("--serve", action="store_true")
     modes.add_argument(
         "--slot-mapping-preview", "--haspelsync-preview", dest="haspelsync_preview",
         nargs=3, metavar=("PRINTERS_JSON", "MAPPINGS_JSON", "ID_MAP_JSON"),
     )
+    parser.add_argument("--api-port", type=int, default=7912)
     parser.add_argument("--spool-source-id", "--spoolman-source-id",
                         dest="spoolman_source_id")
     parser.add_argument("--source-instance")
@@ -160,6 +165,29 @@ def main(argv: list[str] | None = None) -> int:
                 "network_access_performed": haspel_preview.network_access_performed,
                 "inventory_writes_performed": haspel_preview.inventory_writes_performed,
             }, ensure_ascii=True))
+            return 0
+        if args.serve:
+            paths = AppPaths.resolve(args.data_dir)
+            engine = create_sqlite_engine(paths.data / "ufm.sqlite3")
+            try:
+                migrate_database(engine)
+                backend = StudioBackend(engine, paths)
+                server = LocalApiServer(backend, port=args.api_port)
+                bound_port = server.start()
+                print(json.dumps({
+                    "local_api": "listening",
+                    "host": "127.0.0.1",
+                    "port": bound_port,
+                }, ensure_ascii=True))
+                try:
+                    while server.running:
+                        time.sleep(0.5)
+                except KeyboardInterrupt:
+                    pass
+                finally:
+                    server.stop()
+            finally:
+                engine.dispose()
             return 0
         if args.spoolman_db_preview is not None:
             paths = AppPaths.resolve(args.data_dir)

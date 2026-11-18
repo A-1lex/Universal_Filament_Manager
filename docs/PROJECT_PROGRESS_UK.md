@@ -2416,3 +2416,5 @@ CSV: статуси E01–E06 не змінювалися — ця робота 
 Тести: tests/integration/test_local_api.py — 4 contract-тести через реальний HTTP на ephemeral-порті (health/info, порожній каталог, повний spool payload із filament/vendor/location, 405/404, idempotent start/stop). Повний suite: 700 passed / 491 subtests (100,20 с); ruff clean; mypy clean для local_api.py і studio_backend.py.
 
 Залишок E12.06: write-сумісні endpoints, auth/origin policy, автозапуск endpoint самою програмою або UI-перемикач, contract fixtures проти реальних споживачів (slicer/Moonraker/OctoPrint/HA), live-перевірка. Статус лишається Частково виконано.
+
+Додатково того ж дня: `ufm --serve [--api-port ПОРТ]` запускає той самий LocalApiServer поверх бази програми (migrate + StudioBackend), виводить JSON з фактичним портом і працює до Ctrl+C. Ручна перевірка на 127.0.0.1:17923: /api/v1/health → {"status":"ok"}, /api/v1/spool → []. cli.help оновлено в обох локалях. ruff/mypy clean; foundation+local_api 25 passed.
