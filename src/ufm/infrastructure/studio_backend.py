@@ -62,6 +62,7 @@ class StudioSpool:
     color_hex: str | None
     location: str | None
     location_id: str | None
+    profile_id: str
     low_threshold_mg: int | None
     product_line: str | None = None
     batch_number: str | None = None
@@ -583,6 +584,7 @@ class StudioBackend:
                 spool.c.empty_spool_mg, spool.c.opened_at, spool.c.manufactured_at,
                 spool.c.expires_at, spool.c.purchase_price, spool.c.currency,
                 spool.c.purchase_date, spool.c.purchase_basis_mg,
+                filament_profile.c.id,
             ).join(filament_profile, spool.c.filament_profile_id == filament_profile.c.id)
                 .outerjoin(storage_location,
                            spool.c.storage_location_id == storage_location.c.id)
@@ -605,6 +607,7 @@ class StudioBackend:
             purchase_price=None if row[26] is None else row[26].canonical(),
             currency=row[27], purchase_date=row[28],
             purchase_basis_mg=None if row[29] is None else row[29].milligrams,
+            profile_id=str(row[30]),
         ) for row in rows)
 
     def materials(self) -> tuple[StudioMaterial, ...]:

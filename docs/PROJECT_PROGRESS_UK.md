@@ -2408,3 +2408,11 @@ efresh() скан не дублює; повторне відкриття сто�
 Перевірки: повний suite **696 passed / 491 subtests, exit 0** (90,97 с); ruff check clean; mypy clean для змінених source-файлів. Тимчасові скрипти дебрендингу видалено.
 
 CSV: статуси E01–E06 не змінювалися — ця робота не закриває жодного кроку приймання; відкриті пункти та live/owner/hardware-блокери лишаються як у попередньому checkpoint. Зміни закомічено та відправлено в приватний `origin/main` після rebase на віддалені CI-виправлення.
+
+## 2026-11-18 — E12.06: read-only loopback API для локальних споживачів
+
+Реалізовано перший компонент сумісного API: src/ufm/integrations/local_api.py — LocalApiServer на ThreadingHTTPServer (daemon thread, bind 127.0.0.1, типово порт 7912). GET-only підмножина Spoolman v1: /api/v1/health, /info, /spool, /spool/{id}, /spool/group, /filament, /filament/{id}, /material, /vendor, /vendor/{id}, /location. Не-GET повертає 405, невідомі шляхи 404, JSON без секретів; жодних записів в облік через цей інтерфейс. StudioSpool отримав profile_id для коректного зв'язку spool→filament.
+
+Тести: tests/integration/test_local_api.py — 4 contract-тести через реальний HTTP на ephemeral-порті (health/info, порожній каталог, повний spool payload із filament/vendor/location, 405/404, idempotent start/stop). Повний suite: 700 passed / 491 subtests (100,20 с); ruff clean; mypy clean для local_api.py і studio_backend.py.
+
+Залишок E12.06: write-сумісні endpoints, auth/origin policy, автозапуск endpoint самою програмою або UI-перемикач, contract fixtures проти реальних споживачів (slicer/Moonraker/OctoPrint/HA), live-перевірка. Статус лишається Частково виконано.

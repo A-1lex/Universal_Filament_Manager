@@ -3546,3 +3546,14 @@ UI simplification: прибрано створення кнопок `haspel_impo
 Перевірки: pytest повний suite 691 passed / 491 subtests (88,38 с, exit 0); ruff clean; mypy clean (3 файли). Нові тести — див. PROJECT_PROGRESS_UK.md. Жодних мережевих викликів/принтерів/комітів.
 
 Відкрито: live-приймання імпорту/принтерів, E05 parity, E03.08 legal, E07 run identity — без змін. Наступне: за бажанням власника — візуальна перевірка спрощеного Studio та реальний імпорт копії бази котушок.
+
+## 2026-11-18 — E12.06: read-only loopback inventory API (local_api.py)
+
+Staging D:\UFM\_UFM_GitHubStage, .venv312 (Python 3.12.15). Продовження після push 5e56b9e.
+
+Changes:
+- src/ufm/integrations/local_api.py (new): LocalApiServer — ThreadingHTTPServer on daemon thread, default bind 127.0.0.1:7912, port 0 supported for tests. GET-only Spoolman v1-compatible subset: /api/v1/health, /info, /spool, /spool/{id}, /spool/group, /filament, /filament/{id}, /material, /vendor, /vendor/{id}, /location. Non-GET -> 405, unknown -> 404, JSON errors {"detail": ...}. remaining_weight exported in grams (mg/1000); archived flag from lifecycle; UFM fields exposed under spool.extra. No auth yet, no writes, no credentials in payloads.
+- src/ufm/infrastructure/studio_backend.py: StudioSpool gained profile_id (filament_profile.c.id appended to spools() select, row[30]); needed for spool->filament linkage in API payloads.
+- tests/integration/test_local_api.py (new): 4 tests over real HTTP on ephemeral port — health/info/empty catalog, full spool payload (brand, storage location, opening stock 250g -> remaining_weight 250.0), filament/vendor/material/location endpoints, 405/404, idempotent start/stop.
+
+Verification: pytest tests -q -> 700 passed / 491 subtests (100.20s); ruff clean; mypy clean (local_api.py, studio_backend.py). CSV E12.06 stays Частково виконано — remaining: write-compatible endpoints, auth/origin policy, app auto-start or UI toggle, consumer contract fixtures vs real slicer/Moonraker/OctoPrint/HA, live consumer verification. No printer, production DB, or secrets touched.
