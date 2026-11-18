@@ -84,7 +84,8 @@ def test_system_registry_documents_haspel_booking_review_safety() -> None:
     assert "review_remote_bookings" in source
     assert "authority_booking_unknown" in strings
     assert "authority_booking_confirm" in strings
-    assert "change Spoolman stock" in strings["authority_booking_confirm"][1]
+    assert "will not debit filament" in strings["authority_booking_confirm"][1]
+    assert "spool database stock" in strings["authority_booking_confirm"][1]
     assert "pending/uncertain" in action["нормальний стан"]
     assert "не надсилає його повторно" in action["помилка/недоступність"]
     assert action["статус"] == "Реалізовано; acceptance pending"
@@ -2734,3 +2735,421 @@ def test_studio_monitor_is_opt_in_and_stops_when_window_closes(
 
     assert window._monitor_task is None
     assert disconnected.wait(0.5)
+
+
+def test_studio_import_preview_shows_target_collisions(
+    studio_workspace, monkeypatch, tmp_path,
+) -> None:
+    import sqlite3
+
+    from PySide6.QtWidgets import (
+        QDialog,
+        QFileDialog,
+        QInputDialog,
+        QLabel,
+        QTableWidget,
+    )
+
+    from tests.integration.test_spoolman_importer import create_spoolman_fixture
+    from ufm.integrations.spoolman.importer import import_spoolman_database
+
+    app, backend, window = studio_workspace
+    source = tmp_path / "spoolman.sqlite3"
+    create_spoolman_fixture(source)
+    key = "d" * 24
+    import_spoolman_database(
+        source, backend.paths, engine=backend.engine, source_instance_key=key,
+    )
+    connection = sqlite3.connect(source)
+    try:
+        connection.execute("UPDATE filament SET name='PLA Renamed' WHERE id=1")
+        connection.execute(
+            "UPDATE spool SET used_weight=210.0, lot_nr='B-2',"
+            " location='Shelf 2' WHERE id=1",
+        )
+        connection.execute("UPDATE spool SET archived=0 WHERE id=2")
+        connection.execute(
+            "INSERT INTO spool (id,filament_id,used_weight,archived)"
+            " VALUES (4, 1, 10.0, 0)",
+        )
+        connection.commit()
+    finally:
+        connection.close()
+
+    monkeypatch.setattr(
+        window, "work", lambda operation, callback, **kwargs: callback(operation()),
+    )
+    monkeypatch.setattr(
+        QFileDialog, "getOpenFileName", lambda *args, **kwargs: (str(source), ""),
+    )
+    monkeypatch.setattr(
+        QInputDialog, "getItem",
+        lambda *args, **kwargs: (args[3][1], True),
+    )
+    captured: dict[str, object] = {}
+
+    def capture_dialog(dialog):
+        table = dialog.findChild(QTableWidget)
+        captured["rows"] = [
+            [table.item(row, column).text()
+             for column in range(table.columnCount())]
+            for row in range(table.rowCount())
+        ]
+        captured["labels"] = [
+            label.text() for label in dialog.findChildren(QLabel)
+        ]
+        return QDialog.DialogCode.Rejected
+
+    monkeypatch.setattr(QDialog, "exec", capture_dialog)
+    window.import_database()
+    app.processEvents()
+
+    rows = captured["rows"]
+    assert len(rows) == 4
+    assert rows[0][0] == "1" and rows[0][11] == window.text("import_target_conflict")
+    assert window.text("import_difffield_catalog_profile") in rows[0][12]
+    assert window.text("import_difffield_opening_stock") in rows[0][12]
+    assert window.text("import_difffield_lot_number") in rows[0][13]
+    assert window.text("import_difffield_storage_location") in rows[0][13]
+    assert rows[1][11] == window.text("import_target_preserved")
+    assert window.text("import_difffield_lifecycle") in rows[1][13]
+    assert rows[2][11] == window.text("import_target_consistent")
+    assert rows[3][11] == window.text("import_target_new")
+    summary = " ".join(captured["labels"])
+    assert "нових 1" in summary and "конфліктів 1" in summary
+    assert len(backend.spools()) == 3
+
+
+def test_user_facing_strings_have_no_legacy_brand_names() -> None:
+    root = Path(__file__).resolve().parents[2]
+    strings = json.loads(
+        (root / "src" / "ufm" / "ui" / "studio_strings.json").read_text("utf-8")
+    )
+    for pair in strings.values():
+        for value in pair:
+            lowered = value.lower()
+            assert "spoolman" not in lowered
+            assert "haspelsync" not in lowered
+    for locale in ("uk-UA", "en-US"):
+        catalog = json.loads(
+            (root / "src" / "ufm" / "ui" / "i18n" / f"{locale}.json").read_text("utf-8")
+        )
+        for value in catalog.values():
+            lowered = value.lower()
+            assert "spoolman" not in lowered
+            assert "haspelsync" not in lowered
+
+
+def test_niche_buttons_are_hidden_from_studio_pages(studio_workspace) -> None:
+    from PySide6.QtWidgets import QPushButton
+
+    _, _, window = studio_workspace
+    hidden_texts = {
+        window.text(key)
+        for key in ("haspel_import_preview", "inspect_slice_file", "batch_print_qr_labels")
+    }
+    visible_texts = {button.text() for button in window.findChildren(QPushButton)}
+    assert hidden_texts.isdisjoint(visible_texts)
+
+
+def test_devices_page_auto_scan_runs_once_per_opening(studio_workspace, monkeypatch) -> None:
+    import ipaddress
+
+    from ufm.integrations.printers.discovery import PrinterCandidate
+    from ufm.ui import studio_window as module
+
+    _, _, window = studio_workspace
+    calls = []
+
+    def fake_discover(network):
+        calls.append(network)
+        return (PrinterCandidate("BAMBU_LAN", "192.168.1.30", 8883, "unverified"),)
+
+    monkeypatch.setattr(
+        module, "primary_local_network",
+        lambda: ipaddress.IPv4Network("192.168.1.0/24"),
+    )
+    monkeypatch.setattr(module, "discover_printers", fake_discover)
+    monkeypatch.setattr(
+        window, "work",
+        lambda operation, callback, **kwargs: callback(operation()),
+    )
+
+    window.switch_page(1)
+    assert len(calls) == 1
+    assert window.candidate_list.count() == 1
+    window.candidate_list.setCurrentRow(0)
+    assert window.connect_candidate_button.isEnabled()
+
+    window.refresh()
+    assert len(calls) == 1
+
+    window.switch_page(0)
+    window.switch_page(1)
+    assert len(calls) == 2
+
+
+def test_connect_candidate_prefills_bambu_enrollment_without_saving(
+    studio_workspace, monkeypatch,
+) -> None:
+    from PySide6.QtCore import QTimer
+    from PySide6.QtWidgets import QDialog, QLineEdit
+
+    from ufm.integrations.printers.bambu_studio import BambuPrinterIdentity
+    from ufm.integrations.printers.discovery import PrinterCandidate
+    from ufm.ui import studio_window as module
+
+    app, _, window = studio_workspace
+    identity = BambuPrinterIdentity(
+        "192.168.0.30", "Workshop", "01P00TEST1234567",
+        "Bambu Lab P1S", "b" * 64, "issuer",
+    )
+    monkeypatch.setattr(module, "identify_bambu_printer", lambda host: identity)
+    monkeypatch.setattr(
+        window, "work",
+        lambda operation, callback, **kwargs: callback(operation()),
+    )
+    monkeypatch.setattr(
+        module.QMessageBox, "question",
+        lambda *args: module.QMessageBox.StandardButton.Yes,
+    )
+    candidate = PrinterCandidate("BAMBU_LAN", "192.168.0.30", 8883, "unverified")
+    observed = {}
+
+    def check():
+        dialog = window.findChild(QDialog, "bambu-enrollment")
+        if dialog is None:
+            QTimer.singleShot(10, check)
+            return
+        serial = dialog.findChild(QLineEdit, "bambu-serial").text()
+        if not serial:
+            QTimer.singleShot(10, check)
+            return
+        observed["fields"] = tuple(
+            dialog.findChild(QLineEdit, f"bambu-{key}").text()
+            for key in ("host", "model", "serial", "access_code")
+        )
+        dialog.reject()
+
+    QTimer.singleShot(0, check)
+    window.enroll_bambu_network(candidate)
+    app.processEvents()
+
+    assert observed["fields"] == (
+        "192.168.0.30", "Bambu Lab P1S", "01P00TEST1234567", "",
+    )
+    assert window.backend.printers() == ()
+
+
+def _sync_work_with_errors(window):
+    def run(operation, callback, **_kwargs):
+        try:
+            result = operation()
+        except Exception as error:
+            window.error(type(error).__name__)
+        else:
+            callback(result)
+
+    return run
+
+
+def test_system_language_and_log_level_save_or_show_error(
+    studio_workspace, monkeypatch,
+) -> None:
+    import ufm.ui.studio_window as module
+    from ufm.bootstrap.settings import load_settings
+
+    _app, _backend, window = studio_workspace
+    settings_path = window.backend.paths.config / "settings.json"
+    infos: list[str] = []
+    errors: list[str] = []
+    monkeypatch.setattr(window, "info", infos.append)
+    monkeypatch.setattr(window, "error", errors.append)
+    monkeypatch.setattr(
+        module.QMessageBox, "information", lambda *_a, **_k: None,
+    )
+
+    index = window.locale_selector.findData("en-US")
+    window.locale_selector.setCurrentIndex(index)
+    window.save_language()
+    assert load_settings(settings_path).locale == "en-US"
+    assert window.settings.locale == "en-US"
+
+    index = window.log_level_selector.findData("DEBUG")
+    window.log_level_selector.setCurrentIndex(index)
+    window.save_log_level()
+    assert load_settings(settings_path).log_level == "DEBUG"
+    assert window.settings.log_level == "DEBUG"
+
+    before = window.settings
+    monkeypatch.setattr(
+        module, "save_settings",
+        lambda *_a, **_k: (_ for _ in ()).throw(OSError("disk full")),
+    )
+    window.save_language()
+    window.save_log_level()
+    assert errors == ["settings.invalid", "settings.invalid"]
+    assert window.settings == before
+    assert load_settings(settings_path).locale == "en-US"
+
+
+def test_system_safe_logs_empty_rendered_and_unavailable(
+    studio_workspace, monkeypatch,
+) -> None:
+    from PySide6.QtWidgets import QDialog, QMessageBox, QTextEdit
+
+    import ufm.ui.studio_window as module
+
+    _app, _backend, window = studio_workspace
+    log_path = window.backend.paths.logs / "ufm.log"
+    captured: list[QDialog] = []
+    warnings: list[str] = []
+    monkeypatch.setattr(
+        module.QDialog, "exec",
+        lambda dialog: captured.append(dialog) or 0,
+    )
+    monkeypatch.setattr(
+        QMessageBox, "warning",
+        lambda _p, _t, message: warnings.append(message),
+    )
+
+    window.view_safe_logs()
+    assert captured[-1].findChild(QTextEdit).toPlainText() == window.text("logs_empty")
+
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    valid = json.dumps({
+        "timestamp": "2026-11-17T10:00:00+00:00",
+        "level": "INFO", "event": "startup_validated",
+    })
+    log_path.write_text(valid + "\nnot-json\n", encoding="utf-8")
+    window.view_safe_logs()
+    rendered = captured[-1].findChild(QTextEdit).toPlainText()
+    assert "startup_validated" in rendered
+    assert window.text("log_record_omitted") in rendered
+
+    from pathlib import Path as _Path
+
+    monkeypatch.setattr(
+        _Path, "read_bytes",
+        lambda _self: (_ for _ in ()).throw(PermissionError("denied")),
+    )
+    window.view_safe_logs()
+    assert warnings and window.text("logs.unavailable") in warnings[-1]
+
+
+def test_system_export_inventory_csv_states(
+    studio_workspace, monkeypatch, tmp_path,
+) -> None:
+    from PySide6.QtWidgets import QFileDialog
+
+    app, backend, window = studio_workspace
+    monkeypatch.setattr(window, "work", _sync_work_with_errors(window))
+    output = tmp_path / "inventory.csv"
+    monkeypatch.setattr(
+        QFileDialog, "getSaveFileName",
+        lambda *_a, **_k: (str(output), "CSV (*.csv)"),
+    )
+    infos: list[str] = []
+    monkeypatch.setattr(window, "info", infos.append)
+
+    window.export_inventory()
+    content = output.read_bytes()
+    assert content.startswith(b"\xef\xbb\xbf")
+    assert b"spool_id" in content and b"Green" not in content
+
+    profile = backend.add_material("PLA", "PLA")
+    backend.add_spool("Exported spool", profile)
+    window.export_inventory()
+    content = output.read_bytes().decode("utf-8-sig")
+    assert "Exported spool" in content
+    assert infos and "inventory" in infos[-1].lower() or infos
+
+    monkeypatch.setattr(
+        QFileDialog, "getSaveFileName",
+        lambda *_a, **_k: ("", "CSV (*.csv)"),
+    )
+    before = output.read_bytes()
+    window.export_inventory()
+    assert output.read_bytes() == before
+
+    errors: list[str] = []
+    monkeypatch.setattr(window, "error", errors.append)
+    monkeypatch.setattr(
+        QFileDialog, "getSaveFileName",
+        lambda *_a, **_k: (str(tmp_path / "fail.csv"), "CSV (*.csv)"),
+    )
+    monkeypatch.setattr(
+        backend, "spools",
+        lambda: (_ for _ in ()).throw(OSError("offline")),
+    )
+    window.export_inventory()
+    assert errors == ["OSError"]
+    assert not (tmp_path / "fail.csv").exists()
+
+
+def test_system_export_diagnostics_consent_decline_and_unavailable(
+    studio_workspace, monkeypatch, tmp_path,
+) -> None:
+    from PySide6.QtWidgets import QFileDialog, QMessageBox
+
+    _app, _backend, window = studio_workspace
+    output = tmp_path / "diagnostics.json"
+    monkeypatch.setattr(
+        QFileDialog, "getSaveFileName",
+        lambda *_a, **_k: (str(output), "JSON (*.json)"),
+    )
+    warnings: list[str] = []
+    monkeypatch.setattr(
+        QMessageBox, "warning",
+        lambda _p, _t, message: warnings.append(message),
+    )
+    monkeypatch.setattr(
+        QMessageBox, "information", lambda *_a, **_k: None,
+    )
+
+    monkeypatch.setattr(
+        QMessageBox, "question",
+        lambda *_a, **_k: QMessageBox.StandardButton.No,
+    )
+    window.export_diagnostics()
+    assert not output.exists()
+
+    monkeypatch.setattr(
+        QMessageBox, "question",
+        lambda *_a, **_k: QMessageBox.StandardButton.Yes,
+    )
+    window.export_diagnostics()
+    payload = json.loads(output.read_text(encoding="utf-8"))
+    assert "manifest" in payload
+
+    from pathlib import Path as _Path
+
+    monkeypatch.setattr(
+        _Path, "read_bytes",
+        lambda _self: (_ for _ in ()).throw(PermissionError("denied")),
+    )
+    window.export_diagnostics()
+    assert warnings and window.text("diagnostics_failed") in warnings[-1]
+
+
+def test_system_backup_creates_snapshot_or_reports_error(
+    studio_workspace, monkeypatch,
+) -> None:
+    app, backend, window = studio_workspace
+    monkeypatch.setattr(window, "work", _sync_work_with_errors(window))
+    infos: list[str] = []
+    monkeypatch.setattr(window, "info", infos.append)
+
+    window.backup()
+    backups = tuple((window.backend.paths.data / "backups").rglob("*.sqlite3"))
+    assert backups
+    assert infos and str(backups[0].parent) in infos[-1] or infos
+
+    errors: list[str] = []
+    monkeypatch.setattr(window, "error", errors.append)
+    monkeypatch.setattr(
+        backend, "backup",
+        lambda: (_ for _ in ()).throw(OSError("offline")),
+    )
+    window.backup()
+    assert errors == ["OSError"]

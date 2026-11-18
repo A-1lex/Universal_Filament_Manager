@@ -166,11 +166,13 @@ from ufm.integrations.spoolman.importer import (
     SpoolmanImportPreview,
     SpoolmanImportRejected,
     SpoolmanImportResult,
+    SpoolmanTargetPreview,
     default_spoolman_import_source_key,
     import_spoolman_database,
     new_spoolman_source_key,
     preview_spoolman_cutover,
     preview_spoolman_database,
+    preview_spoolman_target_state,
     spoolman_import_source_label,
 )
 from ufm.platform.common.paths import AppPaths
@@ -339,6 +341,7 @@ class StudioWindow(QMainWindow):
         self._observed_namespace: str | None = None
         self._observed_at: UtcDateTime | None = None
         self._mount_candidates: tuple[tuple[str, str, FeedSystemKind, EntityId, str], ...] = ()
+        self._candidates: tuple[PrinterCandidate, ...] = ()
         self._observed_printer_id: EntityId | None = None
         self._monitor_task: PrinterMonitorTask | None = None
         self._monitor_printer_name = ""
@@ -385,7 +388,7 @@ class StudioWindow(QMainWindow):
         self.make_printers()
         self.make_materials()
         self.make_system()
-        self.nav.currentRowChanged.connect(self.pages.setCurrentIndex)
+        self.nav.currentRowChanged.connect(self.switch_page)
         self.nav.setCurrentRow(0)
         self.refresh()
         self.apply_theme()
@@ -553,7 +556,6 @@ class StudioWindow(QMainWindow):
             self.add_location_button,
             self.button("cost_report", self.show_cost_report),
             self.button("batch_export_qr_labels", self.batch_export_qr_labels),
-            self.button("batch_print_qr_labels", self.batch_print_qr_labels),
             self.button("refresh", self.refresh),
         ))
         for index, button in enumerate(action_buttons):
@@ -681,7 +683,6 @@ class StudioWindow(QMainWindow):
         actions.append(self.edit_printer_connection_button)
         self.monitor_button = self.button("monitor_start", self.toggle_printer_monitor)
         actions.append(self.monitor_button)
-        actions.append(self.button("inspect_slice_file", self.inspect_local_slice_file))
         for index, button in enumerate(actions):
             toolbar.addWidget(button, index // 4, index % 4)
         for column in range(4):
@@ -708,7 +709,18 @@ class StudioWindow(QMainWindow):
         layout.addWidget(self.monitor_slot_details)
         self.device_result = QTextEdit()
         self.device_result.setReadOnly(True)
-        layout.addWidget(self.device_result, 1)
+        self.device_result.setMaximumHeight(90)
+        layout.addWidget(self.device_result)
+        self.candidate_list = QListWidget()
+        self.candidate_list.setVisible(False)
+        self.candidate_list.setMaximumHeight(110)
+        self.candidate_list.currentRowChanged.connect(self.update_candidate_actions)
+        layout.addWidget(self.candidate_list)
+        self.connect_candidate_button = self.button(
+            "connect_candidate", self.connect_candidate,
+        )
+        self.connect_candidate_button.setEnabled(False)
+        layout.addWidget(self.connect_candidate_button)
 
     def make_materials(self) -> None:
         layout = self.page("materials")
@@ -852,7 +864,6 @@ class StudioWindow(QMainWindow):
         for key, action in (
             ("export_inventory", self.export_inventory),
             ("import", self.import_database),
-            ("haspel_import_preview", self.preview_haspelsync_config),
             ("backup", self.backup),
         ):
             layout.addWidget(self.button(key, action))
@@ -2329,7 +2340,9 @@ class StudioWindow(QMainWindow):
             for source in preview.source_instances:
                 label = spoolman_import_source_label(
                     source, unverified_label=self.text("import_source_unverified"),
-                    recovery_label=self.text("import_source_recovery_counts"),
+                    recovery_label=(
+                        self.strings["import_source_recovery_counts"][self.language]
+                    ),
                 )
                 source_labels.append(label)
                 source_keys[label] = source.source_instance_key
@@ -2358,118 +2371,162 @@ class StudioWindow(QMainWindow):
                                 lots=preview.lot_number_count, colors=preview.color_count,
                                 locations=preview.location_count,
                                 metadata_unknown=preview.unsupported_metadata_count)
-            detail = QDialog(self)
-            detail.setWindowTitle(self.text("import_preview_title"))
-            detail.resize(1050, 560)
-            detail_layout = QVBoxLayout(detail)
-            summary = QLabel(message)
-            summary.setWordWrap(True)
-            detail_layout.addWidget(summary)
-            table = QTableWidget(detail)
-            headers = [
-                self.text("import_col_spool"), self.text("import_col_filament"),
-                self.text("import_col_material"), self.text("import_col_vendor"),
-                self.text("import_col_nominal"), self.text("import_col_tare"),
-                self.text("import_col_remaining"), self.text("import_col_price"),
-                self.text("import_col_state"), self.text("import_col_metadata"),
-                self.text("import_col_omitted"),
-            ]
-            table.setColumnCount(len(headers))
-            table.setHorizontalHeaderLabels(headers)
-            table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-            table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-            table.setAlternatingRowColors(True)
-            table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
-            table.horizontalHeader().setStretchLastSection(True)
-            page_size = 200
-            page_count = max(1, (len(preview.spools) + page_size - 1) // page_size)
-            page_index = 0
-            page_label = QLabel(detail)
-            previous_page = QPushButton(self.text("import_page_previous"), detail)
-            next_page = QPushButton(self.text("import_page_next"), detail)
 
-            def mass_text(milligrams: int | None) -> str:
-                if milligrams is None:
-                    return self.text("unknown")
-                return f"{milligrams // 1000}.{milligrams % 1000:03d} г"
+            def show_detail(target: object) -> None:
+                target_preview = cast(SpoolmanTargetPreview, target)
+                target_by_id = {row.spool_id: row for row in target_preview.rows}
+                detail = QDialog(self)
+                detail.setWindowTitle(self.text("import_preview_title"))
+                detail.resize(1050, 560)
+                detail_layout = QVBoxLayout(detail)
+                summary = QLabel(message)
+                summary.setWordWrap(True)
+                detail_layout.addWidget(summary)
+                target_summary = QLabel(self.text(
+                    "import_target_summary",
+                    new=target_preview.new_count,
+                    consistent=target_preview.consistent_count,
+                    preserved=target_preview.preserved_count,
+                    conflict=target_preview.conflict_count,
+                ))
+                target_summary.setWordWrap(True)
+                detail_layout.addWidget(target_summary)
+                table = QTableWidget(detail)
+                headers = [
+                    self.text("import_col_spool"), self.text("import_col_filament"),
+                    self.text("import_col_material"), self.text("import_col_vendor"),
+                    self.text("import_col_nominal"), self.text("import_col_tare"),
+                    self.text("import_col_remaining"), self.text("import_col_price"),
+                    self.text("import_col_state"), self.text("import_col_metadata"),
+                    self.text("import_col_omitted"), self.text("import_col_target"),
+                    self.text("import_col_conflicts"),
+                    self.text("import_col_preserved"),
+                ]
+                table.setColumnCount(len(headers))
+                table.setHorizontalHeaderLabels(headers)
+                table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+                table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+                table.setAlternatingRowColors(True)
+                table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+                table.horizontalHeader().setStretchLastSection(True)
+                page_size = 200
+                page_count = max(1, (len(preview.spools) + page_size - 1) // page_size)
+                page_index = 0
+                page_label = QLabel(detail)
+                previous_page = QPushButton(self.text("import_page_previous"), detail)
+                next_page = QPushButton(self.text("import_page_next"), detail)
 
-            omitted_labels = {
-                "lot_nr": "import_omitted_lot", "color_hex": "import_omitted_color",
-                "location": "import_omitted_location", "price": "import_omitted_price",
-            }
+                def mass_text(milligrams: int | None) -> str:
+                    if milligrams is None:
+                        return self.text("unknown")
+                    return f"{milligrams // 1000}.{milligrams % 1000:03d} г"
 
-            def render_page() -> None:
-                nonlocal page_index
-                page_index = min(max(page_index, 0), page_count - 1)
-                start = page_index * page_size
-                page_rows = preview.spools[start:start + page_size]
-                table.setRowCount(len(page_rows))
-                for row_index, spool_preview in enumerate(page_rows):
-                    price = self.text("unknown")
-                    if spool_preview.purchase_price is not None:
-                        price = (
-                            f"{spool_preview.purchase_price} {spool_preview.currency} · "
-                            f"{mass_text(spool_preview.purchase_basis_mg)}"
+                omitted_labels = {
+                    "lot_nr": "import_omitted_lot", "color_hex": "import_omitted_color",
+                    "location": "import_omitted_location", "price": "import_omitted_price",
+                }
+
+                def render_page() -> None:
+                    nonlocal page_index
+                    page_index = min(max(page_index, 0), page_count - 1)
+                    start = page_index * page_size
+                    page_rows = preview.spools[start:start + page_size]
+                    table.setRowCount(len(page_rows))
+                    for row_index, spool_preview in enumerate(page_rows):
+                        price = self.text("unknown")
+                        if spool_preview.purchase_price is not None:
+                            price = (
+                                f"{spool_preview.purchase_price} {spool_preview.currency} · "
+                                f"{mass_text(spool_preview.purchase_basis_mg)}"
+                            )
+                        metadata = " · ".join(filter(None, (
+                            spool_preview.lot_number, spool_preview.color_hex,
+                            spool_preview.location,
+                        ))) or self.text("none")
+                        target_row = target_by_id.get(spool_preview.spool_id)
+                        if target_row is None:
+                            target_values = (
+                                self.text("unknown"), self.text("none"),
+                                self.text("none"),
+                            )
+                        else:
+                            target_values = (
+                                self.text(f"import_target_{target_row.state}"),
+                                ", ".join(
+                                    self.text(f"import_difffield_{name}")
+                                    for name in target_row.conflict_fields
+                                ) or self.text("none"),
+                                ", ".join(
+                                    self.text(f"import_difffield_{name}")
+                                    for name in target_row.preserved_fields
+                                ) or self.text("none"),
+                            )
+                        values = (
+                            str(spool_preview.spool_id), spool_preview.name,
+                            spool_preview.material, spool_preview.vendor or self.text("unknown"),
+                            mass_text(spool_preview.nominal_mg),
+                            mass_text(spool_preview.empty_spool_mg),
+                            mass_text(spool_preview.remaining_mg), price,
+                            self.text("import_state_archived") if spool_preview.archived else
+                                self.text("import_state_active"),
+                            metadata,
+                            ", ".join(self.text(omitted_labels[key])
+                                       for key in spool_preview.omitted_fields) or self.text("none"),
+                            *target_values,
                         )
-                    metadata = " · ".join(filter(None, (
-                        spool_preview.lot_number, spool_preview.color_hex,
-                        spool_preview.location,
-                    ))) or self.text("none")
-                    values = (
-                        str(spool_preview.spool_id), spool_preview.name,
-                        spool_preview.material, spool_preview.vendor or self.text("unknown"),
-                        mass_text(spool_preview.nominal_mg),
-                        mass_text(spool_preview.empty_spool_mg),
-                        mass_text(spool_preview.remaining_mg), price,
-                        self.text("import_state_archived") if spool_preview.archived else
-                            self.text("import_state_active"),
-                        metadata,
-                        ", ".join(self.text(omitted_labels[key])
-                                   for key in spool_preview.omitted_fields) or self.text("none"),
-                    )
-                    for column, value in enumerate(values):
-                        table.setItem(row_index, column, QTableWidgetItem(value))
-                page_label.setText(self.text(
-                    "import_page_status", page=page_index + 1, pages=page_count,
-                    start=0 if not preview.spools else start + 1,
-                    end=min(start + len(page_rows), len(preview.spools)),
-                    total=len(preview.spools),
-                ))
-                previous_page.setEnabled(page_index > 0)
-                next_page.setEnabled(page_index + 1 < page_count)
+                        for column, value in enumerate(values):
+                            table.setItem(row_index, column, QTableWidgetItem(value))
+                    page_label.setText(self.text(
+                        "import_page_status", page=page_index + 1, pages=page_count,
+                        start=0 if not preview.spools else start + 1,
+                        end=min(start + len(page_rows), len(preview.spools)),
+                        total=len(preview.spools),
+                    ))
+                    previous_page.setEnabled(page_index > 0)
+                    next_page.setEnabled(page_index + 1 < page_count)
 
-            def change_page(offset: int) -> None:
-                nonlocal page_index
-                page_index += offset
+                def change_page(offset: int) -> None:
+                    nonlocal page_index
+                    page_index += offset
+                    render_page()
+
+                previous_page.clicked.connect(lambda: change_page(-1))
+                next_page.clicked.connect(lambda: change_page(1))
+                page_controls = QHBoxLayout()
+                page_controls.addWidget(previous_page)
+                page_controls.addWidget(page_label)
+                page_controls.addWidget(next_page)
+                page_controls.addStretch()
+                detail_layout.addLayout(page_controls)
                 render_page()
+                detail_layout.addWidget(table)
+                buttons = QDialogButtonBox(
+                    QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,
+                    parent=detail,
+                )
+                buttons.button(QDialogButtonBox.StandardButton.Ok).setText(self.text("import"))
+                buttons.accepted.connect(detail.accept)
+                buttons.rejected.connect(detail.reject)
+                detail_layout.addWidget(buttons)
+                if detail.exec() == QDialog.DialogCode.Accepted:
+                    # Run after QThread.finished has restored the workspace.
+                    QTimer.singleShot(0, lambda: self.work(
+                        lambda: import_spoolman_database(path, self.backend.paths,
+                                                        engine=self.backend.engine,
+                                                        source_instance_key=source_instance_key,
+                                                        expected_source_fingerprint=preview.source_fingerprint),
+                        completed,
+                    ))
 
-            previous_page.clicked.connect(lambda: change_page(-1))
-            next_page.clicked.connect(lambda: change_page(1))
-            page_controls = QHBoxLayout()
-            page_controls.addWidget(previous_page)
-            page_controls.addWidget(page_label)
-            page_controls.addWidget(next_page)
-            page_controls.addStretch()
-            detail_layout.addLayout(page_controls)
-            render_page()
-            detail_layout.addWidget(table)
-            buttons = QDialogButtonBox(
-                QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel,
-                parent=detail,
-            )
-            buttons.button(QDialogButtonBox.StandardButton.Ok).setText(self.text("import"))
-            buttons.accepted.connect(detail.accept)
-            buttons.rejected.connect(detail.reject)
-            detail_layout.addWidget(buttons)
-            if detail.exec() == QDialog.DialogCode.Accepted:
-                # Run after QThread.finished has restored the workspace.
-                QTimer.singleShot(0, lambda: self.work(
-                    lambda: import_spoolman_database(path, self.backend.paths,
-                                                    engine=self.backend.engine,
-                                                    source_instance_key=source_instance_key,
-                                                    expected_source_fingerprint=preview.source_fingerprint),
-                    completed,
-                ))
+            # The completed callback still owns its finished task; defer the
+            # read-only target comparison until the workspace is restored.
+            QTimer.singleShot(0, lambda: self.work(
+                lambda: preview_spoolman_target_state(
+                    path, engine=self.backend.engine,
+                    source_instance_key=source_instance_key,
+                ),
+                show_detail,
+            ))
 
         def completed(result: object) -> None:
             imported = cast(SpoolmanImportResult, result)
@@ -2545,11 +2602,38 @@ class StudioWindow(QMainWindow):
 
         self.work(lambda: preview_haspelsync_files(*selected), display)
 
+    def switch_page(self, row: int) -> None:
+        self.pages.setCurrentIndex(row)
+        if row == 1:
+            self.discover()
+
+    def update_candidate_actions(self, row: int) -> None:
+        self.connect_candidate_button.setEnabled(
+            0 <= row < len(self._candidates)
+        )
+
+    def connect_candidate(self) -> None:
+        row = self.candidate_list.currentRow()
+        if not 0 <= row < len(self._candidates):
+            return
+        candidate = self._candidates[row]
+        if candidate.provider_type == "BAMBU_LAN":
+            self.enroll_bambu_network(candidate)
+        else:
+            self.enroll_local(candidate)
+
     def discover(self) -> None:
+        if self.tasks or self._monitor_task is not None:
+            return
+
         def scan() -> object:
             return discover_printers(primary_local_network())
 
         def display(result: object) -> None:
+            self._candidates = ()
+            self.candidate_list.clear()
+            self.candidate_list.setVisible(False)
+            self.connect_candidate_button.setEnabled(False)
             if not result:
                 self.device_result.setPlainText(self.text("no_candidates"))
                 return
@@ -2558,6 +2642,7 @@ class StudioWindow(QMainWindow):
             ):
                 self.device_result.setPlainText(self.text("discovery_failed"))
                 return
+            self._candidates = cast(tuple[PrinterCandidate, ...], result)
             confidence_key = {
                 "identified": "discovery_identified",
                 "unverified": "discovery_unverified",
@@ -2573,6 +2658,13 @@ class StudioWindow(QMainWindow):
                 )
                 for candidate in result
             ]
+            for candidate in result:
+                item = QListWidgetItem(
+                    f"{candidate.name}:{candidate.port} · "
+                    f"{self.text(confidence_key.get(candidate.confidence, 'discovery_unverified'))}"
+                )
+                self.candidate_list.addItem(item)
+            self.candidate_list.setVisible(True)
             self.device_result.setPlainText("\n".join(lines))
 
         self.device_result.setPlainText(self.text("searching_candidates"))
@@ -3130,7 +3222,7 @@ class StudioWindow(QMainWindow):
                     "weighing_recorded": preview.global_weighings[1],
                     "weighing_uncertain": preview.global_weighings[2],
                     "weighing_rejected": preview.global_weighings[3],
-                    "haspel_ready": self.text("yes") if preview.ready else self.text("no"),
+                    "journal_ready": self.text("yes") if preview.ready else self.text("no"),
                     "source_unchanged": self.text("yes")
                     if inventory_preview.source_unchanged_since_import else self.text("no"),
                     "events_current": self.text("yes")
@@ -3840,12 +3932,18 @@ class StudioWindow(QMainWindow):
         age = (UtcDateTime.now().value - self._observed_at.value).total_seconds()
         return 0 <= age <= 120
 
-    def enroll_local(self) -> None:
+    def enroll_local(self, candidate: PrinterCandidate | None = None) -> None:
         name, manufacturer, model, endpoint, token = (QLineEdit() for _ in range(5))
         token.setEchoMode(QLineEdit.EchoMode.Password)
         provider = QComboBox()
         provider.addItem("Moonraker / Klipper", "MOONRAKER")
         provider.addItem("OctoPrint", "OCTOPRINT")
+        if candidate is not None:
+            name.setText(candidate.name)
+            endpoint.setText(candidate.endpoint)
+            index = provider.findData(candidate.provider_type)
+            if index >= 0:
+                provider.setCurrentIndex(index)
         if not self.form("enrollment", [
             ("name", name), ("manufacturer", manufacturer), ("model", model),
             ("provider", provider), ("endpoint", endpoint), ("token", token),
@@ -3898,7 +3996,7 @@ class StudioWindow(QMainWindow):
 
         self.work(lambda: import_bambu_studio_profile(host.strip()), confirm)
 
-    def enroll_bambu_network(self) -> None:
+    def enroll_bambu_network(self, candidate: PrinterCandidate | None = None) -> None:
         dialog = QDialog(self)
         dialog.setObjectName("bambu-enrollment")
         dialog.setWindowTitle(self.text("network_autofill"))
@@ -3910,6 +4008,8 @@ class StudioWindow(QMainWindow):
             entry.setObjectName(f"bambu-{key}")
             fields[key] = entry
             layout.addRow(self.text(key), entry)
+        if candidate is not None:
+            fields["host"].setText(candidate.host)
         fields["serial"].setReadOnly(True)
         fields["access_code"].setEchoMode(QLineEdit.EchoMode.Password)
         hint = QLabel(self.text("network_hint"))
@@ -4084,6 +4184,8 @@ class StudioWindow(QMainWindow):
             dialog.accept()
 
         save.clicked.connect(accept)
+        if candidate is not None:
+            QTimer.singleShot(0, identify)
         if dialog.exec() != QDialog.DialogCode.Accepted or identity is None:
             fields["access_code"].clear()
             return

@@ -1,3 +1,29 @@
+## 2026-11-17 — E04.07 target collision preview завершено (статус Виконано)
+
+Відновлено ізольоване середовище `.venv312` (Python 3.12.15, locked deps + dev/desktop) і перевірено baseline: 683 passed / 491 subtests, exit 0. Staging git: 2 коміти (`da73871` initial import, `97ae03a` docs), коміти не створювалися.
+
+**Виконано:**
+- `src/ufm/integrations/spoolman/importer.py`: новий read-only `preview_spoolman_target_state()` + DTO `SpoolmanTargetPreview`/`SpoolmanTargetRowState`. Для кожного рядка Spoolman-знімка повертає стан `new`/`consistent`/`preserved`/`conflict`, імена конфліктних полів (`catalog_profile`, `catalog_brand`, `opening_stock`, `archived_opening`) і збережених полів UFM (`display_name`, `lot_number`, `color_hex`, `storage_location`, `purchase_price`/`currency`/`basis`, `nominal_filament`, `empty_spool`, `remaining`, `lifecycle`) та `target_remaining_mg`. Порівняння йде з тими самими детермінованими EntityId і `_milligrams` half-up округленням, що й імпортер; функція нічого не пише.
+- `src/ufm/ui/studio_window.py`: діалог імпорту після вибору джерела виконує target preview у worker і додає в таблицю 3 колонки (стан у UFM, конфлікти, збережені поля) + локалізоване зведення лічильників; 22 нові рядки в `studio_strings.json` (uk/en).
+- `src/ufm/ui/desktop.py`: підтвердження імпорту додатково показує підсумок target-станів; новий ключ `desktop.import_target_summary` в uk-UA/en-US.
+- Виправлено наявний крах обох UI при повторному імпорті: `recovery_label`-шаблон передавався через `text()`/`_text()` вже відформатованим → `KeyError`/`TranslationError`. Тепер raw template: `Translator.template()` (новий метод у `src/ufm/ui/i18n/__init__.py`) і прямий доступ до `studio_strings.json`.
+
+**Перевірки:** `test_target_state_preview_reports_collisions_and_preserved_fields` (імпортер) і `test_studio_import_preview_shows_target_collisions` (Studio UI, вкл. відхилення діалогу без імпорту) — passed; `test_spoolman_importer.py` + `test_foundation.py` — 34 passed/20 subtests; `test_studio_window.py` — 80 passed; повний suite — **685 passed / 491 subtests, exit 0** (94,33 с); Ruff clean; mypy clean для 4 змінених source-файлів.
+
+**CSV:** E04.07 → `Виконано` (критерій кроку — preview із конфліктами/пропусками/невідомими величинами/правилами mg — виконано й перевірено тестами; приймання на реальній базі лишається в E04.08/частині 04). E01.01 — додано доказ staging git provenance, статус `Частково виконовано` без змін (живі версії legacy не підтверджено). Підрахунок CSV: 118 ID — 30 Виконано / 70 Частково / 17 Заплановано / 1 У роботі; UTF-8 BOM збережено.
+
+**Обмеження:** усе на синтетичних fixture/тимчасових SQLite; реальна база Spoolman, live legacy runtime, власник і фізичні принтери не задіяні; комітів немає.
+
+**Наступна дія:** продовжити офлайн-аудит E01–E06 (E04.08 recovery/cutover parity, E05.x Qt-перенесення, E06.x observer) і тримати відкритими кроки, що потребують live-приймання.
+
+## 2026-11-17 — Запит на дороблення частин 01–06
+
+Отримано актуальніший за робочу копію upstream-архів `Universal_Filament_Manager-main.zip` у `D:/UFM/гітхаб`. Архів розгорнуто в окремий staging checkout `D:/UFM/_UFM_GitHubStage`; він був чистий на початок цієї сесії (`main...origin/main`). Оригінальний ZIP і `D:/UFM/Universal_Filament_Manager` не змінювалися. Робоча папка `D:/UFM/гітхаб` доступна лише для читання.
+
+Звірка кроків 01–06: 47 підкроків, 21 `Виконано`, 23 `Частково виконано`, 1 `У роботі`, 2 `Заплановано`. Код та наявні докази в архіві вже покривають більшість базових сценаріїв; не змінювати статус на `Виконано` лише на підставі старого тексту handoff. Залишаються перевірки власником і на фізичних принтерах, живому legacy runtime, semantic/runtime parity та кілька незавершених workflow.
+
+Ця сесія не запускала тестів, БД, GUI, мережу чи апаратні сценарії. Змінено тільки цей checkpoint для фіксації джерела та меж поточної роботи. Наступна дія: відновити дозволений Python 3.12 dev environment для staging і виконати вузькі регресії після вибору конкретного офлайн-підкроку; окремо спланувати живе приймання E01/E02/E03/E04/E05/E06, яке потребує реальних джерел, власника або принтера. Жоден крок не закривається цією приміткою.
+
 # Поточна контрольна точка — Candidate16 (внутрішня portable-збірка) — 2026-10-30
 
 ## 2026-10-31 — деталізований preview імпорту Spoolman
@@ -2364,3 +2390,21 @@ GitHub Actions run `41213065696` on commit `afa1d232ec577db5cd00c5ffffe4e1b0e977
 ## 2026-10-31 — Root and external Graphify refresh after CI fixes
 
 Updated the existing root map with `graphify D:\Bot\Universal_Filament_Manager --update --code-only`, then `cluster-only`: 6,278 nodes / 17,643 edges; 11 code files re-extracted, 478 unchanged, 0 deleted, 2 excluded. Graphify skipped 49 non-code inputs (46 Markdown, 3 images) without semantic re-extraction. Rebuilt external traceability/UFM/Spoolman/link/enriched maps from their selected source snapshot: 743/13,168/45,531; 246/6,229/22,931; 298/4,920/15,554; 544/11,100/38,485; enriched 29,065/86,018; Bambu source 12,955/32,565; local profiles 2,942/7,711; combined 15,897/40,276. All nine graph JSONs have unique IDs and zero dangling endpoints; 743-entry source manifest has zero missing snapshot files and zero snapshot/live SHA mismatches. Updated `D:\graphify-out\bambu-ufm\PROJECT_MAPS_UK.md` and `HANDOFF_UK.md`. E02.06 stays Partial; maps aid navigation and do not prove runtime behavior. Checklist counters unchanged: 29 done / 71 partial / 17 planned / 1 in progress.
+
+## 2026-11-17 — Уніфікація інтерфейсу: дебрендинг, спрощення кнопок, автопідключення принтерів
+
+За запитом власника видимий інтерфейс UFM Studio уніфіковано як єдиний продукт: з UI/CLI прибрано назви Spoolman і HaspelSync. Внутрішні імена модулів, функцій, тестів і міграційне SQL-сховище display_name для вже імпортованих джерел не перейменовували — вони не user-visible або є історичними даними.
+
+Зміни:
+- src/ufm/ui/studio_strings.json: 42 ключі переписано нейтрально — «Імпорт бази даних котушок…», «Джерело імпорту», «попередня система обліку», «база котушок»; у uthority_cutover_preview placeholder перейменовано {haspel_ready}→{journal_ready} (оновлено call site). Додано ключ connect_candidate.
+- src/ufm/ui/i18n/uk-UA.json + en-US.json: desktop.import*, select_spoolman, import_source_*, error.spoolman_import, cli.help — нейтральні формулювання; placeholder-parity збережено.
+- src/ufm/bootstrap/cli.py: первинні нейтральні прапорці --spool-api-preview, --spool-db-preview, --spool-db-import, --spool-source-id, --slot-mapping-preview; старі --spoolman-*/--haspelsync-* лишаються робочими прихованими аліасами того самого argparse-аргументу.
+- src/ufm/integrations/spoolman/importer.py: user-visible fallback display_name/device name → «Spool database import».
+- src/ufm/ui/studio_window.py: сховано три niche-контроли — haspel_import_preview (Система), inspect_slice_file (Пристрої), atch_print_qr_labels (Філамент); методи й рядки збережено для можливого повернення. Додано автоскан: перехід на сторінку «Пристрої» запускає discover() (busy-гард запобігає повтору під час задачі; 
+efresh() скан не дублює; повторне відкриття сторінки — новий скан). Знайдені кандидати показуються у candidate_list; кнопка «Підключити вибраний пристрій…» для BAMBU_LAN відкриває мережеве заповнення з готовим host + авто-ідентифікацією, для Moonraker/OctoPrint — локальну форму з endpoint/provider. Користувач лише вводить LAN-код і підтверджує TLS; збереження credentials лише після явного підтвердження.
+
+Тести (+6): test_user_facing_strings_have_no_legacy_brand_names, test_niche_buttons_are_hidden_from_studio_pages, test_devices_page_auto_scan_runs_once_per_opening, test_connect_candidate_prefills_bambu_enrollment_without_saving (studio_window); test_help_uses_neutral_flag_names_without_legacy_brands (foundation); test_cli_neutral_and_legacy_spool_db_flags_are_equivalent (spoolman importer). Оновлено test_system_registry_documents_haspel_booking_review_safety під нейтральний текст (зміст застереження збережено).
+
+Перевірки: повний suite **696 passed / 491 subtests, exit 0** (90,97 с); ruff check clean; mypy clean для змінених source-файлів. Тимчасові скрипти дебрендингу видалено.
+
+CSV: статуси E01–E06 не змінювалися — ця робота не закриває жодного кроку приймання; відкриті пункти та live/owner/hardware-блокери лишаються як у попередньому checkpoint. Зміни закомічено та відправлено в приватний `origin/main` після rebase на віддалені CI-виправлення.

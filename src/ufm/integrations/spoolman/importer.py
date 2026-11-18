@@ -21,6 +21,7 @@ from ufm.application.storage import StorageCommands
 from ufm.domain.enums import MaterialType, SpoolLifecycle, StorageType
 from ufm.domain.value_objects import EntityId, ExactDecimal, Mass, UtcDateTime
 from ufm.infrastructure.backup.sqlite_snapshot import create_snapshot
+from ufm.infrastructure.persistence.models.ledger import filament_transaction
 from ufm.infrastructure.persistence.models.schema import (
     brand,
     device_identity,
@@ -164,6 +165,30 @@ class SpoolmanCutoverPreview:
             and self.missing_count == 0
             and self.unexpected_count == 0
         )
+
+
+@dataclass(frozen=True, slots=True)
+class SpoolmanTargetRowState:
+    """Read-only per-row result of comparing one import candidate with UFM."""
+
+    spool_id: int
+    state: str
+    conflict_fields: tuple[str, ...]
+    preserved_fields: tuple[str, ...]
+    target_remaining_mg: int | None
+
+
+@dataclass(frozen=True, slots=True)
+class SpoolmanTargetPreview:
+    """Bounded target-side collision report for one chosen source instance key."""
+
+    source_instance_key: str
+    source_fingerprint: str
+    new_count: int
+    consistent_count: int
+    preserved_count: int
+    conflict_count: int
+    rows: tuple[SpoolmanTargetRowState, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -532,7 +557,7 @@ def list_spoolman_import_sources(engine: Engine) -> tuple[SpoolmanImportSourceIn
         return tuple(SpoolmanImportSourceInfo(
             source_instance_key=row["source_instance_key"],
             device_id=row["device_id"],
-            display_name=f"Legacy Spoolman import ({row['source_instance_key'][:8]})",
+            display_name=f"Spool database import ({row['source_instance_key'][:8]})",
             created_at=row["created_at"], last_seen_at=row["last_seen_at"],
             snapshot_sha256=None,
         ) for row in rows)
@@ -581,6 +606,192 @@ def preview_spoolman_import_recovery(
     if preview.source_unchanged_since_import:
         raise SpoolmanImportRejected()
     return preview
+
+
+def preview_spoolman_target_state(
+    path: Path, *, engine: Engine, source_instance_key: str,
+) -> SpoolmanTargetPreview:
+    """Compare a Spoolman snapshot with existing UFM rows for one source key.
+
+    Read-only: reports which deterministic import identities already exist,
+    which target values the import would keep, and which differences would
+    make the import reject that row. Never writes or creates directories.
+    """
+    try:
+        resolved = path.expanduser().resolve()
+        if not resolved.is_file() or resolved.stat().st_size > MAX_SOURCE_BYTES:
+            raise SpoolmanImportRejected()
+        key = _validated_source_instance_key(source_instance_key, resolved)
+        rows, preview = _load_rows(resolved)
+        device_id = _entity_id(f"ufm:spoolman:{key}:device")
+        spool_ids = {
+            _entity_id(f"ufm:spoolman:{key}:spool:{row.spool_id}") for row in rows
+        }
+        profile_ids = {
+            _entity_id(f"ufm:spoolman:{key}:filament:{row.filament_id}")
+            for row in rows
+        }
+        brand_ids = {
+            _entity_id(f"ufm:spoolman:{key}:vendor:{row.vendor_id}")
+            for row in rows if row.vendor_id is not None and row.vendor
+        }
+        with engine.connect() as connection:
+            target_spools = {
+                row.id: row for row in connection.execute(select(
+                    ufm_spool.c.id, ufm_spool.c.display_name,
+                    ufm_spool.c.lot_number, ufm_spool.c.color_hex,
+                    ufm_spool.c.storage_location_id, ufm_spool.c.lifecycle,
+                    ufm_spool.c.effective_remaining_mg,
+                    ufm_spool.c.nominal_filament_mg, ufm_spool.c.empty_spool_mg,
+                    ufm_spool.c.purchase_price, ufm_spool.c.purchase_basis_mg,
+                    ufm_spool.c.currency, ufm_spool.c.filament_profile_id,
+                ).where(
+                    ufm_spool.c.device_id == device_id,
+                    ufm_spool.c.deleted_at.is_(None),
+                    ufm_spool.c.id.in_(spool_ids),
+                )).mappings()
+            }
+            profiles = {
+                row.id: row for row in connection.execute(select(
+                    filament_profile.c.id, filament_profile.c.name,
+                    filament_profile.c.material_type,
+                    filament_profile.c.diameter_mm,
+                    filament_profile.c.brand_id,
+                ).where(filament_profile.c.id.in_(profile_ids))).mappings()
+            }
+            brands = (
+                {
+                    row.id: row for row in connection.execute(select(
+                        brand.c.id, brand.c.name,
+                    ).where(brand.c.id.in_(brand_ids))).mappings()
+                } if brand_ids else {}
+            )
+            openings = {
+                row.spool_id: row.delta_mg.milligrams
+                for row in connection.execute(select(
+                    filament_transaction.c.spool_id,
+                    filament_transaction.c.delta_mg,
+                ).where(
+                    filament_transaction.c.spool_id.in_(tuple(target_spools)),
+                    filament_transaction.c.sequence == 1,
+                )).all()
+            } if target_spools else {}
+        states: list[SpoolmanTargetRowState] = []
+        for row in rows:
+            spool_id = _entity_id(f"ufm:spoolman:{key}:spool:{row.spool_id}")
+            target = target_spools.get(spool_id)
+            if target is None:
+                states.append(SpoolmanTargetRowState(
+                    row.spool_id, "new", (), (), None,
+                ))
+                continue
+            conflicts: list[str] = []
+            preserved: list[str] = []
+            material = row.material.upper()
+            material_type = (
+                material if material in _MATERIAL_TYPES
+                else MaterialType.CUSTOM.value
+            )
+            expected_brand_id = (
+                _entity_id(f"ufm:spoolman:{key}:vendor:{row.vendor_id}")
+                if row.vendor_id is not None and row.vendor else None
+            )
+            profile = profiles.get(
+                _entity_id(f"ufm:spoolman:{key}:filament:{row.filament_id}"),
+            )
+            if profile is not None and (
+                profile["name"] != row.name
+                or profile["material_type"] != material_type
+                or profile["diameter_mm"] != ExactDecimal(row.diameter_mm)
+                or profile["brand_id"] != expected_brand_id
+            ):
+                conflicts.append("catalog_profile")
+            if expected_brand_id is not None:
+                brand_row = brands.get(expected_brand_id)
+                if brand_row is not None and brand_row["name"] != row.vendor:
+                    conflicts.append("catalog_brand")
+            expected_remaining = _milligrams(row.remaining_g)
+            if expected_remaining is not None:
+                if spool_id in openings:
+                    if openings[spool_id] != expected_remaining:
+                        conflicts.append("opening_stock")
+                elif target["lifecycle"] == SpoolLifecycle.ARCHIVED.value:
+                    conflicts.append("archived_opening")
+            incoming_name = (
+                f"{row.vendor} {row.name}" if row.vendor else row.name
+            )[:200]
+            if target["display_name"] != incoming_name:
+                preserved.append("display_name")
+            if (row.lot_number is not None and target["lot_number"]
+                    and target["lot_number"] != row.lot_number):
+                preserved.append("lot_number")
+            if (row.color_hex is not None and target["color_hex"]
+                    and target["color_hex"] != row.color_hex):
+                preserved.append("color_hex")
+            if row.location is not None:
+                expected_location = _entity_id(
+                    f"ufm:spoolman:{key}:location:{row.location}",
+                )
+                if (target["storage_location_id"] is not None
+                        and target["storage_location_id"] != expected_location):
+                    preserved.append("storage_location")
+            if row.purchase_price is not None:
+                if (target["purchase_price"] is None
+                        or target["purchase_price"] != row.purchase_price):
+                    preserved.append("purchase_price")
+                if target["currency"] != row.currency:
+                    preserved.append("purchase_currency")
+                expected_basis = _milligrams(row.purchase_basis_g)
+                target_basis = target["purchase_basis_mg"]
+                target_basis_mg = (
+                    None if target_basis is None else target_basis.milligrams
+                )
+                if expected_basis != target_basis_mg:
+                    preserved.append("purchase_basis")
+            expected_nominal = _milligrams(row.nominal_filament_g)
+            if expected_nominal is not None:
+                nominal = target["nominal_filament_mg"]
+                nominal_mg = None if nominal is None else nominal.milligrams
+                if nominal_mg != expected_nominal:
+                    preserved.append("nominal_filament")
+            expected_empty = _milligrams(row.empty_spool_g)
+            if expected_empty is not None:
+                empty = target["empty_spool_mg"]
+                empty_mg = None if empty is None else empty.milligrams
+                if empty_mg != expected_empty:
+                    preserved.append("empty_spool")
+            effective = target["effective_remaining_mg"]
+            target_remaining = (
+                None if effective is None else effective.milligrams
+            )
+            if (expected_remaining is not None
+                    and target_remaining != expected_remaining):
+                preserved.append("remaining")
+            if (not row.archived
+                    and target["lifecycle"] == SpoolLifecycle.ARCHIVED.value):
+                preserved.append("lifecycle")
+            state = (
+                "conflict" if conflicts
+                else "preserved" if preserved else "consistent"
+            )
+            states.append(SpoolmanTargetRowState(
+                row.spool_id, state, tuple(conflicts), tuple(preserved),
+                target_remaining,
+            ))
+        counts = {"new": 0, "consistent": 0, "preserved": 0, "conflict": 0}
+        for row_state in states:
+            counts[row_state.state] += 1
+        return SpoolmanTargetPreview(
+            source_instance_key=key,
+            source_fingerprint=preview.source_fingerprint,
+            new_count=counts["new"], consistent_count=counts["consistent"],
+            preserved_count=counts["preserved"], conflict_count=counts["conflict"],
+            rows=tuple(states),
+        )
+    except SpoolmanImportRejected:
+        raise
+    except (OSError, ValueError, sqlite3.Error, SQLAlchemyError):
+        raise SpoolmanImportRejected() from None
 
 
 def _preview_spoolman_reconciliation(
@@ -805,13 +1016,13 @@ def import_spoolman_database(
             ).scalar_one_or_none()
             if row is None:
                 connection.execute(insert(device_identity).values(
-                    id=device_id, name="Spoolman import", public_id=str(device_id),
+                    id=device_id, name="Spool database import", public_id=str(device_id),
                     created_at=now,
                 ))
             if registered_device is None:
                 connection.execute(insert(spoolman_import_source).values(
                     source_instance_key=source_instance, device_id=device_id,
-                    display_name=source.name[:200] or "Spoolman import",
+                    display_name=source.name[:200] or "Spool database import",
                     created_at=now, last_seen_at=now, snapshot_sha256=None,
                 ))
 

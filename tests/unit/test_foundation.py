@@ -207,6 +207,16 @@ class PathsAndStartupTests(unittest.TestCase):
             self.assertEqual(main(["--password", "private-secret"]), 2)
         self.assertNotIn("private-secret", stderr.getvalue())
 
+    def test_help_uses_neutral_flag_names_without_legacy_brands(self) -> None:
+        with contextlib.redirect_stdout(io.StringIO()) as stdout:
+            self.assertEqual(main(["--help", "--locale", "en-US"]), 0)
+        help_text = stdout.getvalue().lower()
+        self.assertIn("--spool-db-import", help_text)
+        self.assertIn("--spool-source-id", help_text)
+        self.assertIn("--slot-mapping-preview", help_text)
+        self.assertNotIn("spoolman", help_text)
+        self.assertNotIn("haspelsync", help_text)
+
     def test_corrupt_config_is_not_silently_ignored(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -628,8 +628,8 @@
     "No transactions yet. Set opening stock separately."
   ],
   "no_profiles": [
-    "Спочатку створіть профіль матеріалу або імпортуйте Spoolman.",
-    "Create a material profile or import Spoolman first."
+    "Спочатку створіть профіль матеріалу або імпортуйте базу котушок.",
+    "Create a material profile or import a spool database first."
   ],
   "diameter": [
     "Діаметр, мм",
@@ -640,8 +640,8 @@
     "Create backup"
   ],
   "import": [
-    "Імпортувати базу Spoolman",
-    "Import Spoolman database"
+    "Імпорт бази даних котушок…",
+    "Import spool database…"
   ],
   "import_confirm": [
     "Джерело: {source_instance_key}. Імпортувати котушки: {spools}; профілі: {profiles}; відомі залишки: {known}; невідомі залишки: {unknown}; ціни закупівлі: {prices}; ціни без бази/валюти: {prices_unknown}; номери партій у джерелі: {lots}; кольори у джерелі: {colors}; місця у джерелі: {locations}; непідтримувані значення метаданих: {metadata_unknown}. Будуть створені резервні копії. Джерело не змінюється.",
@@ -652,8 +652,8 @@
     "Processed spools: {count}. Source key: {source_instance_key}. ID mapping report: {mapping_report}. Source backup: {path}"
   ],
   "import_preview_title": [
-    "Перегляд імпорту Spoolman",
-    "Spoolman import preview"
+    "Попередній перегляд імпорту котушок",
+    "Spool database import preview"
   ],
   "import_col_spool": ["ID котушки", "Spool ID"],
   "import_col_filament": ["Назва", "Name"],
@@ -675,6 +675,32 @@
   "import_omitted_color": ["колір", "color"],
   "import_omitted_location": ["місце зберігання", "storage location"],
   "import_omitted_price": ["ціна (невідома валюта або база)", "price (currency or basis unknown)"],
+  "import_target_summary": [
+    "Стан у поточній базі UFM: нових {new}; узгоджених {consistent}; зі збереженими полями UFM {preserved}; конфліктів {conflict}.",
+    "State in the current UFM database: {new} new; {consistent} consistent; {preserved} with UFM fields kept; {conflict} conflicts."
+  ],
+  "import_col_target": ["Стан у UFM", "UFM state"],
+  "import_col_conflicts": ["Конфлікти", "Conflicts"],
+  "import_col_preserved": ["Збережені поля UFM", "UFM fields kept"],
+  "import_target_new": ["нова", "new"],
+  "import_target_consistent": ["узгоджена", "consistent"],
+  "import_target_preserved": ["є збережені поля", "has kept fields"],
+  "import_target_conflict": ["конфлікт", "conflict"],
+  "import_difffield_catalog_profile": ["профіль каталогу", "catalog profile"],
+  "import_difffield_catalog_brand": ["бренд каталогу", "catalog brand"],
+  "import_difffield_opening_stock": ["початковий залишок", "opening stock"],
+  "import_difffield_archived_opening": ["залишок архівної котушки", "archived opening"],
+  "import_difffield_display_name": ["назва", "display name"],
+  "import_difffield_lot_number": ["номер партії", "lot number"],
+  "import_difffield_color_hex": ["колір", "color"],
+  "import_difffield_storage_location": ["місце зберігання", "storage location"],
+  "import_difffield_purchase_price": ["ціна закупівлі", "purchase price"],
+  "import_difffield_purchase_currency": ["валюта закупівлі", "purchase currency"],
+  "import_difffield_purchase_basis": ["база ціни", "price basis"],
+  "import_difffield_nominal_filament": ["номінал філаменту", "nominal filament"],
+  "import_difffield_empty_spool": ["маса порожньої котушки", "empty spool mass"],
+  "import_difffield_remaining": ["залишок", "remaining"],
+  "import_difffield_lifecycle": ["життєвий цикл", "lifecycle"],
   "none": ["—", "—"],
   "discover": [
     "Знайти у локальній мережі",
@@ -723,6 +749,10 @@
   "discovery_failed": [
     "Не вдалося показати результати пошуку пристроїв.",
     "Could not display the device discovery results."
+  ],
+  "connect_candidate": [
+    "Підключити вибраний пристрій…",
+    "Connect selected device…"
   ],
   "probe_done": [
     "З’єднання: {state}\nСопло: {nozzle} °C\nСтіл: {bed} °C\nЧас спостереження: {time}",
@@ -961,8 +991,8 @@
     "Cancel"
   ],
   "empty_inventory": [
-    "Створіть профіль і котушку або імпортуйте наявну базу Spoolman.",
-    "Create a profile and spool, or import an existing Spoolman database."
+    "Створіть профіль і котушку або імпортуйте наявну базу даних котушок.",
+    "Create a profile and spool, or import an existing spool database."
   ],
   "inventory_unavailable": [
     "Не вдалося прочитати локальні дані. Перевірте файл бази та права доступу, потім натисніть «Оновити дані». Зміни інвентарю тимчасово вимкнено.",
@@ -1549,16 +1579,16 @@
     "Review required"
   ],
   "import_source_title": [
-    "Джерело імпорту Spoolman",
-    "Spoolman import source"
+    "Джерело імпорту",
+    "Import source"
   ],
   "import_source_prompt": [
     "Виберіть раніше зареєстроване джерело, щоб зберегти ті самі ID після переміщення бази. Для окремої інсталяції створіть нове джерело.",
-    "Choose a registered source to preserve the same IDs after moving its database. Create a new source for a separate Spoolman installation."
+    "Choose a registered source to preserve the same IDs after moving its database. Create a new source for a separate installation."
   ],
   "import_source_new": [
-    "Створити нове джерело Spoolman",
-    "Create a new Spoolman source"
+    "Нове джерело імпорту",
+    "New import source"
   ],
   "import_source_unverified": [
     "знімок імпорту не підтверджено — перевірте/продовжте імпорт",
@@ -1569,24 +1599,24 @@
     "preliminary spool reconciliation: matched {matched}/{total}, mismatched {mismatch}, missing {missing}, extra {extra}"
   ],
   "haspel_import_preview": [
-    "Попередній перегляд HaspelSync",
-    "HaspelSync preview"
+    "Попередній перегляд перенесення",
+    "Migration preview"
   ],
   "haspel_import_preview_description": [
-    "Оберіть файли HaspelSync для локального зіставлення. Нічого не буде застосовано.",
-    "Select HaspelSync files for local mapping review. Nothing will be applied."
+    "Оберіть файли попередньої системи для локального зіставлення. Нічого не буде застосовано.",
+    "Select legacy system files for local mapping review. Nothing will be applied."
   ],
   "haspel_select_printers": [
-    "Оберіть printers.json HaspelSync",
-    "Select HaspelSync printers.json"
+    "Оберіть printers.json попередньої системи",
+    "Select legacy printers.json"
   ],
   "haspel_select_mappings": [
-    "Оберіть mappings.json HaspelSync",
-    "Select HaspelSync mappings.json"
+    "Оберіть mappings.json попередньої системи",
+    "Select legacy mappings.json"
   ],
   "haspel_select_id_map": [
-    "Оберіть ID map Spoolman з UFM",
-    "Select the Spoolman ID map exported by UFM"
+    "Оберіть файл відповідності ID, створений UFM",
+    "Select the UFM ID mapping file"
   ],
   "haspel_no_printers": [
     "Принтерів не знайдено.",
@@ -1601,8 +1631,8 @@
     "unresolved"
   ],
   "haspel_import_summary": [
-    "Локальний попередній перегляд. Налаштування не застосовано; мережа та залишки не змінювалися.\n\nНалаштування HaspelSync не читаються й не переносяться. Код доступу вводиться окремо у UFM; адресу та з’єднання підтверджуйте через виявлення принтера. Режими обліку й автоматичного списання не переносяться.\n\nПринтери:\n{printers}\n\nСлоти → UFM котушки:\n{mappings}\n\nПоказано перші 100 прив’язок; приховано: {omitted}.\n\nБез зіставлення: {unresolved}; непідтримувані слоти: {unsupported}; принтери без відповідності: {orphan}; повторні котушки: {duplicates}. Код доступу, IP та значення fingerprint не показуються.",
-    "Local preview only. Settings were not applied; no network or inventory changes were made.\n\nHaspelSync settings are not read or transferred. Enter the access code separately in UFM; verify the address and connection through printer discovery. Tracking and automatic-debit modes are not transferred.\n\nPrinters:\n{printers}\n\nSlots → UFM spools:\n{mappings}\n\nShowing first 100 assignments; omitted: {omitted}.\n\nUnresolved: {unresolved}; unsupported slots: {unsupported}; unmatched printers: {orphan}; duplicate spools: {duplicates}. Access codes, IP addresses and fingerprint values are not shown."
+    "Локальний попередній перегляд. Налаштування не застосовано; мережа та залишки не змінювалися.\n\nНалаштування попередньої системи не читаються й не переносяться. Код доступу вводиться окремо у UFM; адресу та з’єднання підтверджуйте через виявлення принтера. Режими обліку й автоматичного списання не переносяться.\n\nПринтери:\n{printers}\n\nСлоти → UFM котушки:\n{mappings}\n\nПоказано перші 100 прив’язок; приховано: {omitted}.\n\nБез зіставлення: {unresolved}; непідтримувані слоти: {unsupported}; принтери без відповідності: {orphan}; повторні котушки: {duplicates}. Код доступу, IP та значення fingerprint не показуються.",
+    "Local preview only. Settings were not applied; no network or inventory changes were made.\n\nLegacy system settings are not read or transferred. Enter the access code separately in UFM; verify the address and connection through printer discovery. Tracking and automatic-debit modes are not transferred.\n\nPrinters:\n{printers}\n\nSlots → UFM spools:\n{mappings}\n\nShowing first 100 assignments; omitted: {omitted}.\n\nUnresolved: {unresolved}; unsupported slots: {unsupported}; unmatched printers: {orphan}; duplicate spools: {duplicates}. Access codes, IP addresses and fingerprint values are not shown."
   ],
   "haspel_unsupported": [
     "непідтримуваний слот",
@@ -1625,16 +1655,16 @@
     "Printer: {printer} | Mode: {mode} | Revision: {revision} | Cutover evidence SHA-256: {snapshot} | Writer stopped: {writer_time} | Reconciled: {reconciled_time}"
   ],
   "authority_local_notice": [
-    "Цей режим зберігає локальне рішення UFM. Він не зупиняє службу HaspelSync і не є розподіленим блокуванням. Автоматичне списання окремо вимкнене, доки його явно не налаштовано.",
-    "This stores UFM's local decision. It does not stop HaspelSync or provide a distributed lock. Automatic debit remains separately disabled unless explicitly configured."
+    "Цей режим зберігає локальне рішення UFM. Він не зупиняє попередню службу й не є розподіленим блокуванням. Автоматичне списання окремо вимкнене, доки його явно не налаштовано.",
+    "This stores UFM's local decision. It does not stop the legacy service or provide a distributed lock. Automatic debit remains separately disabled unless explicitly configured."
   ],
   "authority_remote_endpoint": [
-    "Адреса HaspelSync API (origin)",
-    "HaspelSync API origin"
+    "Адреса API попередньої системи (origin)",
+    "Legacy system API origin"
   ],
   "authority_remote_printer": [
-    "ID принтера у HaspelSync",
-    "HaspelSync printer ID"
+    "ID принтера у попередній системі",
+    "Legacy system printer ID"
   ],
   "authority_remote_key": [
     "API key (зберігається в захищеному сховищі ОС)",
@@ -1649,20 +1679,20 @@
     "Verify connection and read status"
   ],
   "authority_remote_unknown": [
-    "Стан HaspelSync ще не перевірено",
-    "HaspelSync status has not been checked"
+    "Стан попередньої системи ще не перевірено",
+    "Legacy system status has not been checked"
   ],
   "authority_remote_status": [
-    "Стан вибраного HaspelSync: {owner}; ревізія {revision}; очікує {pending}, невизначених {uncertain}, активних {active}",
-    "Selected HaspelSync state: {owner}; revision {revision}; pending {pending}, uncertain {uncertain}, active {active}"
+    "Стан вибраної попередньої системи: {owner}; ревізія {revision}; очікує {pending}, невизначених {uncertain}, активних {active}",
+    "Selected legacy system state: {owner}; revision {revision}; pending {pending}, uncertain {uncertain}, active {active}"
   ],
   "authority_review_bookings": [
     "Переглянути невизначені списання",
     "Review unresolved bookings"
   ],
   "authority_bookings_failed": [
-    "Не вдалося безпечно прочитати журнал HaspelSync. Рішення не записано.",
-    "Could not safely read the HaspelSync journal. No resolution was recorded."
+    "Не вдалося безпечно прочитати журнал попередньої системи. Рішення не записано.",
+    "Could not safely read the legacy journal. No resolution was recorded."
   ],
   "authority_no_unresolved_bookings": [
     "У журналі вибраного принтера немає очікуваних або невизначених списань серед останніх записів.",
@@ -1673,8 +1703,8 @@
     "{status} · {job} · spool {spool} · {grams} g · {terminal}"
   ],
   "authority_booking_select": [
-    "Виберіть запис, звірте котушку й завдання у HaspelSync та Spoolman.",
-    "Select a record and compare its spool and job in HaspelSync and Spoolman."
+    "Виберіть запис, звірте котушку й завдання у попередній системі та базі котушок.",
+    "Select a record and compare its spool and job in the legacy system and spool database."
   ],
   "authority_booking_details": [
     "ID: {id}\nКлюч завдання: {item}\nПочаток (Unix ms): {started}\nСтворено в журналі (Unix ms): {created}",
@@ -1693,8 +1723,8 @@
     "Review note"
   ],
   "authority_booking_note_prompt": [
-    "Опишіть, що саме перевірили. Нотатка буде записана в журнал HaspelSync.",
-    "Describe what you checked. This note will be stored in the HaspelSync journal."
+    "Опишіть, що саме перевірили. Нотатка буде записана в журнал попередньої системи.",
+    "Describe what you checked. This note will be stored in the legacy journal."
   ],
   "authority_booking_note_invalid": [
     "Введіть нотатку довжиною від 1 до 500 символів.",
@@ -1705,80 +1735,80 @@
     "Confirm reviewed outcome"
   ],
   "authority_booking_confirm": [
-    "Зафіксувати результат «{resolution}»? Це змінить лише журнал HaspelSync. UFM не спише пластик, не змінить залишок Spoolman і не повторить запит.",
-    "Record the outcome “{resolution}”? This changes only the HaspelSync journal. UFM will not debit filament, change Spoolman stock, or retry the request."
+    "Зафіксувати результат «{resolution}»? Це змінить лише журнал попередньої системи. UFM не спише пластик, не змінить залишок бази котушок і не повторить запит.",
+    "Record the outcome “{resolution}”? This changes only the legacy journal. UFM will not debit filament, change spool database stock, or retry the request."
   ],
   "authority_booking_saved": [
-    "Результат перевірки записано в журналі HaspelSync. Це не змінює залишок Spoolman. Перевірте актуальний стан перед іншими діями.",
-    "The review outcome was recorded in the HaspelSync journal. Spoolman stock was not changed. Verify the current state before other actions."
+    "Результат перевірки записано в журналі попередньої системи. Це не змінює залишок бази котушок. Перевірте актуальний стан перед іншими діями.",
+    "The review outcome was recorded in the legacy journal. Spool database stock was not changed. Verify the current state before other actions."
   ],
   "authority_booking_unknown": [
-    "Відповідь на запис рішення невідома. UFM не надсилала повторний запит. Оновіть перегляд і перевірте журнал HaspelSync перед будь-якою наступною дією.",
-    "The resolution write outcome is unknown. UFM did not resend it. Refresh the review and inspect the HaspelSync journal before taking another action."
+    "Відповідь на запис рішення невідома. UFM не надсилала повторний запит. Оновіть перегляд і перевірте журнал попередньої системи перед будь-якою наступною дією.",
+    "The resolution write outcome is unknown. UFM did not resend it. Refresh the review and inspect the legacy journal before taking another action."
   ],
   "authority_booking_conflict": [
     "Запис змінився або більше не підлягає перевірці. Оновіть журнал і звірте його стан; повторне списання не виконується.",
     "The record changed or is no longer reviewable. Refresh the journal and verify its state; no consumption retry was made."
   ],
   "authority_remote_warning": [
-    "Ключ HaspelSync має повний доступ до його API. UFM збереже його лише у сховищі облікових даних ОС після успішної перевірки. Віддалений HTTP без TLS не приймається; дозволено лише HTTPS із перевіркою сертифіката або HTTP на цьому самому ПК. Відповідь стосується лише вибраної служби й не виявляє інші процеси чи каталоги даних.",
-    "The HaspelSync API key has full API access. UFM stores it only in the OS credential vault after a successful check. Remote HTTP without TLS is rejected; only certificate-verified HTTPS or same-machine HTTP is accepted. The response covers only the selected service and cannot detect other processes or data directories."
+    "Ключ доступу попередньої системи має повний доступ до її API. UFM збереже його лише у сховищі облікових даних ОС після успішної перевірки. Віддалений HTTP без TLS не приймається; дозволено лише HTTPS із перевіркою сертифіката або HTTP на цьому самому ПК. Відповідь стосується лише вибраної служби й не виявляє інші процеси чи каталоги даних.",
+    "The legacy system API key has full API access. UFM stores it only in the OS credential vault after a successful check. Remote HTTP without TLS is rejected; only certificate-verified HTTPS or same-machine HTTP is accepted. The response covers only the selected service and cannot detect other processes or data directories."
   ],
   "authority_remote_failed": [
     "Перевірка не пройшла. Зв’язок або capability відсутні; нічого не активовано.",
     "Verification failed. The connection or capability is unavailable; nothing was activated."
   ],
   "authority_remote_activation_required": [
-    "Перед активацією UFM перевірте HaspelSync. Потрібен свіжий стан LEGACY_ACTIVE без активних, очікуваних або невизначених операцій.",
-    "Verify HaspelSync before activating UFM. A fresh LEGACY_ACTIVE state with no active, pending, or uncertain operations is required."
+    "Перед активацією UFM перевірте попередню систему. Потрібен свіжий стан LEGACY_ACTIVE без активних, очікуваних або невизначених операцій.",
+    "Verify the legacy system before activating UFM. A fresh LEGACY_ACTIVE state with no active, pending, or uncertain operations is required."
   ],
   "authority_remote_activation_failed": [
-    "Не вдалося безпечно завершити передачу обліку. Локальна активація не підтверджена; віддалений стан може бути невизначеним. Перевірте свіжий стан HaspelSync перед повтором.",
-    "The accounting handoff could not be safely completed. Local activation was not confirmed; the remote state may be unresolved. Read the current HaspelSync state before retrying."
+    "Не вдалося безпечно завершити передачу обліку. Локальна активація не підтверджена; віддалений стан може бути невизначеним. Перевірте свіжий стан попередньої системи перед повтором.",
+    "The accounting handoff could not be safely completed. Local activation was not confirmed; the remote state may be unresolved. Read the current legacy system state before retrying."
   ],
   "authority_remote_transfer_warning": [
-    "Під час активації UFM спочатку передасть вибраній службі HaspelSync owner із LEGACY_ACTIVE до UFM_ACTIVE з перевіркою ревізії. Якщо локальна фіксація не завершиться, програма спробує перевести цю службу в REVIEW_ONLY. Це не контролює інші процеси HaspelSync чи інші DATA_DIR.",
-    "UFM activation first transfers the selected HaspelSync service owner from LEGACY_ACTIVE to UFM_ACTIVE with a revision check. If local persistence fails, the app will try to move that service to REVIEW_ONLY. This does not control other HaspelSync processes or DATA_DIRs."
+    "Під час активації UFM спочатку передасть вибраній службі попередньої системи owner із LEGACY_ACTIVE до UFM_ACTIVE з перевіркою ревізії. Якщо локальна фіксація не завершиться, програма спробує перевести цю службу в REVIEW_ONLY. Це не контролює інші процеси чи інші DATA_DIR.",
+    "UFM activation first transfers the selected legacy service owner from LEGACY_ACTIVE to UFM_ACTIVE with a revision check. If local persistence fails, the app will try to move that service to REVIEW_ONLY. This does not control other processes or DATA_DIRs."
   ],
   "authority_remote_transferred": [
-    "Вибрана служба HaspelSync передала облік UFM; ревізія {revision}.",
-    "The selected HaspelSync service transferred accounting to UFM; revision {revision}."
+    "Вибрана служба попередньої системи передала облік UFM; ревізія {revision}.",
+    "The selected legacy service transferred accounting to UFM; revision {revision}."
   ],
   "authority_remote_invalid": [
     "Ключ має некоректний формат або завеликий. Його не збережено.",
     "The key is invalid or too long. It was not saved."
   ],
   "authority_choose_snapshot": [
-    "Вибрати bookings.json HaspelSync",
-    "Choose HaspelSync bookings.json"
+    "Вибрати bookings.json попередньої системи",
+    "Choose legacy bookings.json"
   ],
   "authority_snapshot_missing": [
     "Журнали ще не вибрано",
     "Journals not selected"
   ],
   "authority_legacy_stopped": [
-    "Підтверджую: старий writer HaspelSync зупинено й автозапуск вимкнено.",
-    "I confirm the legacy HaspelSync writer is stopped and auto-start is disabled."
+    "Підтверджую: старий writer попередньої системи зупинено й автозапуск вимкнено.",
+    "I confirm the legacy writer is stopped and auto-start is disabled."
   ],
   "authority_reconciled": [
-    "Підтверджую: залишки UFM і вибраного Spoolman snapshot звірено; автоматичні розбіжності відсутні.",
-    "I confirm UFM stock and the selected Spoolman snapshot were reconciled; automated comparison found no differences."
+    "Підтверджую: залишки UFM і вибраного snapshot бази котушок звірено; автоматичні розбіжності відсутні.",
+    "I confirm UFM stock and the selected spool database snapshot were reconciled; automated comparison found no differences."
   ],
   "authority_active_confirm": [
     "Підтверджую: попередні перевірки cutover досі чинні; паралельний writer не працює.",
     "I confirm cutover checks remain valid and no parallel writer is running."
   ],
   "authority_timestamp_warning": [
-    "Журнали HaspelSync перевіряються лише для читання; невирішені booking-и/зважування блокують cutover. Snapshot Spoolman порівнюється з імпортованими котушками UFM, але його відповідність endpoint HaspelSync підтверджує оператор. Це не доводить зупинку віддаленої служби: окремо вимкніть writer та автозапуск.",
-    "HaspelSync journals are inspected read-only; unresolved bookings/weighings block cutover. The Spoolman snapshot is compared with imported UFM spools, but the operator confirms it matches HaspelSync’s endpoint. This does not prove the remote service has stopped: disable the writer and auto-start separately."
+    "Журнали попередньої системи перевіряються лише для читання; невирішені booking-и/зважування блокують cutover. Snapshot бази котушок порівнюється з імпортованими котушками UFM, але його відповідність endpoint попередньої системи підтверджує оператор. Це не доводить зупинку віддаленої служби: окремо вимкніть writer та автозапуск.",
+    "Legacy journals are inspected read-only; unresolved bookings/weighings block cutover. The spool database snapshot is compared with imported UFM spools, but the operator confirms it matches the legacy endpoint. This does not prove the remote service has stopped: disable the writer and auto-start separately."
   ],
   "authority_evidence_required": [
     "Необхідні докази або підтвердження відсутні. Стан не змінено.",
     "Required evidence or confirmations are missing. No state was changed."
   ],
   "authority_snapshot_unreadable": [
-    "Не вдалося перевірити журнали HaspelSync або snapshot Spoolman. Перевірте вибрані файли й реєстрацію джерела.",
-    "Could not validate HaspelSync journals or Spoolman snapshot. Check the selected files and registered source."
+    "Не вдалося перевірити журнали попередньої системи або snapshot бази котушок. Перевірте вибрані файли й реєстрацію джерела.",
+    "Could not validate legacy journals or the spool database snapshot. Check the selected files and registered source."
   ],
   "authority_transition_confirm": [
     "Змінити власника обліку принтера «{printer}» на «{mode}»?",
@@ -1793,8 +1823,8 @@
     "Review only"
   ],
   "authority_mode_LEGACY_ACTIVE": [
-    "Облік HaspelSync",
-    "HaspelSync accounting"
+    "Облік попередньої системи",
+    "Legacy system accounting"
   ],
   "authority_mode_CUTOVER_READY": [
     "Підготовка передачі UFM",
@@ -1805,32 +1835,32 @@
     "UFM accounting"
   ],
   "authority_choose_accounting": [
-    "Вибрати accounting.json HaspelSync",
-    "Choose HaspelSync accounting.json"
+    "Вибрати accounting.json попередньої системи",
+    "Choose legacy accounting.json"
   ],
   "authority_cutover_preview": [
-    "Haspel bookings принтера: очікують {booking_pending}, проведені {booking_booked}, невизначені {booking_uncertain}, відхилені {booking_dismissed}; global weighings: очікують {weighing_pending}, записані {weighing_recorded}, невизначені {weighing_uncertain}, відхилені {weighing_rejected}; журнал готовий {haspel_ready}. Spoolman незмінний від імпорту {source_unchanged}; Haspel activity не новіша за імпорт {events_current}; котушок у джерелі {stock_count}, збігів {stock_matched}, розбіжностей {stock_mismatch}, відсутніх {stock_missing}, додаткових в UFM {stock_extra}. Загальна готовність {ready}; SHA-256 доказу {digest}.",
-    "Haspel printer bookings: pending {booking_pending}, booked {booking_booked}, uncertain {booking_uncertain}, dismissed {booking_dismissed}; global weighings: pending {weighing_pending}, recorded {weighing_recorded}, uncertain {weighing_uncertain}, rejected {weighing_rejected}; journal ready {haspel_ready}. Spoolman unchanged since import {source_unchanged}; Haspel activity not newer than import {events_current}; source spools {stock_count}, matches {stock_matched}, mismatches {stock_mismatch}, missing {stock_missing}, extra in UFM {stock_extra}. Overall ready {ready}; evidence SHA-256 {digest}."
+    "Записи попередньої системи принтера: очікують {booking_pending}, проведені {booking_booked}, невизначені {booking_uncertain}, відхилені {booking_dismissed}; глобальні зважування: очікують {weighing_pending}, записані {weighing_recorded}, невизначені {weighing_uncertain}, відхилені {weighing_rejected}; журнал готовий {journal_ready}. База котушок незмінна від імпорту {source_unchanged}; активність попередньої системи не новіша за імпорт {events_current}; котушок у джерелі {stock_count}, збігів {stock_matched}, розбіжностей {stock_mismatch}, відсутніх {stock_missing}, додаткових в UFM {stock_extra}. Загальна готовність {ready}; SHA-256 доказу {digest}.",
+    "Legacy printer bookings: pending {booking_pending}, booked {booking_booked}, uncertain {booking_uncertain}, dismissed {booking_dismissed}; global weighings: pending {weighing_pending}, recorded {weighing_recorded}, uncertain {weighing_uncertain}, rejected {weighing_rejected}; journal ready {journal_ready}. Spool database unchanged since import {source_unchanged}; legacy activity not newer than import {events_current}; source spools {stock_count}, matches {stock_matched}, mismatches {stock_mismatch}, missing {stock_missing}, extra in UFM {stock_extra}. Overall ready {ready}; evidence SHA-256 {digest}."
   ],
   "authority_choose_spoolman": [
-    "Вибрати snapshot БД Spoolman",
-    "Choose Spoolman database snapshot"
+    "Вибрати snapshot бази котушок",
+    "Choose spool database snapshot"
   ],
   "authority_source_title": [
-    "Джерело Spoolman",
-    "Spoolman source"
+    "Джерело бази котушок",
+    "Spool database source"
   ],
   "authority_source_prompt": [
     "Виберіть джерело, зареєстроване під час імпорту в UFM.",
     "Select the source registered during its import into UFM."
   ],
   "authority_source_missing": [
-    "У UFM немає зареєстрованого джерела Spoolman для звіряння. Спочатку імпортуйте його через «Система».",
-    "UFM has no registered Spoolman source to reconcile. Import it through System first."
+    "У UFM немає зареєстрованого джерела бази котушок для звіряння. Спочатку імпортуйте його через «Система».",
+    "UFM has no registered spool database source to reconcile. Import it through System first."
   ],
   "authority_source_confirm": [
-    "Підтверджую: вибраний snapshot належить саме тому екземпляру Spoolman, до якого підключений HaspelSync.",
-    "I confirm this snapshot is from the exact Spoolman instance configured in HaspelSync."
+    "Підтверджую: вибраний snapshot належить саме тому екземпляру бази котушок, до якого підключена попередня система.",
+    "I confirm this snapshot is from the exact spool database instance configured in the legacy system."
   ],
   "inspect_slice_title": [
     "Локальний аналіз файлу друку",

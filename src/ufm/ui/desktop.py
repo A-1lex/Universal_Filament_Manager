@@ -71,6 +71,7 @@ from ufm.integrations.spoolman.importer import (
     import_spoolman_database,
     new_spoolman_source_key,
     preview_spoolman_database,
+    preview_spoolman_target_state,
     spoolman_import_source_label,
 )
 from ufm.platform.common.paths import AppPaths
@@ -1562,6 +1563,18 @@ class DesktopApp:
         source_instance_key = self._choose_spoolman_source(preview)
         if source_instance_key is None:
             return
+        try:
+            target = preview_spoolman_target_state(
+                source_path, engine=self.engine,
+                source_instance_key=source_instance_key,
+            )
+        except (SpoolmanImportRejected, OSError, SQLAlchemyError):
+            self.messagebox.showerror(
+                self._text("desktop.error_title"),
+                self._text("desktop.import_invalid"),
+                parent=self.root,
+            )
+            return
         summary = self.translator.text(
             "desktop.import_confirmation",
             source_instance_key=source_instance_key,
@@ -1573,6 +1586,13 @@ class DesktopApp:
             colors=preview.color_count,
             locations=preview.location_count,
             metadata_unknown=preview.unsupported_metadata_count,
+        )
+        summary += "\n\n" + self.translator.text(
+            "desktop.import_target_summary",
+            new=target.new_count,
+            consistent=target.consistent_count,
+            preserved=target.preserved_count,
+            conflict=target.conflict_count,
         )
         if not self.messagebox.askyesno(
             self._text("desktop.import"), summary, parent=self.root,
@@ -1628,7 +1648,9 @@ class DesktopApp:
         for item in preview.source_instances:
             label = spoolman_import_source_label(
                 item, unverified_label=self._text("desktop.import_source_unverified"),
-                recovery_label=self._text("desktop.import_source_recovery_counts"),
+                recovery_label=self.translator.template(
+                    "desktop.import_source_recovery_counts",
+                ),
             )
             labels.append(label)
             keys[label] = item.source_instance_key

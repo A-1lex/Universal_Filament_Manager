@@ -1,6 +1,8 @@
 """Backup-first Spoolman SQLite import tests using synthetic source data."""
 
+import contextlib
 import hashlib
+import io
 import json
 import sqlite3
 import tempfile
@@ -29,6 +31,7 @@ from ufm.integrations.spoolman.importer import (
     preview_spoolman_cutover,
     preview_spoolman_database,
     preview_spoolman_import_recovery,
+    preview_spoolman_target_state,
     spoolman_import_source_label,
 )
 from ufm.platform.common.paths import AppPaths
@@ -499,3 +502,75 @@ class SpoolmanImporterTests(unittest.TestCase):
             self.assertEqual(preview.spool_count, 1)
             self.assertEqual(preview.purchase_price_count, 0)
             self.assertEqual(preview.purchase_price_not_imported_count, 0)
+
+    def test_target_state_preview_reports_collisions_and_preserved_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "spoolman.sqlite3"
+            create_spoolman_fixture(source)
+            paths = AppPaths.resolve(root / "ufm")
+            key = "c" * 24
+            import_spoolman_database(source, paths, source_instance_key=key)
+            engine = create_sqlite_engine(paths.data / "ufm.sqlite3")
+            try:
+                initial = preview_spoolman_target_state(
+                    source, engine=engine, source_instance_key=key,
+                )
+                self.assertEqual(
+                    (initial.new_count, initial.consistent_count,
+                     initial.preserved_count, initial.conflict_count),
+                    (0, 3, 0, 0),
+                )
+                connection = sqlite3.connect(source)
+                try:
+                    connection.execute(
+                        "UPDATE filament SET name='PLA Renamed' WHERE id=1",
+                    )
+                    connection.execute(
+                        "UPDATE spool SET used_weight=210.0, lot_nr='B-2',"
+                        " location='Shelf 2' WHERE id=1",
+                    )
+                    connection.execute("UPDATE spool SET archived=0 WHERE id=2")
+                    connection.execute(
+                        "INSERT INTO spool (id,filament_id,used_weight,archived)"
+                        " VALUES (4, 1, 10.0, 0)",
+                    )
+                    connection.commit()
+                finally:
+                    connection.close()
+                states = preview_spoolman_target_state(
+                    source, engine=engine, source_instance_key=key,
+                )
+                by_id = {row.spool_id: row for row in states.rows}
+                self.assertEqual(by_id[1].state, "conflict")
+                self.assertIn("catalog_profile", by_id[1].conflict_fields)
+                self.assertIn("opening_stock", by_id[1].conflict_fields)
+                self.assertIn("lot_number", by_id[1].preserved_fields)
+                self.assertIn("storage_location", by_id[1].preserved_fields)
+                self.assertEqual(by_id[2].state, "preserved")
+                self.assertEqual(by_id[2].preserved_fields, ("lifecycle",))
+                self.assertEqual(by_id[3].state, "consistent")
+                self.assertEqual(by_id[4].state, "new")
+                self.assertEqual(
+                    (states.new_count, states.consistent_count,
+                     states.preserved_count, states.conflict_count),
+                    (1, 1, 1, 1),
+                )
+            finally:
+                engine.dispose()
+
+
+    def test_cli_neutral_and_legacy_spool_db_flags_are_equivalent(self) -> None:
+        from ufm.bootstrap.cli import main
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "spoolman.sqlite3"
+            create_spoolman_fixture(source)
+            for flag in ("--spool-db-preview", "--spoolman-db-preview"):
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    code = main([flag, str(source), "--data-dir", str(root / "app")])
+                self.assertEqual(code, 0, flag)
+                payload = json.loads(out.getvalue())
+                self.assertEqual(payload["spools"], 3)

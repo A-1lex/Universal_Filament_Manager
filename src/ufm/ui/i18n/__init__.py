@@ -67,6 +67,13 @@ class Translator:
             if key in self._catalog and fields != placeholders(self._catalog[key]):
                 raise TranslationError("i18n.placeholder_mismatch")
 
+    def template(self, key: str) -> str:
+        """Return the raw catalog template for callers that format it later."""
+        template = self._catalog.get(key, self._english.get(key))
+        if template is None:
+            raise TranslationError("i18n.unknown_key")
+        return template
+
     def text(self, key: str, **params: str | int) -> str:
         template = self._catalog.get(key, self._english.get(key))
         if template is None:

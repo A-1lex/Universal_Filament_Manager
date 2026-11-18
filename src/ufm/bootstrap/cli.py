@@ -58,14 +58,18 @@ def main(argv: list[str] | None = None) -> int:
     modes.add_argument("--check", action="store_true")
     modes.add_argument("--catalog", action="store_true")
     modes.add_argument("--qr-label")
-    modes.add_argument("--spoolman-preview", type=Path)
-    modes.add_argument("--spoolman-db-preview", type=Path)
-    modes.add_argument("--spoolman-db-import", type=Path)
+    modes.add_argument("--spool-api-preview", "--spoolman-preview",
+                       dest="spoolman_preview", type=Path)
+    modes.add_argument("--spool-db-preview", "--spoolman-db-preview",
+                       dest="spoolman_db_preview", type=Path)
+    modes.add_argument("--spool-db-import", "--spoolman-db-import",
+                       dest="spoolman_db_import", type=Path)
     modes.add_argument(
-        "--haspelsync-preview", nargs=3,
-        metavar=("PRINTERS_JSON", "MAPPINGS_JSON", "ID_MAP_JSON"),
+        "--slot-mapping-preview", "--haspelsync-preview", dest="haspelsync_preview",
+        nargs=3, metavar=("PRINTERS_JSON", "MAPPINGS_JSON", "ID_MAP_JSON"),
     )
-    parser.add_argument("--spoolman-source-id")
+    parser.add_argument("--spool-source-id", "--spoolman-source-id",
+                        dest="spoolman_source_id")
     parser.add_argument("--source-instance")
     parser.add_argument("--locale", choices=("uk-UA", "en-US"))
     parser.add_argument("--data-dir", type=Path)

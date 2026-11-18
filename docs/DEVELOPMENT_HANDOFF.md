@@ -3514,3 +3514,35 @@ GitHub Actions run `41213065696` on commit `afa1d232ec577db5cd00c5ffffe4e1b0e977
 ## 2026-10-31 — Root and external Graphify refresh after CI fixes
 
 Updated the existing root map with `graphify D:\Bot\Universal_Filament_Manager --update --code-only`, then `cluster-only`: 6,278 nodes / 17,643 edges; 11 code files re-extracted, 478 unchanged, 0 deleted, 2 excluded. Graphify skipped 49 non-code inputs (46 Markdown, 3 images) without semantic re-extraction. Rebuilt external traceability/UFM/Spoolman/link/enriched maps from their selected source snapshot: 743/13,168/45,531; 246/6,229/22,931; 298/4,920/15,554; 544/11,100/38,485; enriched 29,065/86,018; Bambu source 12,955/32,565; local profiles 2,942/7,711; combined 15,897/40,276. All nine graph JSONs have unique IDs and zero dangling endpoints; 743-entry source manifest has zero missing snapshot files and zero snapshot/live SHA mismatches. Updated `D:\graphify-out\bambu-ufm\PROJECT_MAPS_UK.md` and `HANDOFF_UK.md`. E02.06 stays Partial; maps aid navigation and do not prove runtime behavior. Checklist counters unchanged: 29 done / 71 partial / 17 planned / 1 in progress.
+
+## 2026-11-17 — E04.07: per-field target collision preview для Spoolman-імпорту
+
+Staging `D:\UFM\_UFM_GitHubStage` працює на відновленому `.venv312` (Python 3.12.15, `uv.lock`, dev+desktop extras). Baseline до змін: 683 passed / 491 subtests, exit 0. Git: коміти `da73871`, `97ae03a`; нових комітів не створено.
+
+Зміни:
+- `src/ufm/integrations/spoolman/importer.py`: `preview_spoolman_target_state(path, *, engine, source_instance_key)` — read-only порівняння Spoolman-знімка з наявними UFM-рядками для обраного source key. Повертає `SpoolmanTargetPreview` з `new/consistent/preserved/conflict` лічильниками й `rows: tuple[SpoolmanTargetRowState]` (`spool_id`, `state`, `conflict_fields`, `preserved_fields`, `target_remaining_mg`). Конфлікти: `catalog_profile`, `catalog_brand`, `opening_stock`, `archived_opening`; preserved: `display_name`, `lot_number`, `color_hex`, `storage_location`, `purchase_price`, `purchase_currency`, `purchase_basis`, `nominal_filament`, `empty_spool`, `remaining`, `lifecycle`. Ті самі deterministic EntityId (`ufm:spoolman:{key}:...`) і `_milligrams` half-up, що в імпортері; записів немає.
+- `src/ufm/ui/studio_window.py`: `import_database` після вибору source key відкладає `preview_spoolman_target_state` через `QTimer.singleShot(0, ...)` + `self.work` (callback completed-task ще володіє finished task — синхронний `self.work` там мовчки нічого не робить). Діалог має +3 колонки (`import_col_target/conflicts/preserved`) і `import_target_summary`; 22 нових ключі в `studio_strings.json`.
+- `src/ufm/ui/desktop.py`: `_choose_spoolman_source` + підтвердження імпорту додатково показують `desktop.import_target_summary` (новий ключ в обох locale JSON).
+- `src/ufm/ui/i18n/__init__.py`: новий `Translator.template(key)` — raw catalog template для пізнішого форматування.
+- Виправлено наявний баг: `recovery_label` у обох UI передавався через `text()`/`_text()` вже відформатованим — `studio_window` падав з `KeyError: 'matched'`, desktop з `TranslationError` при будь-якому повторному імпорті з зареєстрованим джерелом. Тепер Studio бере raw template з `self.strings`, desktop — `translator.template()`.
+
+Тести: `tests/integration/test_spoolman_importer.py::test_target_state_preview_reports_collisions_and_preserved_fields` (імпорт → мутація джерела → новий/consistent/preserved/conflict + збережені поля + read-only) і `tests/integration/test_studio_window.py::test_studio_import_preview_shows_target_collisions` (повний UI-шлях з мокнутими діалогами; Reject не запускає імпорт). Результати: importer+foundation 34 passed/20 subtests; studio_window 80 passed; повний suite 685 passed/491 subtests (94,33 с); `ruff check` clean; `mypy` clean для importer.py, studio_window.py, desktop.py, i18n/__init__.py.
+
+Докази: `docs/INTEGRATION_CHECKLIST_UK.csv` — E04.07 → `Виконано` (preview-критерій закрито; приймання на реальній базі лишається в E04.08/частині 04), E01.01 — додано staging git provenance, статус без змін. UTF-8 BOM, 118 ID, 5 колонок збережено. `PROJECT_PROGRESS_UK.md` оновлено.
+
+Не виконано/не перевірено: реальна база Spoolman, live legacy runtime, owner acceptance, фізичні принтери; CLI `--spoolman-db-preview` не розширено target-state полями (лише Studio/desktop UI). Комітів немає.
+
+
+## 2026-11-17 — Дебрендинг UI/CLI, спрощення кнопок, автоскан+1 клік для принтерів
+
+Staging `D:\UFM\_UFM_GitHubStage`, `.venv312` (Python 3.12.15). Продовження без комітів.
+
+User-visible debranding: `studio_strings.json` — 42 ключі нейтрально («Імпорт бази даних котушок…», «Джерело імпорту», «попередня система обліку», «база котушок»); placeholder `{haspel_ready}`→`{journal_ready}` з оновленням call site у `manage_accounting_authority`. Desktop i18n (uk-UA/en-US): `desktop.import*`, `select_spoolman` (key лишено), `import_source_*`, `error.spoolman_import`, `cli.help`. `importer.py`: fallback display_name → «Spool database import». Внутрішні назви (`ufm.integrations.spoolman`, `preview_haspelsync_*`, migration `0005` display_name для старих рядків) свідомо не чіпали — не user-visible або історичні дані.
+
+CLI: `cli.py` — нейтральні первинні опції з `dest=` на старі імена; `--spoolman-*`/`--haspelsync-*` працюють як аліаси. `cli.help` у JSON показує лише нейтральні прапорці.
+
+UI simplification: прибрано створення кнопок `haspel_import_preview`, `inspect_slice_file`, `batch_print_qr_labels` (методи/рядки/реєстри недоторкані). Додано auto-scan: `switch_page(row)` → `pages.setCurrentIndex` + `discover()` для row==1; `discover()` має busy-гард (`self.tasks`/`_monitor_task`), `refresh()` не сканує. `candidate_list` (QListWidget) + `connect_candidate_button`; `connect_candidate()` → `enroll_bambu_network(candidate)` (host prefilled, `QTimer.singleShot(0, identify)` після показу діалогу) або `enroll_local(candidate)` (name/endpoint/provider prefilled). TLS trust і LAN-код — як і раніше, явні кроки користувача.
+
+Перевірки: pytest повний suite 691 passed / 491 subtests (88,38 с, exit 0); ruff clean; mypy clean (3 файли). Нові тести — див. PROJECT_PROGRESS_UK.md. Жодних мережевих викликів/принтерів/комітів.
+
+Відкрито: live-приймання імпорту/принтерів, E05 parity, E03.08 legal, E07 run identity — без змін. Наступне: за бажанням власника — візуальна перевірка спрощеного Studio та реальний імпорт копії бази котушок.
