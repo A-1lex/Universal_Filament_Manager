@@ -1934,5 +1934,10 @@
   "recon_resolve": ["Вирішити…", "Resolve…"],
   "recon_dismiss": ["Відхилити…", "Dismiss…"],
   "recon_note_title": ["Коментар до рішення", "Resolution note"],
-  "recon_note_prompt": ["Опишіть результат розгляду (1–500 символів). Дія фіксується в журналі.", "Describe the review outcome (1–500 characters). The action is journaled."]
+  "recon_note_prompt": ["Опишіть результат розгляду (1–500 символів). Дія фіксується в журналі.", "Describe the review outcome (1–500 characters). The action is journaled."],
+  "local_api_hint": ["Локальний API лише для читання: дозволяє сумісним програмам на цьому ПК отримувати залишки. Запис не підтримується.", "Read-only local API: lets compatible apps on this PC read stock. Writes are not supported."],
+  "local_api_port": ["Порт", "Port"],
+  "local_api_on": ["Локальний API: увімкнено", "Local API: on"],
+  "local_api_off": ["Локальний API: вимкнено", "Local API: off"],
+  "local_api_start_failed": ["Не вдалося запустити локальний API (порт зайнятий?).", "Could not start the local API (port in use?)."]
 }

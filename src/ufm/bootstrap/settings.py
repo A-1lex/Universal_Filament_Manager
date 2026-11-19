@@ -36,6 +36,8 @@ class AppSettings(BaseModel):
     )
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
     sqlite_busy_timeout_ms: int = Field(default=5000, ge=1, le=60_000)
+    local_api_enabled: bool = False
+    local_api_port: int = Field(default=7912, ge=1, le=65535)
 
 
 def load_settings(path: Path | None = None) -> AppSettings:

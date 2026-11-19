@@ -3597,3 +3597,15 @@ Changes:
 - tests/integration/test_studio_job_detail.py: _add_open_task helper + 3 tests (resolved+audit via work.audit.for_command, dismiss-from-open two-step, invalid input leaves task open).
 
 Verification: 8 targeted tests pass; ruff/mypy clean; full suite in PROJECT_PROGRESS. E12.04 remains Частково виконано — broader job/provider conflict inspection parity and live acceptance pending.
+
+## 2026-11-19 — E12.06: Studio-managed local API lifecycle
+
+Staging D:\UFM\_UFM_GitHubStage, .venv312.
+
+Changes:
+- bootstrap/settings.py: AppSettings += local_api_enabled: bool=False, local_api_port: int=Field(7912, ge=1, le=65535). Frozen/extra=forbid model; old settings.json loads with defaults.
+- studio_window.py: imports QSpinBox + LocalApiServer; self._local_api attr; _sync_local_api() after apply_theme in __init__ auto-starts when enabled; make_system() adds hint + port QSpinBox + toggle button (local_api_button); _start_local_api/_stop_local_api/_update_local_api_button/toggle_local_api — persist via save_settings atomic write, port updated to actual bound port; closeEvent stops server only in the accept branch (not when close is deferred by busy tasks).
+- studio_strings.json: local_api_hint/local_api_port/local_api_on/local_api_off/local_api_start_failed (uk+en).
+- test_studio_window.py: test_local_api_toggle_starts_and_stops_server — ephemeral port via socket bind 0, toggle on, urllib GET /api/v1/health == ok, toggle off, settings flags verified.
+
+Verification: targeted tests pass; ruff/mypy clean; full suite result in PROJECT_PROGRESS. API remains read-only (405 on writes); E12.06 stays partial pending write-endpoint design, auth/origin policy and consumer contract fixtures.

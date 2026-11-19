@@ -70,6 +70,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QScrollArea,
+    QSpinBox,
     QStackedWidget,
     QTableWidget,
     QTableWidgetItem,
@@ -135,6 +136,7 @@ from ufm.integrations.haspelsync.authority_client import (
     HaspelBookingRecord,
     HaspelBookingResolutionUnknown,
 )
+from ufm.integrations.local_api import LocalApiServer
 from ufm.integrations.printers.bambu_discovery import identify_bambu_printer
 from ufm.integrations.printers.bambu_studio import (
     BambuPrinterIdentity,
@@ -351,6 +353,7 @@ class StudioWindow(QMainWindow):
         self._monitor_failed = False
         self._close_when_idle = False
         self._history_signal_connected = False
+        self._local_api: LocalApiServer | None = None
         self.setWindowTitle(self.text("title"))
         self.resize(1360, 860)
         self.setMinimumSize(1080, 700)
@@ -394,6 +397,7 @@ class StudioWindow(QMainWindow):
         self.nav.setCurrentRow(0)
         self.refresh()
         self.apply_theme()
+        self._sync_local_api()
 
     def text(self, key: str, **params: str | int) -> str:
         values = self.strings.get(key)
@@ -865,6 +869,19 @@ class StudioWindow(QMainWindow):
         log_row.addWidget(self.log_level_selector)
         log_row.addWidget(self.button("save_log_level", self.save_log_level))
         layout.addLayout(log_row)
+        api_hint = QLabel(self.text("local_api_hint"))
+        api_hint.setWordWrap(True)
+        layout.addWidget(api_hint)
+        api_row = QHBoxLayout()
+        api_row.addWidget(QLabel(self.text("local_api_port")))
+        self.local_api_port = QSpinBox()
+        self.local_api_port.setRange(1, 65535)
+        self.local_api_port.setValue(self.settings.local_api_port)
+        api_row.addWidget(self.local_api_port)
+        self.local_api_button = self.button("local_api_off", self.toggle_local_api)
+        api_row.addWidget(self.local_api_button)
+        api_row.addStretch(1)
+        layout.addLayout(api_row)
         for key, action in (
             ("export_inventory", self.export_inventory),
             ("import", self.import_database),
@@ -907,6 +924,65 @@ class StudioWindow(QMainWindow):
             return
         self.settings = settings
         self.container.logger.setLevel(level)
+
+    def _sync_local_api(self) -> None:
+        if not self.settings.local_api_enabled:
+            return
+        try:
+            self._start_local_api(self.settings.local_api_port, persist=False)
+        except Exception:
+            self.error("local_api_start_failed")
+
+    def _start_local_api(self, port: int, *, persist: bool) -> None:
+        if self._local_api is not None and self._local_api.running:
+            return
+        server = LocalApiServer(self.backend, port=port)
+        bound = server.start()
+        self._local_api = server
+        if persist:
+            settings = self.settings.model_copy(
+                update={"local_api_enabled": True, "local_api_port": bound}
+            )
+            try:
+                save_settings(settings, self.backend.paths.config / "settings.json")
+            except (OSError, ValueError):
+                server.stop()
+                self._local_api = None
+                raise
+            self.settings = settings
+            self.local_api_port.setValue(bound)
+        self._update_local_api_button()
+
+    def _stop_local_api(self, *, persist: bool) -> None:
+        if self._local_api is not None:
+            self._local_api.stop()
+            self._local_api = None
+        if persist:
+            settings = self.settings.model_copy(update={"local_api_enabled": False})
+            try:
+                save_settings(settings, self.backend.paths.config / "settings.json")
+            except (OSError, ValueError):
+                self.error("settings.invalid")
+                return
+            self.settings = settings
+        self._update_local_api_button()
+
+    def _update_local_api_button(self) -> None:
+        running = self._local_api is not None and self._local_api.running
+        self.local_api_button.setText(
+            self.text("local_api_on" if running else "local_api_off")
+        )
+
+    def toggle_local_api(self) -> None:
+        running = self._local_api is not None and self._local_api.running
+        if running:
+            self._stop_local_api(persist=True)
+            return
+        port = self.local_api_port.value()
+        try:
+            self._start_local_api(port, persist=True)
+        except Exception:
+            self.error("local_api_start_failed")
 
     def view_safe_logs(self) -> None:
         path = self.backend.paths.logs / "ufm.log"
@@ -4486,6 +4562,9 @@ class StudioWindow(QMainWindow):
             self.statusBar().showMessage(self.text("busy"))
             event.ignore()
         else:
+            if self._local_api is not None:
+                self._local_api.stop()
+                self._local_api = None
             if self._history_signal_connected:
                 self.inventory.itemSelectionChanged.disconnect(self.show_history)
                 self._history_signal_connected = False

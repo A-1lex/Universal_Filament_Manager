@@ -3211,3 +3211,29 @@ def test_show_reconciliation_tasks_empty_state(studio_workspace, monkeypatch) ->
     monkeypatch.setattr(window, "info", infos.append)
     window.show_reconciliation_tasks()
     assert infos == [window.text("recon_tasks_empty")]
+
+
+def test_local_api_toggle_starts_and_stops_server(studio_workspace) -> None:
+    import json
+    import socket
+    import urllib.request
+
+    _app, _backend, window = studio_workspace
+    sock = socket.socket()
+    sock.bind(("127.0.0.1", 0))
+    port = int(sock.getsockname()[1])
+    sock.close()
+    window.local_api_port.setValue(port)
+
+    window.toggle_local_api()
+    assert window._local_api is not None and window._local_api.running
+    assert window.settings.local_api_enabled is True
+    assert window.settings.local_api_port == port
+    with urllib.request.urlopen(
+        f"http://127.0.0.1:{port}/api/v1/health", timeout=5,
+    ) as response:
+        assert json.loads(response.read())["status"] == "ok"
+
+    window.toggle_local_api()
+    assert window._local_api is None
+    assert window.settings.local_api_enabled is False

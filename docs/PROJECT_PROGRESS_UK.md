@@ -2445,3 +2445,11 @@ CSV: статуси E01–E06 не змінювалися — ця робота 
 - Тести: tests/integration/test_studio_job_detail.py (+3: resolved+audit, dismiss через IN_REVIEW, валідація вводу), наявний UI empty-state тест оновлено під нову структуру діалогу.
 
 Перевірки: цільові тести passed; ruff/mypy clean; повний suite 710 passed / 491 subtests (115,67 с). CSV E12.04 → Частково виконано з новим доказом; лишається паритет інспекції job/provider конфліктів і live-приймання.
+
+## 2026-11-19 — E12.06: локальний API керується зі Studio
+
+- src/ufm/bootstrap/settings.py: AppSettings.local_api_enabled (default False) + local_api_port (default 7912, 1–65535); старі settings.json без полів отримують типові значення.
+- src/ufm/ui/studio_window.py: на сторінці «Система» — порт + кнопка «Локальний API: увімкнено/вимкнено»; toggle стартує/зупиняє LocalApiServer на 127.0.0.1, зберігає вибір атомарно в settings.json, автозапуск при старті програми якщо enabled, зупинка в closeEvent (лише при реальному закритті, не при відкладеному). 5 нових ключів локалізації.
+- tests/integration/test_studio_window.py::test_local_api_toggle_starts_and_stops_server — реальний loopback GET /api/v1/health через UI toggle, перевірка persist і stop.
+
+Перевірки: цільові тести passed; ruff/mypy clean; повний suite 711 passed / 491 subtests (90,85 с). CSV E12.06 → Частково виконано з новим доказом; лишаються write-endpoints, auth/origin policy, contract fixtures і live-приймання.
