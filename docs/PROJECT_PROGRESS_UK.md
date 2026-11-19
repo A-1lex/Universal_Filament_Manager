@@ -2437,3 +2437,11 @@ CSV: статуси E01–E06 не змінювалися — ця робота 
 - Тести: tests/integration/test_studio_job_detail.py (+2: порожній стан; OPEN задачі повертаються, RESOLVED — ні), test_show_reconciliation_tasks_empty_state.
 
 Перевірки: цільові тести passed; ruff/mypy clean; повний suite 707 passed / 491 subtests (90,68 с). CSV E12.01 → Частково виконано з новим доказом; лишається повний lifecycle/receipt browser parity та live-приймання.
+
+## 2026-11-19 — E12.04: ручне розв'язання невизначених подій у Studio
+
+- src/ufm/infrastructure/studio_backend.py: resolve_reconciliation_task(task_id, outcome, notes) — outcome resolved/dismissed, нотатка 1–500 символів, OPEN/IN_REVIEW → RESOLVED/DISMISSED (OPEN→DISMISSED через проміжний IN_REVIEW згідно з політикою переходів), revision+1, audit event reconciliation.manual_resolution; первинна історія задачі зберігається.
+- src/ufm/ui/studio_window.py: діалог «Невизначені події» отримав кнопки «Вирішити…»/«Відхилити…» з обов'язковою нотаткою (QInputDialog) і оновленням таблиці; 4 нові ключі локалізації.
+- Тести: tests/integration/test_studio_job_detail.py (+3: resolved+audit, dismiss через IN_REVIEW, валідація вводу), наявний UI empty-state тест оновлено під нову структуру діалогу.
+
+Перевірки: цільові тести passed; ruff/mypy clean; повний suite 710 passed / 491 subtests (115,67 с). CSV E12.04 → Частково виконано з новим доказом; лишається паритет інспекції job/provider конфліктів і live-приймання.

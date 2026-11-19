@@ -115,3 +115,72 @@ def test_open_reconciliation_tasks_lists_open_with_names(job_backend) -> None:
     assert task.suggested_action == "review_spool_stock"
     assert task.spool_name is None
     assert task.job_name is None
+
+
+def _add_open_task(backend, dedupe_key: str):
+    from ufm.domain.entities import ReconciliationTask
+    from ufm.domain.enums import ReconciliationState, Severity
+    from ufm.domain.value_objects import EntityId, UtcDateTime
+    from ufm.infrastructure.persistence.sqlite.unit_of_work import SQLiteUnitOfWork
+    from ufm.integrations.printers.configuration import ensure_local_device
+
+    device = ensure_local_device(backend.engine)
+    now = UtcDateTime.now()
+    with SQLiteUnitOfWork(backend.engine) as work:
+        work.reconciliations.add_task(ReconciliationTask(
+            id=EntityId.new(), device_id=device, created_at=now, updated_at=now,
+            revision=1, reason_code="RESERVATION_SHORTAGE", severity=Severity.WARNING,
+            state=ReconciliationState.OPEN, dedupe_key=dedupe_key,
+        ))
+        work.commit()
+    tasks = backend.open_reconciliation_tasks()
+    return next(task for task in tasks if task.reason_code == "RESERVATION_SHORTAGE")
+
+
+def test_resolve_reconciliation_task_marks_resolved_and_audits(job_backend) -> None:
+    backend = job_backend
+    task = _add_open_task(backend, "studio-recon-resolve-1")
+
+    backend.resolve_reconciliation_task(task.id, "resolved", "stock verified")
+
+    assert backend.open_reconciliation_tasks() == ()
+    from ufm.domain.value_objects import EntityId
+    from ufm.infrastructure.persistence.sqlite.unit_of_work import SQLiteUnitOfWork
+    with SQLiteUnitOfWork(backend.engine) as work:
+        stored = work.reconciliations.get(EntityId.parse(task.id))
+        audits = work.audit.for_command(f"reconciliation:{task.id}:manual-resolution")
+    assert str(stored.state) == "RESOLVED"
+    assert stored.resolution_notes == "stock verified"
+    assert stored.resolved_by is not None
+    assert len(audits) == 1
+    assert audits[0].event_code == "reconciliation.manual_resolution"
+
+
+def test_dismiss_reconciliation_task_from_open_uses_review_step(job_backend) -> None:
+    backend = job_backend
+    task = _add_open_task(backend, "studio-recon-dismiss-1")
+
+    backend.resolve_reconciliation_task(task.id, "dismissed", "false positive")
+
+    assert backend.open_reconciliation_tasks() == ()
+    from ufm.domain.value_objects import EntityId
+    from ufm.infrastructure.persistence.sqlite.unit_of_work import SQLiteUnitOfWork
+    with SQLiteUnitOfWork(backend.engine) as work:
+        stored = work.reconciliations.get(EntityId.parse(task.id))
+    assert str(stored.state) == "DISMISSED"
+    assert stored.resolution_notes == "false positive"
+
+
+def test_resolve_reconciliation_task_rejects_invalid_input(job_backend) -> None:
+    backend = job_backend
+    task = _add_open_task(backend, "studio-recon-invalid-1")
+
+    with pytest.raises(ValueError):
+        backend.resolve_reconciliation_task(task.id, "bogus", "note")
+    with pytest.raises(ValueError):
+        backend.resolve_reconciliation_task(task.id, "resolved", "   ")
+    with pytest.raises(ValueError):
+        backend.resolve_reconciliation_task(task.id, "resolved", "x" * 501)
+
+    remaining = backend.open_reconciliation_tasks()
+    assert [item.id for item in remaining] == [task.id]

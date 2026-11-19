@@ -115,6 +115,7 @@ from ufm.infrastructure.studio_backend import (
     StudioJobDetail,
     StudioMaterial,
     StudioPrinter,
+    StudioReconciliationTask,
     StudioSpool,
 )
 from ufm.integrations.gcode_extrusion import (
@@ -2688,19 +2689,11 @@ class StudioWindow(QMainWindow):
         dialog.exec()
 
     def show_reconciliation_tasks(self) -> None:
-        try:
-            tasks = self.backend.open_reconciliation_tasks()
-        except Exception as error:
-            self.error(type(error).__name__)
-            return
-        if not tasks:
-            self.info(self.text("recon_tasks_empty"))
-            return
         dialog = QDialog(self)
         dialog.setWindowTitle(self.text("recon_tasks_title"))
         dialog.setMinimumSize(960, 480)
         layout = QVBoxLayout(dialog)
-        table = QTableWidget(len(tasks), 7)
+        table = QTableWidget(0, 7)
         table.setHorizontalHeaderLabels([
             self.text("recon_col_reason"), self.text("recon_col_severity"),
             self.text("recon_col_state"), self.text("recon_col_spool"),
@@ -2708,25 +2701,75 @@ class StudioWindow(QMainWindow):
             self.text("recon_col_created"),
         ])
         table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         table.verticalHeader().hide()
         table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
-        for row_index, task in enumerate(tasks):
-            values = [
-                task.reason_code,
-                self.text(task.severity),
-                self.text(task.state),
-                task.spool_name or "—",
-                task.job_name or "—",
-                task.suggested_action or "—",
-                task.created_at or "—",
-            ]
-            for column, value in enumerate(values):
-                table.setItem(row_index, column, QTableWidgetItem(value))
-        layout.addWidget(table)
+        actions_row = QHBoxLayout()
+        resolve_button = QPushButton(self.text("recon_resolve"))
+        dismiss_button = QPushButton(self.text("recon_dismiss"))
+        actions_row.addWidget(resolve_button)
+        actions_row.addWidget(dismiss_button)
+        actions_row.addStretch(1)
+        layout.addLayout(actions_row)
+        layout.addWidget(table, 1)
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
         buttons.rejected.connect(dialog.reject)
         layout.addWidget(buttons)
+        tasks: list[StudioReconciliationTask] = []
+
+        def reload() -> None:
+            nonlocal tasks
+            try:
+                tasks = list(self.backend.open_reconciliation_tasks())
+            except Exception as error:
+                self.error(type(error).__name__)
+                tasks = []
+            table.setRowCount(len(tasks))
+            for row_index, task in enumerate(tasks):
+                values = [
+                    task.reason_code,
+                    self.text(task.severity),
+                    self.text(task.state),
+                    task.spool_name or "—",
+                    task.job_name or "—",
+                    task.suggested_action or "—",
+                    task.created_at or "—",
+                ]
+                for column, value in enumerate(values):
+                    table.setItem(row_index, column, QTableWidgetItem(value))
+            resolve_button.setEnabled(bool(tasks))
+            dismiss_button.setEnabled(bool(tasks))
+
+        def resolve(outcome: str) -> None:
+            row = table.currentRow()
+            if not 0 <= row < len(tasks):
+                return
+            notes, accepted = QInputDialog.getMultiLineText(
+                dialog, self.text("recon_note_title"),
+                self.text("recon_note_prompt"),
+            )
+            if not accepted:
+                return
+            try:
+                self.backend.resolve_reconciliation_task(
+                    tasks[row].id, outcome, notes,
+                )
+            except Exception as error:
+                self.error(type(error).__name__)
+                return
+            reload()
+
+        resolve_button.clicked.connect(lambda: resolve("resolved"))
+        dismiss_button.clicked.connect(lambda: resolve("dismissed"))
+        table.itemSelectionChanged.connect(
+            lambda: resolve_button.setEnabled(table.currentRow() >= 0)
+        )
+        reload()
+        if not tasks:
+            dialog.accept()
+            self.info(self.text("recon_tasks_empty"))
+            return
         dialog.exec()
 
     @staticmethod

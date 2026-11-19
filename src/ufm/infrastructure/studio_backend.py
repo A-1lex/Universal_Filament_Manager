@@ -1,5 +1,6 @@
 """Desktop read models; stock mutations always pass through InventoryCommands."""
 
+import json
 from dataclasses import dataclass, replace
 from pathlib import Path
 from uuid import uuid4
@@ -21,7 +22,14 @@ from ufm.application.storage import StorageCommands
 from ufm.domain.entities.accounting import InventoryEvidence
 from ufm.domain.entities.catalog import Brand, FilamentProfile
 from ufm.domain.entities.ledger import FilamentTransaction
-from ufm.domain.enums import EvidenceSource, MaterialType, PrinterAccountingMode, StorageType
+from ufm.domain.entities.reconciliation import AuditEvent
+from ufm.domain.enums import (
+    EvidenceSource,
+    MaterialType,
+    PrinterAccountingMode,
+    ReconciliationState,
+    StorageType,
+)
 from ufm.domain.value_objects import EntityId, ExactDecimal, Mass, UtcDateTime
 from ufm.infrastructure.backup.sqlite_snapshot import create_snapshot
 from ufm.infrastructure.persistence.models.schema import (
@@ -875,6 +883,53 @@ class StudioBackend:
             suggested_action=task.suggested_action,
             created_at=_iso(task.created_at),
         ) for task in tasks)
+
+    def resolve_reconciliation_task(
+        self, task_id: str, outcome: str, notes: str,
+    ) -> None:
+        if outcome not in {"resolved", "dismissed"}:
+            raise ValueError("reconciliation_task.outcome_invalid")
+        if type(notes) is not str or not notes.strip() or len(notes) > 500:
+            raise ValueError("reconciliation_task.notes_invalid")
+        actor = ensure_local_device(self.engine)
+        now = UtcDateTime.now()
+        target = (
+            ReconciliationState.RESOLVED if outcome == "resolved"
+            else ReconciliationState.DISMISSED
+        )
+        with SQLiteUnitOfWork(self.engine) as work:
+            task = work.reconciliations.get(EntityId.parse(task_id))
+            if task.state not in {ReconciliationState.OPEN, ReconciliationState.IN_REVIEW}:
+                raise ValueError("reconciliation_task.not_open")
+            revision = task.revision
+            current = task
+            if current.state is ReconciliationState.OPEN and target is ReconciliationState.DISMISSED:
+                review = replace(
+                    current, state=ReconciliationState.IN_REVIEW,
+                    updated_at=now, revision=revision + 1,
+                )
+                work.reconciliations.save_task(review, revision)
+                revision = review.revision
+                current = review
+            resolved = replace(
+                current, state=target, resolved_at=now, resolved_by=actor,
+                resolution_notes=notes.strip(), updated_at=now,
+                revision=revision + 1,
+            )
+            work.reconciliations.save_task(resolved, revision)
+            work.audit.append(AuditEvent(
+                id=EntityId.new(), device_id=actor, created_at=now,
+                actor_device_id=actor,
+                event_code="reconciliation.manual_resolution",
+                correlation_id=f"reconciliation:{task.id}:manual-resolution",
+                entity_type="reconciliation_task", entity_id=task.id,
+                parameters_json=json.dumps({
+                    "dedupe_key": task.dedupe_key,
+                    "reason_code": task.reason_code,
+                    "outcome": outcome,
+                }, sort_keys=True),
+            ))
+            work.commit()
 
     def spoolman_import_sources(self) -> tuple[SpoolmanImportSourceInfo, ...]:
         return list_spoolman_import_sources(self.engine)

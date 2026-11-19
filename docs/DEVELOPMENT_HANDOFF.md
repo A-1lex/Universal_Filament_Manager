@@ -3586,3 +3586,14 @@ Changes:
 - tests: test_studio_job_detail.py +2 (empty; open-vs-resolved filtering via SQLiteUnitOfWork.add_task+commit); test_studio_window.py +1 empty-state UI test.
 
 Verification: targeted tests pass; ruff/mypy clean on 6 changed files; full suite result in PROJECT_PROGRESS. E12.01 remains Частково виконано — lifecycle/receipt browser parity and live acceptance pending.
+
+## 2026-11-19 — E12.04: manual reconciliation task resolution
+
+Staging D:\UFM\_UFM_GitHubStage, .venv312.
+
+Changes:
+- studio_backend.py: imports json, AuditEvent (domain.entities.reconciliation), ReconciliationState. New resolve_reconciliation_task(): validates outcome/notes, loads task via work.reconciliations.get, requires OPEN/IN_REVIEW, for OPEN->DISMISSED first saves IN_REVIEW (transition policy), then saves terminal state with resolved_at/resolved_by/resolution_notes and revision+1; appends AuditEvent event_code="reconciliation.manual_resolution" correlation_id=f"reconciliation:{task.id}:manual-resolution"; work.commit().
+- studio_window.py: show_reconciliation_tasks() rewritten — dialog created upfront, reload() closure repopulates 7-col table from backend.open_reconciliation_tasks(), Resolve/Dismiss QPushButtons + QInputDialog.getMultiLineText note prompt, selection enables buttons, empty state info+accept. New strings recon_resolve/recon_dismiss/recon_note_title/recon_note_prompt.
+- tests/integration/test_studio_job_detail.py: _add_open_task helper + 3 tests (resolved+audit via work.audit.for_command, dismiss-from-open two-step, invalid input leaves task open).
+
+Verification: 8 targeted tests pass; ruff/mypy clean; full suite in PROJECT_PROGRESS. E12.04 remains Частково виконано — broader job/provider conflict inspection parity and live acceptance pending.
