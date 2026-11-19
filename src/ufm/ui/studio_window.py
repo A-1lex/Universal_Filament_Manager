@@ -112,6 +112,7 @@ from ufm.infrastructure.studio_backend import (
     StudioBackend,
     StudioBrand,
     StudioHaspelAuthorityConnection,
+    StudioJobDetail,
     StudioMaterial,
     StudioPrinter,
     StudioSpool,
@@ -683,6 +684,7 @@ class StudioWindow(QMainWindow):
         actions.append(self.edit_printer_connection_button)
         self.monitor_button = self.button("monitor_start", self.toggle_printer_monitor)
         actions.append(self.monitor_button)
+        actions.append(self.button("print_jobs", self.show_print_jobs))
         for index, button in enumerate(actions):
             toolbar.addWidget(button, index // 4, index % 4)
         for column in range(4):
@@ -2621,6 +2623,130 @@ class StudioWindow(QMainWindow):
             self.enroll_bambu_network(candidate)
         else:
             self.enroll_local(candidate)
+
+    def show_print_jobs(self) -> None:
+        try:
+            jobs = self.backend.recent_jobs()
+        except Exception as error:
+            self.error(type(error).__name__)
+            return
+        if not jobs:
+            self.info(self.text("jobs_empty"))
+            return
+        dialog = QDialog(self)
+        dialog.setWindowTitle(self.text("print_jobs_title"))
+        dialog.setMinimumSize(880, 520)
+        layout = QVBoxLayout(dialog)
+        table = QTableWidget(len(jobs), 6)
+        table.setHorizontalHeaderLabels([
+            self.text("job_col_job"), self.text("job_col_file"),
+            self.text("job_col_plate"), self.text("job_col_printer"),
+            self.text("job_col_status"), self.text("job_col_started"),
+        ])
+        table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        table.verticalHeader().hide()
+        table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        for row_index, job in enumerate(jobs):
+            values = [
+                job.name or job.file_name or job.id,
+                job.file_name or "—",
+                job.plate_name or "—",
+                job.printer_name,
+                f"{self.text(job.status)} / {self.text(job.finalization_state)}",
+                job.started_at or job.detected_at or "—",
+            ]
+            for column, value in enumerate(values):
+                table.setItem(row_index, column, QTableWidgetItem(value))
+        detail = QTextEdit()
+        detail.setReadOnly(True)
+        detail.setMinimumHeight(160)
+
+        def show_detail() -> None:
+            row = table.currentRow()
+            if not 0 <= row < len(jobs):
+                return
+            try:
+                info = self.backend.job_detail(jobs[row].id)
+            except Exception as error:
+                self.error(type(error).__name__)
+                return
+            detail.setPlainText(
+                self.text("job_missing") if info is None
+                else self._job_detail_text(info)
+            )
+
+        table.itemSelectionChanged.connect(show_detail)
+        layout.addWidget(table, 3)
+        layout.addWidget(detail, 2)
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        table.selectRow(0)
+        dialog.exec()
+
+    @staticmethod
+    def _dash(value: object) -> str:
+        return "—" if value is None else str(value)
+
+    def _job_detail_text(self, info: StudioJobDetail) -> str:
+        progress = (
+            "—" if info.progress_bp is None else f"{info.progress_bp / 100:g}%"
+        )
+        layer = "—" if info.current_layer is None else str(info.current_layer)
+        total = "—" if info.total_layers is None else str(info.total_layers)
+        sections = [self.text(
+            "job_detail_header",
+            name=self._dash(info.name or info.file_name or info.id),
+            file=self._dash(info.file_name), plate=self._dash(info.plate_name),
+            printer=info.printer_name,
+            status=self.text(info.status),
+            finalization=self.text(info.finalization_state),
+            source=info.source_type, slicer=self._dash(info.slicer_type),
+            progress=progress, layer=layer, total=total,
+            detected=self._dash(info.detected_at), started=self._dash(info.started_at),
+            completed=self._dash(info.completed_at),
+        )]
+        if info.materials:
+            lines = [self.text("job_section_materials")]
+            for material in info.materials:
+                lines.append(self.text(
+                    "job_material_line", channel=material.channel_key,
+                    tool=material.tool_index,
+                    filament=self._dash(material.filament_name),
+                    mass=(
+                        "—" if material.estimated_mass_mg is None
+                        else f"{material.estimated_mass_mg / 1000:g} g"
+                    ),
+                ))
+            sections.append("\n".join(lines))
+        if info.segments:
+            lines = [self.text("job_section_segments")]
+            for segment in info.segments:
+                lines.append(self.text(
+                    "job_segment_line", tool=segment.tool_index,
+                    state=self.text(segment.assignment_state),
+                    source=segment.source,
+                    confidence=f"{segment.confidence_bp / 100:g}",
+                    started=self._dash(segment.started_at), ended=self._dash(segment.ended_at),
+                    spool=self._dash(segment.spool_name),
+                ))
+            sections.append("\n".join(lines))
+        if info.ledger:
+            lines = [self.text("job_section_ledger")]
+            for entry in info.ledger:
+                desc = "" if entry.description is None else f" · {entry.description}"
+                lines.append(self.text(
+                    "job_ledger_line", seq=entry.sequence,
+                    type=self.text(entry.transaction_type),
+                    delta=f"{entry.delta_mg / 1000:g}",
+                    source=entry.source_type,
+                    confidence=f"{entry.confidence_bp / 100:g}",
+                    policy=entry.estimate_policy_version, desc=desc,
+                ))
+            sections.append("\n".join(lines))
+        return "\n\n".join(sections)
 
     def discover(self) -> None:
         if self.tasks or self._monitor_task is not None:

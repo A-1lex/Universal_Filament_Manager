@@ -15,6 +15,7 @@ from ufm.application.inventory import (
     InventoryCostSummary,
     InventoryMeasurementRecord,
 )
+from ufm.application.ports.persistence import NotFound
 from ufm.application.ports.secrets import SecretStore, SecretValue
 from ufm.application.storage import StorageCommands
 from ufm.domain.entities.accounting import InventoryEvidence
@@ -28,6 +29,7 @@ from ufm.infrastructure.persistence.models.schema import (
     connection_profile,
     filament_profile,
     haspel_authority_connection,
+    print_job,
     printer,
     spool,
     storage_location,
@@ -136,6 +138,71 @@ class StudioLocation:
     name: str
     storage_type: str
     parent_id: str | None
+
+
+def _iso(value: UtcDateTime | None) -> str | None:
+    return None if value is None else value.value.isoformat()
+
+
+@dataclass(frozen=True)
+class StudioJobRow:
+    id: str
+    name: str | None
+    file_name: str | None
+    plate_name: str | None
+    printer_name: str
+    status: str
+    finalization_state: str
+    detected_at: str | None
+    started_at: str | None
+    completed_at: str | None
+
+
+@dataclass(frozen=True)
+class StudioJobMaterialInfo:
+    id: str
+    channel_key: str
+    tool_index: int
+    filament_name: str | None
+    estimated_mass_mg: int | None
+
+
+@dataclass(frozen=True)
+class StudioJobSegmentInfo:
+    print_job_material_id: str
+    tool_index: int
+    assignment_state: str
+    source: str
+    confidence_bp: int
+    started_at: str | None
+    ended_at: str | None
+    spool_name: str | None
+
+
+@dataclass(frozen=True)
+class StudioJobLedgerEntry:
+    id: str
+    spool_name: str | None
+    sequence: int
+    transaction_type: str
+    delta_mg: int
+    source_type: str
+    confidence_bp: int
+    estimate_policy_version: str
+    description: str | None
+    created_at: str | None
+
+
+@dataclass(frozen=True)
+class StudioJobDetail(StudioJobRow):
+    source_type: str
+    slicer_type: str | None
+    progress_bp: int | None
+    current_layer: int | None
+    total_layers: int | None
+    materials: tuple[StudioJobMaterialInfo, ...]
+    segments: tuple[StudioJobSegmentInfo, ...]
+    ledger: tuple[StudioJobLedgerEntry, ...]
 
 
 @dataclass(frozen=True)
@@ -661,6 +728,112 @@ class StudioBackend:
         return tuple(StudioPrinter(
             str(r[0]), r[1], r[2] or "", r[3], r[4], r[5] or "",
         ) for r in rows)
+
+    def recent_jobs(self, limit: int = 50) -> tuple[StudioJobRow, ...]:
+        with self.engine.connect() as connection:
+            rows = connection.execute(
+                select(
+                    print_job.c.id, print_job.c.name, print_job.c.file_name,
+                    print_job.c.plate_name, printer.c.name,
+                    print_job.c.status, print_job.c.finalization_state,
+                    print_job.c.detected_at, print_job.c.started_at,
+                    print_job.c.completed_at,
+                ).join(printer, print_job.c.printer_id == printer.c.id)
+                .where(print_job.c.deleted_at.is_(None))
+                .order_by(print_job.c.detected_at.desc())
+                .limit(min(max(limit, 1), 500))
+            ).all()
+        return tuple(StudioJobRow(
+            id=str(row[0]), name=row[1], file_name=row[2], plate_name=row[3],
+            printer_name=row[4], status=str(row[5]), finalization_state=str(row[6]),
+            detected_at=_iso(row[7]), started_at=_iso(row[8]), completed_at=_iso(row[9]),
+        ) for row in rows)
+
+    @staticmethod
+    def _entity_name(repository: object, identity: EntityId | None) -> str | None:
+        if identity is None:
+            return None
+        try:
+            entity = repository.get(identity)  # type: ignore[attr-defined]
+        except NotFound:
+            return None
+        name = getattr(entity, "display_name", getattr(entity, "name", None))
+        return name if type(name) is str else None
+
+    def job_detail(self, job_id: str) -> StudioJobDetail | None:
+        identity = EntityId.parse(job_id)
+        with SQLiteUnitOfWork(self.engine) as work:
+            try:
+                job = work.jobs.get(identity)
+            except NotFound:
+                return None
+            try:
+                printer_name = work.printers.get(job.printer_id).name
+            except NotFound:
+                printer_name = str(job.printer_id)
+            materials = work.jobs.materials_for_job(identity)
+            segments = work.segments.for_job(identity)
+            entries = work.ledger.for_job(identity)
+
+            profile_names: dict[str, str | None] = {}
+            for material in materials:
+                if material.filament_profile_id is not None:
+                    key = str(material.filament_profile_id)
+                    if key not in profile_names:
+                        profile_names[key] = self._entity_name(
+                            work.filament_profiles, material.filament_profile_id,
+                        )
+            spool_names: dict[str, str | None] = {}
+            wanted_spools = {
+                segment.spool_id for segment in segments if segment.spool_id is not None
+            } | {entry.spool_id for entry in entries}
+            for spool_id in wanted_spools:
+                spool_names[str(spool_id)] = self._entity_name(work.spools, spool_id)
+
+        return StudioJobDetail(
+            id=str(job.id), name=job.name, file_name=job.file_name,
+            plate_name=job.plate_name, printer_name=printer_name,
+            status=str(job.status), finalization_state=str(job.finalization_state),
+            detected_at=_iso(job.detected_at), started_at=_iso(job.started_at),
+            completed_at=_iso(job.completed_at),
+            source_type=job.source_type, slicer_type=job.slicer_type,
+            progress_bp=job.progress_bp, current_layer=job.current_layer,
+            total_layers=job.total_layers,
+            materials=tuple(StudioJobMaterialInfo(
+                id=str(item.id), channel_key=item.channel_key,
+                tool_index=item.tool_index,
+                filament_name=(
+                    None if item.filament_profile_id is None
+                    else profile_names.get(str(item.filament_profile_id))
+                ),
+                estimated_mass_mg=(
+                    None if item.estimated_mass is None
+                    else item.estimated_mass.milligrams
+                ),
+            ) for item in materials),
+            segments=tuple(StudioJobSegmentInfo(
+                print_job_material_id=str(item.print_job_material_id),
+                tool_index=item.tool_index,
+                assignment_state=str(item.assignment_state),
+                source=item.source, confidence_bp=item.confidence_bp,
+                started_at=_iso(item.started_at), ended_at=_iso(item.ended_at),
+                spool_name=spool_names.get(
+                    "" if item.spool_id is None else str(item.spool_id)
+                ),
+            ) for item in segments),
+            ledger=tuple(StudioJobLedgerEntry(
+                id=str(item.id),
+                spool_name=spool_names.get(str(item.spool_id)),
+                sequence=item.sequence,
+                transaction_type=str(item.transaction_type),
+                delta_mg=item.delta.milligrams,
+                source_type=item.source_type,
+                confidence_bp=item.confidence_bp,
+                estimate_policy_version=item.estimate_policy_version,
+                description=item.description,
+                created_at=_iso(item.created_at),
+            ) for item in entries),
+        )
 
     def spoolman_import_sources(self) -> tuple[SpoolmanImportSourceInfo, ...]:
         return list_spoolman_import_sources(self.engine)

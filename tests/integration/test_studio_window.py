@@ -3153,3 +3153,53 @@ def test_system_backup_creates_snapshot_or_reports_error(
     )
     window.backup()
     assert errors == ["OSError"]
+def test_job_detail_text_explains_decision_fields(studio_workspace) -> None:
+    from ufm.infrastructure.studio_backend import (
+        StudioJobDetail,
+        StudioJobLedgerEntry,
+        StudioJobMaterialInfo,
+        StudioJobSegmentInfo,
+    )
+
+    _app, _backend, window = studio_workspace
+    info = StudioJobDetail(
+        id="job-1", name="Bracket", file_name="bracket.3mf", plate_name="Plate A",
+        printer_name="P1S", status="RUNNING", finalization_state="FINALIZED",
+        detected_at="2026-11-18T10:00:00+00:00",
+        started_at="2026-11-18T10:01:00+00:00", completed_at=None,
+        source_type="printer", slicer_type="Bambu Studio",
+        progress_bp=10000, current_layer=20, total_layers=20,
+        materials=(StudioJobMaterialInfo(
+            id="m1", channel_key="AMS-A1", tool_index=0,
+            filament_name="Generic PLA", estimated_mass_mg=12_500_000,
+        ),),
+        segments=(StudioJobSegmentInfo(
+            print_job_material_id="m1", tool_index=0,
+            assignment_state="ASSIGNED", source="RFID", confidence_bp=9500,
+            started_at="2026-11-18T10:01:00+00:00", ended_at=None,
+            spool_name="Black PLA spool",
+        ),),
+        ledger=(StudioJobLedgerEntry(
+            id="t1", spool_name="Black PLA spool", sequence=7,
+            transaction_type="PRINT_CONSUMPTION", delta_mg=-12_000_000,
+            source_type="THREE_MF", confidence_bp=9000,
+            estimate_policy_version="safe-v1",
+            description="partial print",
+            created_at="2026-11-18T12:00:00+00:00",
+        ),),
+    )
+    rendered = window._job_detail_text(info)
+    assert "bracket.3mf" in rendered and "Plate A" in rendered
+    assert "Generic PLA" in rendered and "12500 g" in rendered
+    assert "Black PLA spool" in rendered
+    assert "95%" in rendered and "90%" in rendered
+    assert "safe-v1" in rendered and "partial print" in rendered
+    assert window.text("PRINT_CONSUMPTION") in rendered
+
+
+def test_show_print_jobs_empty_state(studio_workspace, monkeypatch) -> None:
+    _app, _backend, window = studio_workspace
+    infos: list[str] = []
+    monkeypatch.setattr(window, "info", infos.append)
+    window.show_print_jobs()
+    assert infos == [window.text("jobs_empty")]

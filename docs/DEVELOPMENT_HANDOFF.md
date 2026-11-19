@@ -3561,3 +3561,15 @@ Verification: pytest tests -q -> 700 passed / 491 subtests (100.20s); ruff clean
 ### E12.06 follow-up: CLI serve mode
 
 `ufm --serve [--api-port PORT]` (default 7912) added to bootstrap/cli.py: resolves AppPaths, creates engine, migrate_database, StudioBackend, LocalApiServer; prints {"local_api":"listening","host":"127.0.0.1","port":N} and blocks until KeyboardInterrupt. Manual smoke on port 17923 returned health/spool JSON. cli.help documents --serve/--api-port in uk-UA and en-US. Remaining unchanged: writes/auth/auto-start-in-Studio/consumer fixtures.
+
+## 2026-11-18 — E12.02: job detail read model + Studio print-history dialog
+
+Staging D:\UFM\_UFM_GitHubStage, .venv312. Follow-up to E12.06 API work.
+
+Changes:
+- studio_backend.py: new DTOs StudioJobRow/StudioJobMaterialInfo/StudioJobSegmentInfo/StudioJobLedgerEntry/StudioJobDetail; recent_jobs() (direct select print_job join printer, limit clamp 1..500) and job_detail() via SQLiteUnitOfWork (jobs.get/materials_for_job, segments.for_job, ledger.for_job, name resolution through _entity_name with NotFound -> None). print_job table added to schema imports; NotFound imported from application.ports.persistence.
+- studio_window.py: "print_jobs" button on Devices toolbar; show_print_jobs() dialog (QTableWidget 6 cols + QTextEdit detail, selection-driven); _job_detail_text() renders localized sections via new studio_strings keys (job_detail_header, job_material_line, job_segment_line, job_ledger_line, sections, columns, plus enum labels DETECTED..CANCELLED, NOT_STARTED..FINALIZED, EMPTY/ASSIGNED/ACTIVE_SPOOL_UNKNOWN). _dash static helper for None -> em dash.
+- tests/integration/test_studio_job_detail.py: empty states + populated job via direct printer/print_job inserts (ensure_local_device for device_id).
+- test_studio_window.py: _job_detail_text content assertions + empty-state info.
+
+Verification: targeted tests pass; ruff/mypy clean on changed files; full suite result recorded in PROJECT_PROGRESS. E12.02 stays Частково виконано — needs live print data and UI acceptance.

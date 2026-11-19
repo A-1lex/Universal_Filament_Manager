@@ -2418,3 +2418,12 @@ CSV: статуси E01–E06 не змінювалися — ця робота 
 Залишок E12.06: write-сумісні endpoints, auth/origin policy, автозапуск endpoint самою програмою або UI-перемикач, contract fixtures проти реальних споживачів (slicer/Moonraker/OctoPrint/HA), live-перевірка. Статус лишається Частково виконано.
 
 Додатково того ж дня: `ufm --serve [--api-port ПОРТ]` запускає той самий LocalApiServer поверх бази програми (migrate + StudioBackend), виводить JSON з фактичним портом і працює до Ctrl+C. Ручна перевірка на 127.0.0.1:17923: /api/v1/health → {"status":"ok"}, /api/v1/spool → []. cli.help оновлено в обох локалях. ruff/mypy clean; foundation+local_api 25 passed.
+
+## 2026-11-18 — E12.02: поверхня деталей завдання друку в Studio
+
+Додано read-model агрегацію та UI для пояснення рішень списання:
+- src/ufm/infrastructure/studio_backend.py: StudioJobRow/StudioJobMaterialInfo/StudioJobSegmentInfo/StudioJobLedgerEntry/StudioJobDetail; recent_jobs(limit<=500) і job_detail(job_id) — print_job + materials_for_job + segments.for_job + ledger.for_job з resolved іменами котушок/профілів/принтера; NotFound → None.
+- src/ufm/ui/studio_window.py: кнопка «Історія друку» на сторінці «Пристрої» → діалог із таблицею завдань і read-only деталями (файл/пластина/принтер/статус/фіналізація/прогрес/шари/часові мітки, матеріали з оцінкою маси, сегменти з assignment_state/source/confidence/spool, ledger-записи з типом/масою/source/confidence_bp/policy/description). 32 нові локалізовані ключі (job_* + enum-мітки статусів) у studio_strings.json.
+- Тести: tests/integration/test_studio_job_detail.py (2 тести: порожній стан + агрегація полів через прямий insert printer/print_job), test_job_detail_text_explains_decision_fields, test_show_print_jobs_empty_state.
+
+Перевірки: цільові тести passed; ruff clean; mypy clean (studio_window.py, studio_backend.py). Повний suite: 704 passed / 491 subtests (92,20 с), exit 0. CSV E12.02 → Частково виконано з новим доказом; live-приймання на реальних друках і UI-акцептанс лишаються.
