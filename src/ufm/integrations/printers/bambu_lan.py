@@ -217,6 +217,8 @@ def _slot_observation(slot: Mapping[str, Any], now: UtcDateTime, key: str) -> Fe
         if type(raw_remaining_grams) is int and 0 < raw_remaining_grams <= 100_000
         else None
     )
+    material_hint = _optional_text(slot.get("tray_type"), limit=100)
+    color_hint = _optional_text(slot.get("tray_color"), limit=16)
     return FeedSlotSnapshot(
         slot_key=key,
         occupancy=_observed(occupancy, now),
@@ -225,6 +227,8 @@ def _slot_observation(slot: Mapping[str, Any], now: UtcDateTime, key: str) -> Fe
         assigned_spool_id=_observed(None, now),
         remaining_mass=_observed(remaining_mass, now),
         remaining_percent=_observed(remaining_percent, now),
+        material_hint=material_hint,
+        color_hint=color_hint,
     )
 
 

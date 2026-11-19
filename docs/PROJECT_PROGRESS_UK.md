@@ -2464,3 +2464,12 @@ CSV: статуси E01–E06 не змінювалися — ця робота 
 - Тести: tests/integration/test_spool_identifier_commands.py (+2: rebind retire+verify+audit+replay; rebind_not_needed без конфлікту/для тієї ж котушки).
 
 Перевірки: цільові тести passed; повний suite 713 passed / 491 subtests (93,19 с); ruff/mypy clean. CSV E12.04 → Частково виконано з live-доказом конфлікту та новим шляхом розв’язання. Наступна дія власника: повторно probe → verify identity для кожного слота → mount verified.
+
+## 2026-11-19 — Автосинхронізація завантажених котушок (Bambu AMS)
+
+- src/ufm/application/dto/providers.py: FeedSlotSnapshot += material_hint/color_hint (optional bounded text).
+- src/ufm/integrations/printers/bambu_lan.py: _slot_observation читає tray_type→material_hint, tray_color→color_hint.
+- src/ufm/ui/studio_window.py: probe() збирає ObservedSlotSync (system/slot, match_state, hints, remaining %, tray_uuid/tag_uid) у _observed_slots; нова кнопка «Синхронізувати котушки» → діалог «Завантажені котушки»: слоти з UNKNOWN матчем + ідентифікаторами, вибір наявної котушки або «＋ Нова котушка» (ім’я з material+slot, колір з принтера, нотатка джерела; профіль підбирається за material_type або створюється); worker биндить tray_uuid+tag_uid через audited verify, конфлікти рахуються окремо (sync_partial). 8 нових ключів локалізації.
+- Тести: hints у test_bambu_lan_provider (+3 asserts), test_sync_observed_spools_requires_fresh_probe.
+
+Перевірки: цільові тести passed; ruff/mypy clean; повний suite 714 passed / 491 subtests (93,02 с). CSV E06.05 → Частково виконано з новим доказом. Наступна дія власника: probe → «Синхронізувати котушки» → для кожного слота обрати котушку або нову → probe повторно.

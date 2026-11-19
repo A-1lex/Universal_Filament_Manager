@@ -209,9 +209,14 @@ class FeedSlotSnapshot:
     assigned_spool_id: Observed[EntityId]
     remaining_mass: Observed[Mass]
     remaining_percent: Observed[int] | None = None
+    material_hint: str | None = None
+    color_hint: str | None = None
 
     def __post_init__(self) -> None:
         _bounded_text(self.slot_key, "feed_slot_snapshot.slot_key_invalid")
+        for hint in (self.material_hint, self.color_hint):
+            if hint is not None:
+                _bounded_text(hint, "feed_slot_snapshot.hint_invalid")
         if self.occupancy.value is not None and type(self.occupancy.value) is not bool:
             raise TypeError("feed_slot_snapshot.occupancy_invalid")
         for identifier in (self.tray_uuid.value, self.tag_uid.value):

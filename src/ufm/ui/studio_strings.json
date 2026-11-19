@@ -1942,5 +1942,13 @@
   "local_api_start_failed": ["Не вдалося запустити локальний API (порт зайнятий?).", "Could not start the local API (port in use?)."],
   "identity_unbound": ["не прив'язано", "unbound"],
   "identity_rebind_message": ["Ідентифікатор {system} · {slot} · {kind} · {value} зараз прив'язано до котушки «{bound}». Переприв'язати його до «{spool}»? Попередня прив'язка буде знята й записана в журналі.", "Identifier {system} · {slot} · {kind} · {value} is currently bound to spool \"{bound}\". Rebind it to \"{spool}\"? The previous binding will be retired and journaled."],
-  "identity_rebound_reprobe": ["Ідентифікатор переприв'язано й записано в журнал. Повторно прочитайте стан, щоб побачити зіставлення.", "Identifier rebound and journaled. Read printer status again to see the match."]
+  "identity_rebound_reprobe": ["Ідентифікатор переприв'язано й записано в журнал. Повторно прочитайте стан, щоб побачити зіставлення.", "Identifier rebound and journaled. Read printer status again to see the match."],
+  "sync_spools_button": ["Синхронізувати котушки", "Sync spools"],
+  "sync_title": ["Завантажені котушки", "Loaded spools"],
+  "sync_slot": ["Слот", "Slot"],
+  "sync_new_spool": ["＋ Нова котушка (за даними принтера)", "+ New spool (from printer data)"],
+  "sync_probe_first": ["Спочатку виконайте «Прочитати стан», щоб побачити завантажені котушки.", "Run \"Read status\" first to see the loaded spools."],
+  "sync_none": ["Невідомих завантажених котушок немає — усі слоти вже зіставлено або порожні.", "No unknown loaded spools — every slot is matched or empty."],
+  "sync_done": ["Прив’язано ідентифікаторів: {bound}. Повторне «Прочитати стан» покаже зіставлення.", "Identifiers bound: {bound}. Read status again to see the match."],
+  "sync_partial": ["Прив’язано: {bound}; конфліктів: {conflicts}. Конфліктні ідентифікатори вже прив’язані до інших котушок — скористайтеся «Перевірити ідентифікатор».", "Bound: {bound}; conflicts: {conflicts}. Conflicting identifiers are already bound to other spools — use \"Verify identity\"."]
 }

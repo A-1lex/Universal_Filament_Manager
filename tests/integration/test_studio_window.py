@@ -3213,6 +3213,15 @@ def test_show_reconciliation_tasks_empty_state(studio_workspace, monkeypatch) ->
     assert infos == [window.text("recon_tasks_empty")]
 
 
+def test_sync_observed_spools_requires_fresh_probe(studio_workspace, monkeypatch) -> None:
+    _app, _backend, window = studio_workspace
+    infos: list[str] = []
+    monkeypatch.setattr(window, "info", infos.append)
+    window._observed_slots = ()
+    window.sync_observed_spools()
+    assert infos == [window.text("sync_probe_first")]
+
+
 def test_local_api_toggle_starts_and_stops_server(studio_workspace) -> None:
     import json
     import socket

@@ -10,6 +10,7 @@ import json
 import os
 import re
 from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import date, datetime, time
 from functools import partial
 from importlib.resources import files
@@ -229,6 +230,18 @@ class Task(QThread):
             self.completed.emit(result)
 
 
+@dataclass(frozen=True)
+class ObservedSlotSync:
+    system_key: str
+    slot_key: str
+    match_state: SlotSpoolMatchState
+    material_hint: str | None
+    color_hint: str | None
+    remaining_percent: int | None
+    tray_uuid: str | None
+    tag_uid: str | None
+
+
 class MassTableItem(QTableWidgetItem):
     def __init__(self, text: str, milligrams: int | None) -> None:
         super().__init__(text)
@@ -343,6 +356,7 @@ class StudioWindow(QMainWindow):
         self.profiles: tuple[StudioMaterial, ...] = ()
         self.printers: tuple[StudioPrinter, ...] = ()
         self._observed_slot_identities: tuple[tuple[str, str, str, str], ...] = ()
+        self._observed_slots: tuple[ObservedSlotSync, ...] = ()
         self._observed_namespace: str | None = None
         self._observed_at: UtcDateTime | None = None
         self._mount_candidates: tuple[tuple[str, str, FeedSystemKind, EntityId, str], ...] = ()
@@ -667,6 +681,7 @@ class StudioWindow(QMainWindow):
             self.button("discover", self.discover),
             self.button("probe", self.probe),
             self.button("verify_identity_button", self.verify_feed_identity),
+            self.button("sync_spools_button", self.sync_observed_spools),
             self.button("mount_verified_button", self.mount_verified_feed_slot),
             self.button("enrollment", self.enroll_local),
             self.button("bambu_import", self.enroll_bambu),
@@ -2973,6 +2988,7 @@ class StudioWindow(QMainWindow):
         self._observed_at = None
         self._mount_candidates = ()
         self._observed_printer_id = None
+        self._observed_slots = ()
 
         def observe() -> object:
             result = asyncio.run(probe_configured_printer(
@@ -2987,6 +3003,7 @@ class StudioWindow(QMainWindow):
             mappings: list[tuple[str, str, SlotSpoolMatchState, str | None]] = []
             mount_candidates: list[tuple[str, str, FeedSystemKind, EntityId, str]] = []
             identities: list[tuple[str, str, str, str]] = []
+            slot_details: list[ObservedSlotSync] = []
             if namespace is not None:
                 topology = TopologyCommands(lambda: SQLiteUnitOfWork(self.backend.engine))
                 actor_device_id = ensure_local_device(self.backend.engine)
@@ -3028,25 +3045,36 @@ class StudioWindow(QMainWindow):
                             )
                             mappings.append((system.provider_system_key, slot.slot_key,
                                              match.state, spool_name))
+                            slot_details.append(ObservedSlotSync(
+                                system.provider_system_key, slot.slot_key, match.state,
+                                slot.material_hint, slot.color_hint,
+                                None if slot.remaining_percent is None
+                                else slot.remaining_percent.value,
+                                None if slot.tray_uuid is None else slot.tray_uuid.value,
+                                None if slot.tag_uid is None else slot.tag_uid.value,
+                            ))
                             if match.state is SlotSpoolMatchState.MATCHED and match.spool_id is not None:
                                 mount_candidates.append((
                                     system.provider_system_key, slot.slot_key, system.kind,
                                     match.spool_id, spool_name or "",
                                 ))
-            return status, tuple(mappings), namespace, tuple(identities), tuple(mount_candidates)
+            return (status, tuple(mappings), namespace, tuple(identities),
+                    tuple(mount_candidates), tuple(slot_details))
 
         def display(result: object) -> None:
-            status, mappings, namespace, identities, mount_candidates = cast(
+            status, mappings, namespace, identities, mount_candidates, slot_details = cast(
                 tuple[PrinterStatusSnapshot,
                       tuple[tuple[str, str, SlotSpoolMatchState, str | None], ...],
                       str | None, tuple[tuple[str, str, str, str], ...],
-                      tuple[tuple[str, str, FeedSystemKind, EntityId, str], ...]], result,
+                      tuple[tuple[str, str, FeedSystemKind, EntityId, str], ...],
+                      tuple[ObservedSlotSync, ...]], result,
             )
             self._observed_namespace = namespace
             self._observed_at = status.observed_at
             self._observed_slot_identities = identities
             self._observed_printer_id = status.printer_id
             self._mount_candidates = mount_candidates
+            self._observed_slots = slot_details
             message = self.text(
                 "probe_done", state=str(status.connection_state),
                 nozzle=(status.nozzle_temperature_c.value.canonical()
@@ -4091,6 +4119,116 @@ class StudioWindow(QMainWindow):
             self.info(self.text("printer_connection_updated", name=selected.name))
 
         self.work(update_connection, completed)
+
+    def sync_observed_spools(self) -> None:
+        if (not self._observed_slots or self._observed_namespace is None
+                or not self._snapshot_is_fresh()):
+            self.info(self.text("sync_probe_first"))
+            return
+        candidates = [
+            slot for slot in self._observed_slots
+            if slot.match_state is SlotSpoolMatchState.UNKNOWN
+            and (slot.tray_uuid is not None or slot.tag_uid is not None)
+        ]
+        if not candidates:
+            self.info(self.text("sync_none"))
+            return
+        dialog = QDialog(self)
+        dialog.setObjectName("observed-spool-sync")
+        dialog.setWindowTitle(self.text("sync_title"))
+        layout = QFormLayout(dialog)
+        slot_combo = QComboBox()
+        slot_combo.setObjectName("observed-spool-sync-slot")
+        for index, slot in enumerate(candidates):
+            hints = " · ".join(
+                part for part in (
+                    slot.material_hint,
+                    slot.color_hint,
+                    None if slot.remaining_percent is None
+                    else f"{slot.remaining_percent}%",
+                ) if part
+            )
+            slot_combo.addItem(
+                f"{slot.system_key} · {slot.slot_key} · {hints or self.text('unknown')}",
+                index,
+            )
+        spool_combo = QComboBox()
+        spool_combo.setObjectName("observed-spool-sync-target")
+        for item in self.rows:
+            spool_combo.addItem(item.name, item.id)
+        new_marker = "__new__"
+        spool_combo.addItem(self.text("sync_new_spool"), new_marker)
+        layout.addRow(self.text("sync_slot"), slot_combo)
+        layout.addRow(self.text("spool"), spool_combo)
+        buttons = QDialogButtonBox()
+        buttons.addButton(self.text("confirm"), QDialogButtonBox.ButtonRole.AcceptRole)
+        buttons.addButton(self.text("cancel"), QDialogButtonBox.ButtonRole.RejectRole)
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addRow(buttons)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        slot = candidates[int(slot_combo.currentData())]
+        target = spool_combo.currentData()
+        material = (slot.material_hint or "").strip().upper()
+        material_type = material if material in {item.value for item in MaterialType} else "CUSTOM"
+        auto_name = " ".join(
+            part for part in (slot.material_hint or "Filament", slot.slot_key) if part
+        )[:200]
+
+        def enroll() -> object:
+            actor = ensure_local_device(self.backend.engine)
+            if target == new_marker:
+                profile_id = self._profile_id_for_material(material_type, material)
+                spool_id = self.backend.add_spool(
+                    auto_name, profile_id,
+                    color_hex=slot.color_hint,
+                    notes=f"Auto-enrolled from {slot.system_key} {slot.slot_key}",
+                )
+            else:
+                spool_id = str(target)
+            commands = SpoolIdentifierCommands(
+                lambda: SQLiteUnitOfWork(self.backend.engine),
+            )
+            bound: list[str] = []
+            conflicts: list[str] = []
+            for kind, value in (("tray_uuid", slot.tray_uuid), ("tag_uid", slot.tag_uid)):
+                if value is None:
+                    continue
+                try:
+                    commands.verify(
+                        spool_id=EntityId.parse(spool_id),
+                        namespace=self._observed_namespace or "",
+                        kind=kind, value=value, actor_device_id=actor,
+                        command_key=f"studio-slot-sync-{uuid4()}",
+                        manual_confirmation=True,
+                    )
+                    bound.append(kind)
+                except ValueError:
+                    conflicts.append(kind)
+            return bound, conflicts, spool_id
+
+        def done(result: object) -> None:
+            bound, conflicts, _spool_id = cast(
+                tuple[list[str], list[str], str], result,
+            )
+            self.refresh()
+            if conflicts:
+                self.info(self.text(
+                    "sync_partial", bound=len(bound), conflicts=len(conflicts),
+                ))
+            else:
+                self.info(self.text("sync_done", bound=len(bound)))
+
+        self.work(enroll, done)
+
+    def _profile_id_for_material(self, material_type: str, raw_hint: str) -> str:
+        wanted = material_type.upper()
+        for profile in self.profiles:
+            if profile.material.upper() == wanted:
+                return profile.id
+        name = raw_hint.strip() or wanted
+        return self.backend.add_material(name, wanted if wanted != "CUSTOM" else "CUSTOM")
 
     def verify_feed_identity(self) -> None:
         if (not self._observed_slot_identities or self._observed_namespace is None

@@ -3624,3 +3624,16 @@ Changes:
 - tests/integration/test_spool_identifier_commands.py: _second_spool helper; test_rebind_retires_old_binding_and_verifies_new_one (new id, trusted lookup returns new, old retired_at set, single audit event, no raw value in params, replay equal); test_rebind_requires_existing_conflicting_binding (missing binding and same-spool both rejected).
 
 Verification: 6 passed/3 subtests in identifier tests; ruff/mypy clean; full suite 713 passed/491 subtests. E12.04 evidence appended. Owner action needed: re-probe, verify/rebind each slot identifier, mount verified spools; then re-check slot matching.
+
+## 2026-11-19 — Loaded-spool sync (Bambu AMS hints + one-click enroll)
+
+Staging D:\UFM\_UFM_GitHubStage, .venv312.
+
+Changes:
+- application/dto/providers.py: FeedSlotSnapshot += material_hint/color_hint: str|None=None with _bounded_text validation.
+- integrations/printers/bambu_lan.py _slot_observation: material_hint=_optional_text(tray_type,100), color_hint=_optional_text(tray_color,16).
+- ui/studio_window.py: @dataclass ObservedSlotSync(system_key,slot_key,match_state,material_hint,color_hint,remaining_percent,tray_uuid,tag_uid); probe() resets/collects _observed_slots inside the existing work.work UoW loop and returns them as 6th tuple element (display() cast updated); new button "sync_spools_button" -> sync_observed_spools(): requires fresh probe+namespace, filters UNKNOWN slots with identifiers, QDialog slot/spool combos ("__new__" marker), worker enroll(): optional backend.add_spool(auto_name, profile_id via _profile_id_for_material, color_hex, notes) then SpoolIdentifierCommands.verify per present kind with unique command_keys, collects bound/conflicts; done() refreshes and shows sync_done/sync_partial. _profile_id_for_material matches self.profiles by material_type else backend.add_material(name, material_type or CUSTOM).
+- studio_strings.json: sync_spools_button/sync_title/sync_slot/sync_new_spool/sync_probe_first/sync_none/sync_done/sync_partial.
+- tests: test_bambu_lan_provider asserts material_hint PLA/PETG + color_hint None; test_studio_window.py test_sync_observed_spools_requires_fresh_probe.
+
+Verification: targeted tests pass; ruff/mypy clean on 3 files; full suite in PROJECT_PROGRESS. E06.05 evidence appended. Live flow for owner: probe -> Sync spools -> pick/create per slot -> probe again -> mount verified.
