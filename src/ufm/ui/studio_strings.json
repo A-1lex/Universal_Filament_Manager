@@ -1913,5 +1913,22 @@
   "FINALIZED": ["Проведено","Finalized"],
   "EMPTY": ["Порожньо","Empty"],
   "ASSIGNED": ["Призначено","Assigned"],
-  "ACTIVE_SPOOL_UNKNOWN": ["Активна котушка невідома","Active spool unknown"]
+  "ACTIVE_SPOOL_UNKNOWN": ["Активна котушка невідома","Active spool unknown"],
+  "recon_tasks": ["Невизначені події", "Unresolved events"],
+  "recon_tasks_title": ["Невизначені події звіряння", "Unresolved reconciliation events"],
+  "recon_tasks_empty": ["Невизначених подій немає.", "No unresolved events."],
+  "recon_col_reason": ["Причина", "Reason"],
+  "recon_col_severity": ["Важливість", "Severity"],
+  "recon_col_state": ["Стан", "State"],
+  "recon_col_spool": ["Котушка", "Spool"],
+  "recon_col_job": ["Завдання", "Job"],
+  "recon_col_action": ["Рекомендована дія", "Suggested action"],
+  "recon_col_created": ["Створено", "Created"],
+  "IN_REVIEW": ["На розгляді", "In review"],
+  "RESOLVED": ["Вирішено", "Resolved"],
+  "DISMISSED": ["Відхилено", "Dismissed"],
+  "INFO": ["Інформація", "Info"],
+  "WARNING": ["Попередження", "Warning"],
+  "ERROR": ["Помилка", "Error"],
+  "CRITICAL": ["Критично", "Critical"]
 }

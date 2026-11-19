@@ -685,6 +685,7 @@ class StudioWindow(QMainWindow):
         self.monitor_button = self.button("monitor_start", self.toggle_printer_monitor)
         actions.append(self.monitor_button)
         actions.append(self.button("print_jobs", self.show_print_jobs))
+        actions.append(self.button("recon_tasks", self.show_reconciliation_tasks))
         for index, button in enumerate(actions):
             toolbar.addWidget(button, index // 4, index % 4)
         for column in range(4):
@@ -2684,6 +2685,48 @@ class StudioWindow(QMainWindow):
         buttons.rejected.connect(dialog.reject)
         layout.addWidget(buttons)
         table.selectRow(0)
+        dialog.exec()
+
+    def show_reconciliation_tasks(self) -> None:
+        try:
+            tasks = self.backend.open_reconciliation_tasks()
+        except Exception as error:
+            self.error(type(error).__name__)
+            return
+        if not tasks:
+            self.info(self.text("recon_tasks_empty"))
+            return
+        dialog = QDialog(self)
+        dialog.setWindowTitle(self.text("recon_tasks_title"))
+        dialog.setMinimumSize(960, 480)
+        layout = QVBoxLayout(dialog)
+        table = QTableWidget(len(tasks), 7)
+        table.setHorizontalHeaderLabels([
+            self.text("recon_col_reason"), self.text("recon_col_severity"),
+            self.text("recon_col_state"), self.text("recon_col_spool"),
+            self.text("recon_col_job"), self.text("recon_col_action"),
+            self.text("recon_col_created"),
+        ])
+        table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        table.verticalHeader().hide()
+        table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        for row_index, task in enumerate(tasks):
+            values = [
+                task.reason_code,
+                self.text(task.severity),
+                self.text(task.state),
+                task.spool_name or "—",
+                task.job_name or "—",
+                task.suggested_action or "—",
+                task.created_at or "—",
+            ]
+            for column, value in enumerate(values):
+                table.setItem(row_index, column, QTableWidgetItem(value))
+        layout.addWidget(table)
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
         dialog.exec()
 
     @staticmethod

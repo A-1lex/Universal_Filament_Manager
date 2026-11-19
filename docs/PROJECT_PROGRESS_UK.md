@@ -2427,3 +2427,13 @@ CSV: статуси E01–E06 не змінювалися — ця робота 
 - Тести: tests/integration/test_studio_job_detail.py (2 тести: порожній стан + агрегація полів через прямий insert printer/print_job), test_job_detail_text_explains_decision_fields, test_show_print_jobs_empty_state.
 
 Перевірки: цільові тести passed; ruff clean; mypy clean (studio_window.py, studio_backend.py). Повний suite: 704 passed / 491 subtests (92,20 с), exit 0. CSV E12.02 → Частково виконано з новим доказом; live-приймання на реальних друках і UI-акцептанс лишаються.
+
+## 2026-11-19 — E12.01: список невизначених подій звіряння в Studio
+
+Продовження уніфікованої історії (E12.01):
+- src/ufm/application/ports/persistence.py + src/ufm/infrastructure/persistence/repositories/entities.py: новий ReconciliationRepository.open_tasks() — усі задачі зі статусом OPEN/IN_REVIEW (не видалені), упорядковані за created_at.
+- src/ufm/infrastructure/studio_backend.py: DTO StudioReconciliationTask + open_reconciliation_tasks() з resolved іменами котушки/завдання.
+- src/ufm/ui/studio_window.py: кнопка «Невизначені події» на сторінці «Пристрої» → діалог-таблиця (причина/важливість/стан/котушка/завдання/рекомендована дія/дата); 17 нових ключів локалізації (recon_* + статуси/важливість).
+- Тести: tests/integration/test_studio_job_detail.py (+2: порожній стан; OPEN задачі повертаються, RESOLVED — ні), test_show_reconciliation_tasks_empty_state.
+
+Перевірки: цільові тести passed; ruff/mypy clean; повний suite 707 passed / 491 subtests (90,68 с). CSV E12.01 → Частково виконано з новим доказом; лишається повний lifecycle/receipt browser parity та live-приймання.

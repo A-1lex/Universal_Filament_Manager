@@ -75,3 +75,43 @@ def test_job_detail_aggregates_job_fields(job_backend) -> None:
     assert detail.materials == ()
     assert detail.segments == ()
     assert detail.ledger == ()
+
+
+def test_open_reconciliation_tasks_empty(job_backend) -> None:
+    assert job_backend.open_reconciliation_tasks() == ()
+
+
+def test_open_reconciliation_tasks_lists_open_with_names(job_backend) -> None:
+    from ufm.domain.entities import ReconciliationTask
+    from ufm.domain.enums import ReconciliationState, Severity
+    from ufm.domain.value_objects import EntityId, UtcDateTime
+    from ufm.infrastructure.persistence.sqlite.unit_of_work import SQLiteUnitOfWork
+    from ufm.integrations.printers.configuration import ensure_local_device
+
+    backend = job_backend
+    device = ensure_local_device(backend.engine)
+    now = UtcDateTime.now()
+    with SQLiteUnitOfWork(backend.engine) as work:
+        work.reconciliations.add_task(ReconciliationTask(
+            id=EntityId.new(), device_id=device, created_at=now, updated_at=now,
+            revision=1, reason_code="RESERVATION_SHORTAGE", severity=Severity.WARNING,
+            state=ReconciliationState.OPEN, dedupe_key="studio-recon-test-1",
+            suggested_action="review_spool_stock",
+        ))
+        work.reconciliations.add_task(ReconciliationTask(
+            id=EntityId.new(), device_id=device, created_at=now, updated_at=now,
+            revision=1, reason_code="DONE_TASK", severity=Severity.INFO,
+            state=ReconciliationState.RESOLVED, dedupe_key="studio-recon-test-2",
+            resolved_at=now, resolved_by=device, resolution_notes="ok",
+        ))
+        work.commit()
+
+    tasks = backend.open_reconciliation_tasks()
+    assert len(tasks) == 1
+    task = tasks[0]
+    assert task.reason_code == "RESERVATION_SHORTAGE"
+    assert task.severity == "WARNING"
+    assert task.state == "OPEN"
+    assert task.suggested_action == "review_spool_stock"
+    assert task.spool_name is None
+    assert task.job_name is None

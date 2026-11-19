@@ -3203,3 +3203,11 @@ def test_show_print_jobs_empty_state(studio_workspace, monkeypatch) -> None:
     monkeypatch.setattr(window, "info", infos.append)
     window.show_print_jobs()
     assert infos == [window.text("jobs_empty")]
+
+
+def test_show_reconciliation_tasks_empty_state(studio_workspace, monkeypatch) -> None:
+    _app, _backend, window = studio_workspace
+    infos: list[str] = []
+    monkeypatch.setattr(window, "info", infos.append)
+    window.show_reconciliation_tasks()
+    assert infos == [window.text("recon_tasks_empty")]

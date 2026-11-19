@@ -628,6 +628,13 @@ class Reconciliations:
             "estimated_before": "estimated_before_mg", "estimated_after": "estimated_after_mg",
         })
 
+    def open_tasks(self) -> list[ReconciliationTask]:
+        rows = self.tasks.transaction.execute(select(l.reconciliation_task).where(
+            l.reconciliation_task.c.status.in_(("OPEN", "IN_REVIEW")),
+            l.reconciliation_task.c.deleted_at.is_(None),
+        ).order_by(l.reconciliation_task.c.created_at)).mappings().all()
+        return [self.tasks.entity(row) for row in rows]
+
     def open_tasks_for_spool(self, spool_id: EntityId) -> list[ReconciliationTask]:
         rows = self.tasks.transaction.execute(select(l.reconciliation_task).where(
             l.reconciliation_task.c.spool_id == spool_id,

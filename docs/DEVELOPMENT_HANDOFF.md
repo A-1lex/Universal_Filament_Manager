@@ -3573,3 +3573,16 @@ Changes:
 - test_studio_window.py: _job_detail_text content assertions + empty-state info.
 
 Verification: targeted tests pass; ruff/mypy clean on changed files; full suite result recorded in PROJECT_PROGRESS. E12.02 stays Частково виконано — needs live print data and UI acceptance.
+
+## 2026-11-19 — E12.01: unresolved reconciliation events surface
+
+Staging D:\UFM\_UFM_GitHubStage, .venv312.
+
+Changes:
+- ports/persistence.py: ReconciliationRepository.open_tasks() -> Sequence[ReconciliationTask].
+- repositories/entities.py Reconciliations.open_tasks(): select reconciliation_task where status IN (OPEN, IN_REVIEW) AND deleted_at IS NULL order by created_at; entity() mapping reuses MappedRepository.
+- studio_backend.py: StudioReconciliationTask DTO (id/reason_code/severity/state/spool_name/job_name/suggested_action/created_at) + open_reconciliation_tasks() resolving names via _entity_name(work.spools / work.jobs).
+- studio_window.py: "recon_tasks" button on Devices toolbar -> show_reconciliation_tasks() QDialog with 7-column QTableWidget; empty -> info(recon_tasks_empty). New studio_strings keys: recon_tasks(_title/_empty), recon_col_*, IN_REVIEW/RESOLVED/DISMISSED/INFO/WARNING/ERROR/CRITICAL (uk+en pairs, appended as compact lines preserving file style).
+- tests: test_studio_job_detail.py +2 (empty; open-vs-resolved filtering via SQLiteUnitOfWork.add_task+commit); test_studio_window.py +1 empty-state UI test.
+
+Verification: targeted tests pass; ruff/mypy clean on 6 changed files; full suite result in PROJECT_PROGRESS. E12.01 remains Частково виконано — lifecycle/receipt browser parity and live acceptance pending.

@@ -206,6 +206,18 @@ class StudioJobDetail(StudioJobRow):
 
 
 @dataclass(frozen=True)
+class StudioReconciliationTask:
+    id: str
+    reason_code: str
+    severity: str
+    state: str
+    spool_name: str | None
+    job_name: str | None
+    suggested_action: str | None
+    created_at: str | None
+
+
+@dataclass(frozen=True)
 class StudioAccountingAuthority:
     mode: str
     revision: int
@@ -834,6 +846,35 @@ class StudioBackend:
                 created_at=_iso(item.created_at),
             ) for item in entries),
         )
+
+    def open_reconciliation_tasks(self) -> tuple[StudioReconciliationTask, ...]:
+        with SQLiteUnitOfWork(self.engine) as work:
+            tasks = work.reconciliations.open_tasks()
+            spool_names: dict[str, str | None] = {}
+            job_names: dict[str, str | None] = {}
+            for task in tasks:
+                if task.spool_id is not None:
+                    key = str(task.spool_id)
+                    if key not in spool_names:
+                        spool_names[key] = self._entity_name(work.spools, task.spool_id)
+                if task.print_job_id is not None:
+                    key = str(task.print_job_id)
+                    if key not in job_names:
+                        job_names[key] = self._entity_name(work.jobs, task.print_job_id)
+        return tuple(StudioReconciliationTask(
+            id=str(task.id), reason_code=task.reason_code,
+            severity=str(task.severity), state=str(task.state),
+            spool_name=(
+                None if task.spool_id is None
+                else spool_names.get(str(task.spool_id))
+            ),
+            job_name=(
+                None if task.print_job_id is None
+                else job_names.get(str(task.print_job_id))
+            ),
+            suggested_action=task.suggested_action,
+            created_at=_iso(task.created_at),
+        ) for task in tasks)
 
     def spoolman_import_sources(self) -> tuple[SpoolmanImportSourceInfo, ...]:
         return list_spoolman_import_sources(self.engine)
