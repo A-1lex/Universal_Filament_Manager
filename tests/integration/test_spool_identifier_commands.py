@@ -97,3 +97,63 @@ class SpoolIdentifierCommandTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "spool_identifier.identity_conflict"):
             self.verify(spool_id=other_spool, command_key="verify-other-spool")
 
+    def _second_spool(self) -> EntityId:
+        other_spool = EntityId.new()
+        with SQLiteUnitOfWork(self.engine) as work:
+            work.spools.add(Spool(
+                id=other_spool, device_id=self.device, created_at=self.now,
+                updated_at=self.now, revision=1, display_name="Second PLA",
+                filament_profile_id=self.profile,
+            ))
+            work.commit()
+        return other_spool
+
+    def test_rebind_retires_old_binding_and_verifies_new_one(self) -> None:
+        first = self.verify()
+        other_spool = self._second_spool()
+
+        rebound = self.commands.rebind(
+            spool_id=other_spool, namespace="bambu", kind="tray_uuid",
+            value="tray-private-id", actor_device_id=self.device,
+            command_key="rebind-tray", manual_confirmation=True, at=self.now,
+        )
+        replay = self.commands.rebind(
+            spool_id=other_spool, namespace="bambu", kind="tray_uuid",
+            value="tray-private-id", actor_device_id=self.device,
+            command_key="rebind-tray", manual_confirmation=True, at=self.now,
+        )
+
+        self.assertEqual(replay, rebound)
+        self.assertNotEqual(rebound.id, first.id)
+        self.assertEqual(rebound.spool_id, other_spool)
+        with SQLiteUnitOfWork(self.engine) as work:
+            trusted = work.spool_identifiers.by_trusted_identity(
+                "bambu", "tray_uuid", "tray-private-id",
+            )
+            self.assertEqual(trusted, rebound)
+            retired = work.spool_identifiers.get(first.id)
+            self.assertIsNotNone(retired.retired_at)
+            self.assertFalse(retired.is_trusted_current)
+            events = work.audit.for_command("rebind-tray")
+            self.assertEqual(len(events), 1)
+            self.assertEqual(events[0].event_code, "spool.identifier_rebound")
+            params = json.loads(events[0].parameters_json)
+            self.assertNotIn("tray-private-id", json.dumps(params))
+
+    def test_rebind_requires_existing_conflicting_binding(self) -> None:
+        other_spool = self._second_spool()
+        with self.assertRaisesRegex(ValueError, "spool_identifier.rebind_not_needed"):
+            self.commands.rebind(
+                spool_id=other_spool, namespace="bambu", kind="tray_uuid",
+                value="tray-private-id", actor_device_id=self.device,
+                command_key="rebind-missing", manual_confirmation=True, at=self.now,
+            )
+
+        self.verify()
+        with self.assertRaisesRegex(ValueError, "spool_identifier.rebind_not_needed"):
+            self.commands.rebind(
+                spool_id=self.spool, namespace="bambu", kind="tray_uuid",
+                value="tray-private-id", actor_device_id=self.device,
+                command_key="rebind-same", manual_confirmation=True, at=self.now,
+            )
+

@@ -2453,3 +2453,14 @@ CSV: статуси E01–E06 не змінювалися — ця робота 
 - tests/integration/test_studio_window.py::test_local_api_toggle_starts_and_stops_server — реальний loopback GET /api/v1/health через UI toggle, перевірка persist і stop.
 
 Перевірки: цільові тести passed; ruff/mypy clean; повний suite 711 passed / 491 subtests (90,85 с). CSV E12.06 → Частково виконано з новим доказом; лишаються write-endpoints, auth/origin policy, contract fixtures і live-приймання.
+
+## 2026-11-19 — Перше live-підключення принтера + виправлення конфлікту ідентифікаторів
+
+Користувач отримав реальний probe: принтер ONLINE, сопло 255 °C, стіл 70 °C, але всі 5 слотів (ams:0·0:0–0:3, external) у стані CONFLICT — tray_uuid і tag_uid були довірено прив’язані до різних котушок UFM, а шляху переприв’язки не існувало.
+
+- src/ufm/application/spool_identifiers.py: новий SpoolIdentifierCommands.rebind() — retired_at для старої прив’язки (без видалення), новий verified SpoolIdentifier для обраної котушки, окремий audit event spool.identifier_rebound, ідемпотентний replay за command_key.
+- src/ufm/application/ports/persistence.py: SpoolIdentifierRepository.save().
+- src/ufm/ui/studio_window.py: діалог «Перевірити ідентифікатор» показує поточну прив’язку кожного ідентифікатора (ім’я котушки або «не прив’язано»); якщо обрано іншу котушку — підтвердження переприв’язки і виклик rebind. 3 нові ключі локалізації.
+- Тести: tests/integration/test_spool_identifier_commands.py (+2: rebind retire+verify+audit+replay; rebind_not_needed без конфлікту/для тієї ж котушки).
+
+Перевірки: цільові тести passed; повний suite 713 passed / 491 subtests (93,19 с); ruff/mypy clean. CSV E12.04 → Частково виконано з live-доказом конфлікту та новим шляхом розв’язання. Наступна дія власника: повторно probe → verify identity для кожного слота → mount verified.

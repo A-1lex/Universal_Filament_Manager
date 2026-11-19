@@ -87,6 +87,7 @@ from ufm.application.dto.providers import (
 )
 from ufm.application.dto.slice_facts import VerifiedSliceFacts
 from ufm.application.inventory import InventoryCostReport
+from ufm.application.ports.persistence import NotFound
 from ufm.application.ports.secrets import SecretValue
 from ufm.application.slot_spool_identity import (
     SlotSpoolMatchState,
@@ -4103,8 +4104,32 @@ class StudioWindow(QMainWindow):
         observed = QComboBox()
         observed.setObjectName("spool-identifier-observed")
         choices = self._observed_slot_identities
+        bindings: list[tuple[str | None, EntityId | None]] = []
+        try:
+            with SQLiteUnitOfWork(self.backend.engine) as work:
+                for _system, _slot, kind, value in choices:
+                    identifier = work.spool_identifiers.by_trusted_identity(
+                        self._observed_namespace or "", kind, value,
+                    )
+                    if identifier is None:
+                        bindings.append((None, None))
+                        continue
+                    try:
+                        bound_name = work.spools.get(identifier.spool_id).display_name
+                    except NotFound:
+                        bound_name = None
+                    bindings.append((bound_name, identifier.spool_id))
+        except Exception:
+            bindings = [(None, None)] * len(choices)
         for index, (system, slot, kind, value) in enumerate(choices):
-            observed.addItem(f"{system} · {slot} · {kind} · …{value[-6:]}", index)
+            bound_name, _bound_id = bindings[index]
+            suffix = (
+                f" · → {bound_name}" if bound_name
+                else f" · → {self.text('identity_unbound')}"
+            )
+            observed.addItem(
+                f"{system} · {slot} · {kind} · …{value[-6:]}{suffix}", index,
+            )
         spool = QComboBox()
         spool.setObjectName("spool-identifier-spool")
         for item in self.rows:
@@ -4124,25 +4149,39 @@ class StudioWindow(QMainWindow):
             return
         selected = choices[int(observed.currentData())]
         system, slot, kind, value = selected
+        bound_name, bound_spool_id = bindings[int(observed.currentData())]
         spool_id = EntityId.parse(str(spool.currentData()))
+        rebound = bound_spool_id is not None and bound_spool_id != spool_id
+        message_key = "identity_rebind_message" if rebound else "identity_confirm_message"
         message = self.text(
-            "identity_confirm_message", spool=spool.currentText(), system=system,
+            message_key, spool=spool.currentText(), system=system,
             slot=slot, kind=kind, value=value,
+            bound=self.text("identity_unbound") if bound_name is None else bound_name,
         )
         if QMessageBox.question(self, self.text("verify_identity"), message) != \
                 QMessageBox.StandardButton.Yes:
             return
 
         def verify() -> object:
-            return SpoolIdentifierCommands(
+            commands = SpoolIdentifierCommands(
                 lambda: SQLiteUnitOfWork(self.backend.engine),
-            ).verify(
+            )
+            if rebound:
+                return commands.rebind(
+                    spool_id=spool_id, namespace=self._observed_namespace or "",
+                    kind=kind, value=value,
+                    actor_device_id=ensure_local_device(self.backend.engine),
+                    command_key=f"studio-spool-identity-rebind-{uuid4()}",
+                    manual_confirmation=True,
+                )
+            return commands.verify(
                 spool_id=spool_id, namespace=self._observed_namespace or "",
                 kind=kind, value=value, actor_device_id=ensure_local_device(self.backend.engine),
                 command_key=f"studio-spool-identity-{uuid4()}", manual_confirmation=True,
             )
 
-        self.work(verify, lambda _: self.info(self.text("identity_verified_reprobe")))
+        done_key = "identity_rebound_reprobe" if rebound else "identity_verified_reprobe"
+        self.work(verify, lambda _: self.info(self.text(done_key)))
 
     def mount_verified_feed_slot(self) -> None:
         if (self._observed_printer_id is None or not self._mount_candidates

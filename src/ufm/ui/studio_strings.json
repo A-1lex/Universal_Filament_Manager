@@ -1939,5 +1939,8 @@
   "local_api_port": ["Порт", "Port"],
   "local_api_on": ["Локальний API: увімкнено", "Local API: on"],
   "local_api_off": ["Локальний API: вимкнено", "Local API: off"],
-  "local_api_start_failed": ["Не вдалося запустити локальний API (порт зайнятий?).", "Could not start the local API (port in use?)."]
+  "local_api_start_failed": ["Не вдалося запустити локальний API (порт зайнятий?).", "Could not start the local API (port in use?)."],
+  "identity_unbound": ["не прив'язано", "unbound"],
+  "identity_rebind_message": ["Ідентифікатор {system} · {slot} · {kind} · {value} зараз прив'язано до котушки «{bound}». Переприв'язати його до «{spool}»? Попередня прив'язка буде знята й записана в журналі.", "Identifier {system} · {slot} · {kind} · {value} is currently bound to spool \"{bound}\". Rebind it to \"{spool}\"? The previous binding will be retired and journaled."],
+  "identity_rebound_reprobe": ["Ідентифікатор переприв'язано й записано в журнал. Повторно прочитайте стан, щоб побачити зіставлення.", "Identifier rebound and journaled. Read printer status again to see the match."]
 }

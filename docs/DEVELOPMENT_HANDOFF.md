@@ -3609,3 +3609,18 @@ Changes:
 - test_studio_window.py: test_local_api_toggle_starts_and_stops_server — ephemeral port via socket bind 0, toggle on, urllib GET /api/v1/health == ok, toggle off, settings flags verified.
 
 Verification: targeted tests pass; ruff/mypy clean; full suite result in PROJECT_PROGRESS. API remains read-only (405 on writes); E12.06 stays partial pending write-endpoint design, auth/origin policy and consumer contract fixtures.
+
+## 2026-11-19 — Live printer probe + spool identifier rebind
+
+Staging D:\UFM\_UFM_GitHubStage, .venv312. First real printer connection observed by user.
+
+Live evidence: probe reported ONLINE with nozzle 255.03C / bed 69.94C; every feed slot (ams:0 slots 0-3 + external) in SlotSpoolMatchState.CONFLICT because resolve_feed_slot_spool found tray_uuid and tag_uid trusted-bound to different spool_ids. verify() correctly refused reassignment (spool_identifier.identity_conflict) and no rebind path existed.
+
+Changes:
+- application/spool_identifiers.py: REBOUND event const; SpoolIdentifierCommands.rebind() — validates identity/command_key/manual_confirmation like verify(), idempotent replay via audit.for_command (entity_id = new identifier), requires current trusted binding to a DIFFERENT spool (else spool_identifier.rebind_not_needed), retires old via save(replace(retired_at=now, revision+1)) then adds new verified SpoolIdentifier, appends AuditEvent event_code="spool.identifier_rebound" with request_hash_v1 params (no raw value).
+- application/ports/persistence.py: SpoolIdentifierRepository.save(identifier, expected_revision).
+- ui/studio_window.py: verify_feed_identity() — queries current bindings per observed identity (by_trusted_identity + spools.get display_name, NotFound-safe), annotates combo items with "-> name"/"-> unbound"; rebound flag when bound_spool_id != chosen; identity_rebind_message confirmation; calls commands.rebind vs commands.verify; done message identity_rebound_reprobe vs identity_verified_reprobe. New import NotFound.
+- studio_strings.json: identity_unbound, identity_rebind_message ({bound} param; identity_confirm_message ignores extra kwargs via format_map), identity_rebound_reprobe.
+- tests/integration/test_spool_identifier_commands.py: _second_spool helper; test_rebind_retires_old_binding_and_verifies_new_one (new id, trusted lookup returns new, old retired_at set, single audit event, no raw value in params, replay equal); test_rebind_requires_existing_conflicting_binding (missing binding and same-spool both rejected).
+
+Verification: 6 passed/3 subtests in identifier tests; ruff/mypy clean; full suite 713 passed/491 subtests. E12.04 evidence appended. Owner action needed: re-probe, verify/rebind each slot identifier, mount verified spools; then re-check slot matching.
