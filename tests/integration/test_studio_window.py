@@ -1626,7 +1626,10 @@ def test_printer_probe_shows_matches_and_mounts_only_after_confirmation(
     ),)
     window.fill(window.printer_table, [["Test printer", "P1S", "BAMBU_LAN", "127.0.0.1"]])
     window.printer_table.setCurrentCell(0, 0)
-    monkeypatch.setattr(window, "work", lambda operation, callback: callback(operation()))
+    monkeypatch.setattr(
+        window, "work",
+        lambda operation, callback, **_kwargs: callback(operation()),
+    )
 
     window.probe()
 
@@ -3246,3 +3249,26 @@ def test_local_api_toggle_starts_and_stops_server(studio_workspace) -> None:
     window.toggle_local_api()
     assert window._local_api is None
     assert window.settings.local_api_enabled is False
+
+
+def test_studio_events_write_safe_json_to_ufm_log(studio_workspace) -> None:
+    """Test runs leave analyzable events; secrets and payloads stay out."""
+    _, backend, window = studio_workspace
+
+    window._log(
+        "printer_probe_started", printer_id="printer-1",
+        token="super-secret-value",
+    )
+    window._log("task_failed", error_code="ValueError")
+
+    log_path = backend.paths.logs / "ufm.log"
+    content = log_path.read_text("utf-8")
+    lines = [line for line in content.splitlines() if line.strip()]
+    events = [json.loads(line)["event"] for line in lines]
+    assert "printer_probe_started" in events
+    assert "task_failed" in events
+    probe = next(json.loads(line) for line in lines
+                 if json.loads(line)["event"] == "printer_probe_started")
+    assert probe["fields"]["printer_id"] == "printer-1"
+    assert "token" not in probe["fields"]
+    assert "super-secret-value" not in content

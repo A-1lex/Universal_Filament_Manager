@@ -2016,6 +2016,9 @@ class StudioWindow(QMainWindow):
             self.error(type(error).__name__)
         self.refresh()
 
+    def _log(self, event: str, **fields: object) -> None:
+        self.container.logger.info(event, extra={"fields": fields})
+
     def work(
         self,
         operation: Callable[[], object],
@@ -2033,6 +2036,7 @@ class StudioWindow(QMainWindow):
         task.completed.connect(callback)
 
         def failed(code: str) -> None:
+            self._log("task_failed", error_code=code)
             self.error(code)
             if after_failed is not None:
                 after_failed(code)
@@ -2970,6 +2974,7 @@ class StudioWindow(QMainWindow):
                 self.candidate_list.addItem(item)
             self.candidate_list.setVisible(True)
             self.device_result.setPlainText("\n".join(lines))
+            self._log("printer_discovery_completed", count=len(result))
 
         self.device_result.setPlainText(self.text("searching_candidates"))
         self.work(scan, display)
@@ -3097,8 +3102,18 @@ class StudioWindow(QMainWindow):
                     ))
                 message = "\n".join(lines)
             self.device_result.setPlainText(message)
+            self._log(
+                "printer_probe_completed", printer_id=str(status.printer_id),
+                count=len(mappings), status=str(status.connection_state),
+            )
 
-        self.work(observe, display)
+        self._log("printer_probe_started", printer_id=str(identity))
+        self.work(
+            observe, display,
+            after_failed=lambda code: self._log(
+                "printer_probe_failed", printer_id=str(identity), error_code=code,
+            ),
+        )
 
     def update_printer_actions(self) -> None:
         index = self.printer_table.currentRow()
@@ -3817,6 +3832,7 @@ class StudioWindow(QMainWindow):
         task.failed.connect(self.printer_monitor_failed)
         task.finished.connect(self.finish_printer_monitor)
         task.start()
+        self._log("printer_monitor_started", printer_id=str(identity))
 
     def show_latest_monitored_event(self) -> None:
         task = self._monitor_task
@@ -3962,6 +3978,7 @@ class StudioWindow(QMainWindow):
         ))
 
     def printer_monitor_state_changed(self, state: str) -> None:
+        self._log("printer_monitor_state", details=state)
         if state == "online":
             self.monitor_status.setText(self.text(
                 "monitor_online", name=self._monitor_printer_name,
@@ -3985,6 +4002,7 @@ class StudioWindow(QMainWindow):
 
     def printer_monitor_failed(self, error_type: str) -> None:
         self._monitor_failed = True
+        self._log("printer_monitor_failed", error_code=error_type)
         error_key = {
             "AuthenticationFailed": "monitor_error_authentication",
             "TLSVerificationFailed": "monitor_error_tls",
@@ -3998,6 +4016,7 @@ class StudioWindow(QMainWindow):
         ))
 
     def finish_printer_monitor(self) -> None:
+        self._log("printer_monitor_stopped", status="failed" if self._monitor_failed else "ok")
         task = self._monitor_task
         self._monitor_task = None
         self.printer_table.setEnabled(True)
@@ -4213,6 +4232,10 @@ class StudioWindow(QMainWindow):
                 tuple[list[str], list[str], str], result,
             )
             self.refresh()
+            self._log(
+                "spool_sync_completed", count=len(bound),
+                status="partial" if conflicts else "ok",
+            )
             if conflicts:
                 self.info(self.text(
                     "sync_partial", bound=len(bound), conflicts=len(conflicts),
@@ -4319,7 +4342,15 @@ class StudioWindow(QMainWindow):
             )
 
         done_key = "identity_rebound_reprobe" if rebound else "identity_verified_reprobe"
-        self.work(verify, lambda _: self.info(self.text(done_key)))
+
+        def verified(_: object) -> None:
+            self._log(
+                "spool_identity_verified", spool_id=str(spool_id),
+                status="rebound" if rebound else "verified",
+            )
+            self.info(self.text(done_key))
+
+        self.work(verify, verified)
 
     def mount_verified_feed_slot(self) -> None:
         if (self._observed_printer_id is None or not self._mount_candidates
@@ -4387,6 +4418,7 @@ class StudioWindow(QMainWindow):
 
         def mounted(_: object) -> None:
             self._mount_candidates = ()
+            self._log("feed_slot_mounted", spool_id=str(spool_id))
             self.info(self.text("mount_done"))
 
         self.work(mount, mounted)

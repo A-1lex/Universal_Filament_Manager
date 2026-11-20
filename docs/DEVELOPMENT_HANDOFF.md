@@ -3637,3 +3637,19 @@ Changes:
 - tests: test_bambu_lan_provider asserts material_hint PLA/PETG + color_hint None; test_studio_window.py test_sync_observed_spools_requires_fresh_probe.
 
 Verification: targeted tests pass; ruff/mypy clean on 3 files; full suite in PROJECT_PROGRESS. E06.05 evidence appended. Live flow for owner: probe -> Sync spools -> pick/create per slot -> probe again -> mount verified.
+
+## 2026-11-20 — Діагностичне логування подій Studio
+
+- `src/ufm/infrastructure/logging/events.py`: розширено SAFE_LOG_EVENT_CODES —
+  printer_probe_started/completed/failed, printer_monitor_started/state/failed/stopped,
+  printer_discovery_completed, spool_sync_completed, spool_identity_verified,
+  feed_slot_mounted, task_failed.
+- `src/ufm/ui/studio_window.py`: `StudioWindow._log()` пише через container.logger
+  (safe JSON, allowlist полів). Точки: probe start/done/fail, monitor
+  start/state/fail/stop, discovery completed, slot sync, identity verify/rebind,
+  mount, і загальний task_failed у work().
+- Мета: раніше ufm.log був порожній (0 байт) — GUI не лишав сліду; тепер
+  тестові й живі запуски дають аналізовані події без секретів/payload.
+- Тест `test_studio_events_write_safe_json_to_ufm_log`: події у ufm.log,
+  секретні поля відкидаються санітизатором.
+- Перевірки: ruff/mypy clean; focused 225 passed/77 subtests; повний suite: 715 passed / 491 subtests (99,63 с).
